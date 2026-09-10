@@ -77,8 +77,8 @@
                   "id": "inr",
                   "type": "obs",
                   "questionOptions": {
-                    "rendering": "text",
-                    "concept": "797b76a2-0096-5435-bc55-047d29370f75"
+                    "rendering": "number",
+                    "concept": "161482AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                   }
                 }
               ]

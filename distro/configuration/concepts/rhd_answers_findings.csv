@@ -12,7 +12,7 @@ ed595b95-91cb-5a74-991b-18967bc628ab,,ACT-RHD:mouth_or_throat_swelling,Mouth or 
 6d85ceb4-3746-56b9-9d39-70a25c38b238,,ACT-RHD:nonspecific_st_segment_changes,Nonspecific ST segment changes,,,Finding,N/A,,,
 c1e4256f-bde0-515f-9992-1a9c5d572324,,ACT-RHD:nonspecific_t_wave_changes,Nonspecific t-wave changes,,,Finding,N/A,,,
 1487337c-188c-59e0-8c26-92cf3d152f20,,ACT-RHD:normal_sinus_rhythm,Normal sinus rhythm,NSR,,Finding,N/A,,,
-41bd79b2-db5a-5da1-89dd-827c30ccb25a,,ACT-RHD:penicillin_allergy,Penicillin (allergy),,,Misc,N/A,,,
+41bd79b2-db5a-5da1-89dd-827c30ccb25a,true,ACT-RHD:penicillin_allergy,Penicillin (allergy),,"replaced by CIEL:989 (Allergy to penicillin) -- reuse audit 2026-09-10, should not have been a custom concept",Misc,N/A,,,
 b4e6c064-ab4f-5ee4-9837-094731ee23d4,,ACT-RHD:penicillin_anaphylaxis,Penicillin (anaphylaxis),,,Misc,N/A,,,
 bc663c48-5449-5930-b468-1b946c478f26,,ACT-RHD:premature_atrial_contractions,Premature atrial contractions,PACs,,Finding,N/A,,,
 d0e81a4a-ee82-50f6-98fc-4169fa3a5855,,ACT-RHD:premature_ventricular_contractions,Premature ventricular contractions,PVCs,,Finding,N/A,,,

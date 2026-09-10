@@ -31,7 +31,7 @@ fd250ab4-3a0b-50a9-90e0-f51bdd2e2221,,ACT-RHD:q_digestive_diseases,Digestive dis
 de49e440-3360-5350-b79d-c9cf45c5034c,,ACT-RHD:q_evidence,Evidence,,,Question,Coded,Patient reported reaction; Clinician reported reaction,,
 a53ea77c-8671-58b0-8011-6bd7fecc8b01,,ACT-RHD:q_follow_up_appointments,Follow-up Appointments,,,Question,Coded,RHD clinic; Tertiary center,,
 5743086e-867a-5e9b-aee6-ea3dd7245f30,,ACT-RHD:q_hematology_oncology,Hematology/Oncology,,,Question,Coded,Sickle cell disease; Malignancy/Cancer; HIV; 5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,
-797b76a2-0096-5435-bc55-047d29370f75,,ACT-RHD:q_inr,INR,,,Question,Text,,,
+797b76a2-0096-5435-bc55-047d29370f75,true,ACT-RHD:q_inr,INR,,"replaced by CIEL:161482 (International normalized ratio) -- reuse audit 2026-09-10, should not have been a custom Text concept",Question,Text,,,
 0778ce12-ddba-5e22-b5fd-92424e8747b4,,ACT-RHD:q_inr_target,INR Target,,,Question,Coded,1.5-2.5; 2.0-3.0; 2.5-3.5,,
 06898c35-63d1-5b2c-8f61-d3c972b252f5,,ACT-RHD:q_if_no_why,Reasoning,,"renamed from 'If no, why?' to 'Reasoning' matching live legacy app label; confirmed 2026-09-10",Question,Text,,,
 53d3cb00-b556-5842-b67f-32239176b746,,ACT-RHD:q_if_not_given_sap_why,"If not given SAP, why?",,,Question,Text,,,
