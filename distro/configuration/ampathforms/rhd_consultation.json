@@ -216,7 +216,7 @@
                       },
                       {
                         "label": "Penicillin (allergy)",
-                        "concept": "41bd79b2-db5a-5da1-89dd-827c30ccb25a",
+                        "concept": "149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                         "conceptMappings": []
                       },
                       {
@@ -397,7 +397,7 @@
               "type": "obs",
               "questionOptions": {
                 "rendering": "number",
-                "concept": "6eabb220-cdd8-5104-b91c-eb9022d1a289"
+                "concept": "5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
               },
               "_specBranching": "Pull forward from previous visit"
             },
@@ -407,7 +407,7 @@
               "type": "obs",
               "questionOptions": {
                 "rendering": "number",
-                "concept": "a25cf90c-2bdd-5874-8d31-519481f9b5db"
+                "concept": "5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
               },
               "_specBranching": "Pull forward from previous visit"
             },
@@ -417,7 +417,7 @@
               "type": "obs",
               "questionOptions": {
                 "rendering": "number",
-                "concept": "99865498-12e2-546f-a6c1-53c9b0f51e6a"
+                "concept": "5087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
               }
             },
             {
@@ -435,7 +435,7 @@
               "type": "obs",
               "questionOptions": {
                 "rendering": "number",
-                "concept": "3e3cdb78-9a9d-5e77-aa64-cd8abfecc441"
+                "concept": "5092AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
               }
             },
             {
