@@ -1,6 +1,6 @@
 {
   "name": "RHD INR Monitoring",
-  "description": "ACT RHD registry \u2014 RHD INR Monitoring",
+  "description": "ACT RHD registry: RHD INR Monitoring",
   "version": "1",
   "published": true,
   "retired": false,

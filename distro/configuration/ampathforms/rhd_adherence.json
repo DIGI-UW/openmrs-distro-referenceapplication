@@ -1,6 +1,6 @@
 {
   "name": "RHD Oral Adherence",
-  "description": "ACT RHD registry \u2014 RHD Oral Adherence",
+  "description": "ACT RHD registry: RHD Oral Adherence",
   "version": "1",
   "published": true,
   "retired": false,
@@ -75,7 +75,9 @@
                 "rendering": "text",
                 "concept": "3fd2d82e-c664-5d77-b151-daf328e77bd9"
               },
-              "_specBranching": "if Dosing = Other"
+              "hide": {
+                "hideWhenExpression": "dosing_oral_adherence !== '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Dosing (Oral Adherence)",

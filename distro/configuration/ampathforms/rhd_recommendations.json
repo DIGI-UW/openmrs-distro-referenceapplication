@@ -1,6 +1,6 @@
 {
   "name": "RHD Interventional Recommendations",
-  "description": "ACT RHD registry \u2014 RHD Interventional Recommendations",
+  "description": "ACT RHD registry: RHD Interventional Recommendations",
   "version": "1",
   "published": true,
   "retired": false,
@@ -91,7 +91,9 @@
                       }
                     ]
                   },
-                  "_specBranching": "If Type of Intervention = Cardiac catheterization"
+                  "hide": {
+                    "hideWhenExpression": "!(includes(type_of_intervention, '3d32f20c-b4b5-5765-8f80-7b89b8cb3859'))"
+                  }
                 }
               ]
             },
@@ -115,7 +117,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Type of Intervention = Cardiac surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(type_of_intervention, '414f1c28-9507-5fc3-8684-dc3fd57a52fb'))"
+              }
             },
             {
               "label": "Cardiac surgery type",
@@ -142,7 +146,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Type of Intervention = Cardiac surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(type_of_intervention, '414f1c28-9507-5fc3-8684-dc3fd57a52fb'))"
+              }
             }
           ]
         }
