@@ -57,6 +57,38 @@
               "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
             },
             {
+              "label": "Is patient suitable for mitral valve repair",
+              "id": "is_patient_suitable_for_mitral_valve_repair",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "8d6e9ea5-aa27-57d6-bf43-198aca63a951",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "_specBranching": "Show if Mitral Regurgitation is not \"None\""
+            },
+            {
+              "label": "Reasoning",
+              "id": "mitral_valve_repair_reasoning",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "53c3d6ce-6468-5533-848a-1c1e21057b64"
+              },
+              "_specBranching": "Show if Mitral Regurgitation is not \"None\""
+            },
+            {
               "label": "Mitral stenosis severity",
               "id": "mitral_stenosis_severity",
               "type": "obs",
