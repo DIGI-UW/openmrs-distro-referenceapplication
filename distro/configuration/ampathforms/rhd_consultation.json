@@ -1496,8 +1496,7 @@
                         "conceptMappings": []
                       }
                     ]
-                  },
-                  "_specBranching": "If Type of Intervention is not None."
+                  }
                 },
                 {
                   "label": "Completed",
@@ -1560,8 +1559,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Follow-up Appointments = RHD Clinic"
+              }
             }
           ]
         }

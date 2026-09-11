@@ -53,8 +53,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Is patient suitable for mitral valve repair",
@@ -121,8 +120,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Is patient suitable for BAV?",
@@ -189,8 +187,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Aortic Stenosis",
@@ -221,8 +218,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Tricuspid Regurgitation",
@@ -253,8 +249,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Tricuspid Stenosis",
@@ -285,8 +280,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Left Ventricular Ejection Fraction (%)",
@@ -295,8 +289,7 @@
               "questionOptions": {
                 "rendering": "number",
                 "concept": "ed630fda-8451-53c0-929e-40eafd9bca9b"
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Left Ventricular Function",
@@ -327,8 +320,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Left Ventricular Size",
@@ -390,8 +382,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Mitral Valve Annulus Diameter (cm)",
@@ -513,8 +504,7 @@
                 "rendering": "textarea",
                 "concept": "ad533240-b503-5b82-a2fd-c7b69868d632",
                 "rows": "3"
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             }
           ]
         }
