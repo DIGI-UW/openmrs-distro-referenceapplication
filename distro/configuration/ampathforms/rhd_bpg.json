@@ -1,6 +1,6 @@
 {
   "name": "RHD BPG Delivery",
-  "description": "ACT RHD registry \u2014 RHD BPG Delivery",
+  "description": "ACT RHD registry: RHD BPG Delivery",
   "version": "1",
   "published": true,
   "retired": false,
@@ -171,7 +171,9 @@
                 ]
               },
               "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             },
             {
               "label": "Respiratory Signs or Symptoms",
@@ -204,7 +206,9 @@
                 ]
               },
               "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             },
             {
               "label": "Cardiovascular Signs or Symptoms",
@@ -237,7 +241,9 @@
                 ]
               },
               "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             },
             {
               "label": "Abdominal/Pelvic Signs or Symptoms",
@@ -270,7 +276,9 @@
                 ]
               },
               "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             },
             {
               "label": "Neurological Signs or Symptoms",
@@ -303,7 +311,9 @@
                 ]
               },
               "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             },
             {
               "label": "Signs or Symptoms Risk Factors",
@@ -336,7 +346,9 @@
                 ]
               },
               "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             }
           ]
         }

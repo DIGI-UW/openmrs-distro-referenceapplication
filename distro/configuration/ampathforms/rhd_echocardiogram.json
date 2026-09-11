@@ -1,6 +1,6 @@
 {
   "name": "RHD Echocardiogram",
-  "description": "ACT RHD registry \u2014 RHD Echocardiogram",
+  "description": "ACT RHD registry: RHD Echocardiogram",
   "version": "1",
   "published": true,
   "retired": false,
@@ -76,7 +76,9 @@
                   }
                 ]
               },
-              "_specBranching": "Show if Mitral Regurgitation is not \"None\""
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_regurgitation) || mitral_regurgitation === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Reasoning",
@@ -86,7 +88,9 @@
                 "rendering": "text",
                 "concept": "53c3d6ce-6468-5533-848a-1c1e21057b64"
               },
-              "_specBranching": "Show if Mitral Regurgitation is not \"None\""
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_regurgitation) || mitral_regurgitation === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Mitral stenosis severity",
@@ -140,7 +144,9 @@
                   }
                 ]
               },
-              "_specBranching": "Show if Mitral stenosis Is \"Mild\" \"Moderate\" or \"Severe\""
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_stenosis_severity) || mitral_stenosis_severity === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Reasoning",
@@ -150,7 +156,9 @@
                 "rendering": "text",
                 "concept": "06898c35-63d1-5b2c-8f61-d3c972b252f5"
               },
-              "_specBranching": "Show if Mitral stenosis Is \"Mild\" \"Moderate\" or \"Severe\""
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_stenosis_severity) || mitral_stenosis_severity === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Aortic Regurgitation",
@@ -493,7 +501,9 @@
                   }
                 ]
               },
-              "_specBranching": "Show if Mitral stenosis Is \"Mild\" \"Moderate\" or \"Severe\""
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_stenosis_severity) || mitral_stenosis_severity === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Other Findings on Echocardiogram",

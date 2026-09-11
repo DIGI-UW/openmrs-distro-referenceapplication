@@ -1,6 +1,6 @@
 {
   "name": "RHD Interventions and Outcomes",
-  "description": "ACT RHD registry \u2014 RHD Interventions and Outcomes",
+  "description": "ACT RHD registry: RHD Interventions and Outcomes",
   "version": "1",
   "published": true,
   "retired": false,
@@ -120,7 +120,9 @@
                       }
                     ]
                   },
-                  "_specBranching": "If Procedure Type is Surgery"
+                  "hide": {
+                    "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+                  }
                 }
               ]
             },
@@ -154,7 +156,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Reason for Surgery",
@@ -164,7 +168,9 @@
                 "rendering": "text",
                 "concept": "c997adcd-e9ab-5705-91bb-1dbea2a3abb8"
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Open Chest After Surgery",
@@ -186,7 +192,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Required Additional Surgery for Bleeding",
@@ -208,7 +216,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Describe",
@@ -218,7 +228,9 @@
                 "rendering": "text",
                 "concept": "d81dfd3d-a882-5451-815d-ae6e98c291af"
               },
-              "_specBranching": "If Other Major Complications is Y"
+              "hide": {
+                "hideWhenExpression": "other_major_complications_assiciated_with_surgery !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             },
             {
               "label": "Other Pertinent Medical Information",
@@ -228,7 +240,9 @@
                 "rendering": "text",
                 "concept": "8b9ccf9e-ab44-56d2-885e-61a626cb6569"
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             }
           ]
         },
@@ -261,7 +275,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Date of Hospital Discharge",
@@ -271,7 +287,9 @@
                 "rendering": "date",
                 "concept": "d4317b82-5d37-5b59-ac32-4922f18cd65b"
               },
-              "_specBranching": "If Surgical Outcome is Discharge to home"
+              "hide": {
+                "hideWhenExpression": "surgery_outcome !== '98ea6c57-5f77-549b-97ca-32604c5b9220'"
+              }
             },
             {
               "label": "ICU Stay",
@@ -281,7 +299,9 @@
                 "rendering": "number",
                 "concept": "5b409279-ec02-50a9-8d68-9953f526beeb"
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Ventilation Time",
@@ -291,7 +311,9 @@
                 "rendering": "number",
                 "concept": "26f8371b-ef08-5a2d-ab3d-88d384b142a5"
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Perfusion Issues",
@@ -313,7 +335,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Surgical Site Infection",
@@ -335,7 +359,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Bacterial Sepsis",
@@ -357,7 +383,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Organism Identified (if Known)",
@@ -367,7 +395,9 @@
                 "rendering": "text",
                 "concept": "7961d827-0af9-5c92-9818-24e2e886de6f"
               },
-              "_specBranching": "If Bacterial Sepsis is Y"
+              "hide": {
+                "hideWhenExpression": "bacterial_sepsis !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             },
             {
               "label": "Other Major Complications Assiciated with Surgery",
@@ -389,7 +419,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             }
           ]
         },
@@ -405,7 +437,9 @@
                 "rendering": "date",
                 "concept": "49f9238d-2ca4-5efd-a5cb-f00a0b44828d"
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Is Patient Alive?",
@@ -427,7 +461,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "How was the patient contacted?",
@@ -437,7 +473,9 @@
                 "rendering": "text",
                 "concept": "2075f5e4-b8e5-50c1-83d7-81234fff3653"
               },
-              "_specBranching": "If Is Patient Alive is Y"
+              "hide": {
+                "hideWhenExpression": "is_patient_alive !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             },
             {
               "label": "Is the patient OK?",
@@ -459,7 +497,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Is Patient Alive is Y"
+              "hide": {
+                "hideWhenExpression": "is_patient_alive !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             },
             {
               "label": "Describe the patient's current condition",
@@ -469,7 +509,9 @@
                 "rendering": "text",
                 "concept": "445ebd06-b013-5afd-a59c-c82c80748ae7"
               },
-              "_specBranching": "If Is Patient Alive is Y"
+              "hide": {
+                "hideWhenExpression": "is_patient_alive !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             }
           ]
         },
@@ -511,7 +553,9 @@
                       }
                     ]
                   },
-                  "_specBranching": "If Procedure Type is Catheterization"
+                  "hide": {
+                    "hideWhenExpression": "!(includes(procedure_type, '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'))"
+                  }
                 }
               ]
             },
@@ -624,7 +668,9 @@
                 "rendering": "text",
                 "concept": "57d774b1-9060-5615-ad9b-f740d513e410"
               },
-              "_specBranching": "itral balloon valvuloplasty"
+              "hide": {
+                "hideWhenExpression": "!(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
             },
             {
               "label": "Pre-Inflation: LV Pressure",
@@ -634,7 +680,9 @@
                 "rendering": "text",
                 "concept": "ada941f5-77f2-56f4-b3c2-82d1d528be04"
               },
-              "_specBranching": "itral balloon valvuloplasty"
+              "hide": {
+                "hideWhenExpression": "!(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
             },
             {
               "label": "Post-Inflation: LA Pressure",
@@ -644,7 +692,9 @@
                 "rendering": "text",
                 "concept": "9ccd8043-d9be-5b24-8fc4-4890d46e716f"
               },
-              "_specBranching": "itral balloon valvuloplasty"
+              "hide": {
+                "hideWhenExpression": "!(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
             },
             {
               "label": "Post-Inflation: LV Pressure",
@@ -654,7 +704,9 @@
                 "rendering": "text",
                 "concept": "18060962-d3fe-5d6b-89ef-2d5386c2ad44"
               },
-              "_specBranching": "itral balloon valvuloplasty"
+              "hide": {
+                "hideWhenExpression": "!(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
             },
             {
               "label": "Mitral Valve Area",
@@ -676,7 +728,9 @@
                   }
                 ]
               },
-              "_specBranching": "itral balloon valvuloplasty"
+              "hide": {
+                "hideWhenExpression": "!(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
             }
           ]
         }
