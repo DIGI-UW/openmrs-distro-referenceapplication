@@ -223,8 +223,7 @@
               "questionOptions": {
                 "rendering": "text",
                 "concept": "062a66ad-8efb-5d28-a6d9-511bb396d661"
-              },
-              "_specBranching": "If Maternal Prenatal outcome is not death + 30 day outcome is deceased"
+              }
             },
             {
               "label": "Neonatal Outcomes 30 Days After Delivery",
