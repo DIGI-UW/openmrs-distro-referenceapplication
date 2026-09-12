@@ -32,7 +32,7 @@
                 "rendering": "repeating",
                 "concept": "0778ce12-ddba-5e22-b5fd-92424e8747b4",
                 "repeatOptions": {
-                  "limit": 20
+                  "limit": "20"
                 }
               },
               "questions": [

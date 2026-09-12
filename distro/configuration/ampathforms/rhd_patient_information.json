@@ -169,7 +169,9 @@
                   }
                 ]
               },
-              "_specBranching": "Show if patient Sex = Female"
+              "hide": {
+                "hideWhenExpression": "patient.gender !== 'female'"
+              }
             },
             {
               "label": "WhatsApp",

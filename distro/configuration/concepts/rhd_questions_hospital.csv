@@ -5,3 +5,4 @@ f17fbfad-6208-53ee-a97a-17583d2f6259,,ACT-RHD:q_date_of_discharge,Date of Discha
 01e6dd39-b8ba-5b0a-bcd7-6b8d5973c1bc,,ACT-RHD:q_facility,Facility,,,Question,Text,,,
 e60fcf3b-1057-5d1f-a8be-679411b48ba9,,ACT-RHD:q_reason_for_admission,Reason for Admission,,,Question,Coded,RHD - intervention; RHD - heart failure; RHD - stroke; RHD - arrhythmia; RHD - endocarditis; 127447AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA; 116128AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,
 15951587-62e3-536f-a471-958b4f210b6c,,ACT-RHD:q_to_where,To Where?,,,Question,Text,,,
+ae69bb65-cd0a-5035-aee5-ba5521e7b889,,ACT-RHD:q_outcome,Outcome,,"hospital admission outcome; trigger for To Where? and Date of Discharge",Question,Coded,"Discharge to home; Transfer to another facility; Transfer to another department; 159AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",,
