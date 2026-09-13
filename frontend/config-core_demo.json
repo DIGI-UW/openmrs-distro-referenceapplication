@@ -4,19 +4,31 @@
     "showUpcomingAppointments": true,
     "extensionSlots": {
       "action-menu-patient-chart-items-slot": {
-        "order": ["order-basket-action-menu"]
+        "order": [
+          "order-basket-action-menu"
+        ]
       }
     }
   },
   "@openmrs/esm-ward-app": {
     "extensionSlots": {
       "action-menu-ward-patient-items-slot": {
-        "add": ["order-basket-action-menu"]
+        "add": [
+          "order-basket-action-menu"
+        ]
       }
     }
   },
   "@openmrs/esm-laboratory-app": {
-    "labTableColumns": ["name", "patientId", "urgency", "age", "sex", "totalOrders", "action"]
+    "labTableColumns": [
+      "name",
+      "patientId",
+      "urgency",
+      "age",
+      "sex",
+      "totalOrders",
+      "action"
+    ]
   },
   "@openmrs/esm-styleguide": {
     "Brand color #1": "#005d5d"
@@ -29,8 +41,8 @@
   },
   "@openmrs/esm-patient-registration-app": {
     "defaultPatientIdentifierTypes": [
-      "b4143563-16cd-4439-b288-f83d61670fc8",
-      "a71403f3-8584-4289-ab41-2b4e5570bd45"
+      "fdd6f720-743b-57fc-915a-87c0f571097b",
+      "060a2595-da89-5509-8cf4-645a8e50ad8a"
     ]
   },
   "@openmrs/esm-login-app": {
