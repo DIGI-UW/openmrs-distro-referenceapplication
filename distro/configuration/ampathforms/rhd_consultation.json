@@ -399,7 +399,7 @@
                 "rendering": "number",
                 "concept": "5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
               },
-              "_specBranching": "Pull forward from previous visit"
+              "historicalExpression": "HD.getObject('prevEnc')?.getValue('5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
             },
             {
               "label": "Weight (kg)",
@@ -409,7 +409,7 @@
                 "rendering": "number",
                 "concept": "5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
               },
-              "_specBranching": "Pull forward from previous visit"
+              "historicalExpression": "HD.getObject('prevEnc')?.getValue('5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
             },
             {
               "label": "Heart Rate (BPM)",
