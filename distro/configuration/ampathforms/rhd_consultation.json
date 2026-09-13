@@ -697,8 +697,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Hide if \"Category at Diagnosis\" is either \"Congenital heart disease\" or \"Other heart disease\"\n\nPull forward from previous visit.  Display all ever entered."
+              }
             },
             {
               "label": "Secondary Antibiotic Prophylaxis Data Entry",
@@ -729,8 +728,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Hide if \"Category at Diagnosis\" is either \"Congenital heart disease\" or \"Other heart disease\"\n\nPull forward from previous visit.  Display all ever entered."
+              }
             }
           ]
         },

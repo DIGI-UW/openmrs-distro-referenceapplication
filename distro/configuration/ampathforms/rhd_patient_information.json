@@ -126,8 +126,7 @@
               "questionOptions": {
                 "rendering": "text",
                 "concept": "32f3e45d-c2a8-5c19-b4d1-9306251426f6"
-              },
-              "_specBranching": "Show if Patient Status is \"inactive\" and \"Reason inactive is\"  \"Physical Relocation\""
+              }
             },
             {
               "label": "Date of Death",
@@ -137,8 +136,7 @@
                 "rendering": "date",
                 "concept": "07534416-c1c2-5772-83d8-76a429986ec0"
               },
-              "required": true,
-              "_specBranching": "Show if Patient Status is \"inactive\" and \"Reason Inactive\" is \"Death\""
+              "required": true
             },
             {
               "label": "Details of events leading up to death",
