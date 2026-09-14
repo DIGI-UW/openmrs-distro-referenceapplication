@@ -1,6 +1,6 @@
 {
   "name": "RHD Electrocardiogram",
-  "description": "ACT RHD registry \u2014 RHD Electrocardiogram",
+  "description": "ACT RHD registry: RHD Electrocardiogram",
   "version": "1",
   "published": true,
   "retired": false,
@@ -29,7 +29,7 @@
               "id": "electrocardiogram_result",
               "type": "obs",
               "questionOptions": {
-                "rendering": "select",
+                "rendering": "checkbox",
                 "concept": "1c5476e4-ff12-5fbd-b2ad-53f66f9006a0",
                 "answers": [
                   {

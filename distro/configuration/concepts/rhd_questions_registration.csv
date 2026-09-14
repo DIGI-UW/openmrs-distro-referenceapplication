@@ -7,5 +7,7 @@ a4d27e8c-0c90-571f-be54-a6132c7a1d69,,ACT-RHD:q_details_of_events_leading_up_to_
 1af5b942-8747-5dfb-aa40-805b5575f2e3,,ACT-RHD:q_home_address,Home Address,,,Question,Text,,,
 6ffe2fe5-f7c0-5993-b20e-13d1ccd384dc,,ACT-RHD:q_pregnant_or_postpartum_60_days_after_delivery_at_time_of_death,Pregnant or Postpartum (60 Days After Delivery) at Time of Death,,,Question,Coded,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA; 1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,
 32f3e45d-c2a8-5c19-b4d1-9306251426f6,,ACT-RHD:q_relocation_area,Relocation Area,,,Question,Text,,,
-17eeabd8-b3cd-5ae1-b600-9769174eadea,,ACT-RHD:q_tertiary_phone_ownder,Tertiary Phone Ownder,,,Question,Text,,,
+17eeabd8-b3cd-5ae1-b600-9769174eadea,,ACT-RHD:q_tertiary_phone_owner,Tertiary Phone Owner,,,Question,Text,,,
 02e65ad0-676d-5fb7-9a5d-044c1b67621b,,ACT-RHD:q_whatsapp,WhatsApp,,,Question,Boolean,,,
+48d8e6a8-9095-5d16-8d0e-739004566b03,,ACT-RHD:q_primary_diagnosis_details,Primary Diagnosis Details,,,Question,Text,,,
+cfd8f77a-a2b5-5836-96c1-d3e5fdd48e02,,ACT-RHD:q_school_name,School Name,,,Question,Text,,,

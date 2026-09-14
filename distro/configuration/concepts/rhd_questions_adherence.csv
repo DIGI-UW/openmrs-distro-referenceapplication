@@ -6,3 +6,4 @@ Uuid,Void/Retire,Same as mappings,Fully specified name:en,Short name:en,Descript
 cd03af00-de81-5c08-9a02-92f95c00e1ce,,ACT-RHD:q_prescription_duration,Prescription Duration,,,Question,Coded,1 month; 3 months; 6 months; 12 months,,
 f1343ee0-b1ed-5145-949e-dba989f81cf7,,ACT-RHD:q_tablets_given_prescribed,Tablets Given/Prescribed,,,Question,Numeric,,,
 75cd7e15-5f05-58d1-acb1-4a046eb1b437,,ACT-RHD:q_weeks_in_reporting_period,Weeks in Reporting Period,,,Question,Numeric,,,
+a9fbf67b-65d7-57f6-8270-7bb65cd49469,,ACT-RHD:q_explanation_adherence_below_80,Explanation if Adherence is Below 80%,,,Question,Text,,,

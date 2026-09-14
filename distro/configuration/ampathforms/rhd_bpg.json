@@ -1,6 +1,6 @@
 {
   "name": "RHD BPG Delivery",
-  "description": "ACT RHD registry \u2014 RHD BPG Delivery",
+  "description": "ACT RHD registry: RHD BPG Delivery",
   "version": "1",
   "published": true,
   "retired": false,
@@ -65,6 +65,51 @@
                   }
                 ]
               }
+            },
+            {
+              "label": "Facility",
+              "id": "facility",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "01e6dd39-b8ba-5b0a-bcd7-6b8d5973c1bc"
+              }
+            },
+            {
+              "label": "Injection Tolerance",
+              "id": "injection_tolerance",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "9684b2da-a340-5a70-b8c5-114ba0b1ebcc",
+                "answers": [
+                  {
+                    "label": "Tolerated without major issue",
+                    "concept": "384326ed-1860-5756-b6d2-9c05b7952b32",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Anaphylaxis",
+                    "concept": "148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Leg numbness",
+                    "concept": "5085f024-7bc7-5791-b7f5-e816007ee59c",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Excessive pain",
+                    "concept": "5633b68d-30a2-5325-9e7c-31e133f43156",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Other non-coded",
+                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              }
             }
           ]
         },
@@ -100,28 +145,23 @@
                         "conceptMappings": []
                       },
                       {
-                        "label": "Rash",
-                        "concept": "512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                        "label": "Pain >48 hours post-injection",
+                        "concept": "6b7af79b-ac82-5e31-92c6-28c98f25f349",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Pain",
-                        "concept": "114403AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                        "label": "Limp >48 hours post-injection",
+                        "concept": "ef11f3e5-dbc2-5e21-85dc-12d984f238c3",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Limp",
-                        "concept": "4e513376-7f1d-5f1a-9628-929f576403a7",
+                        "label": "Leg swelling > 48 hours post-injection",
+                        "concept": "f96ecc22-a114-5b7a-a334-2bdc2d4b62f4",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Leg numbness",
-                        "concept": "5085f024-7bc7-5791-b7f5-e816007ee59c",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Local redness",
-                        "concept": "e0f8f506-2ff9-5442-b46d-b5c472351326",
+                        "label": "Rash thought to be from injection",
+                        "concept": "4d6c8b64-ae48-5307-a0e3-00cec3eeaea3",
                         "conceptMappings": []
                       },
                       {
@@ -130,13 +170,17 @@
                         "conceptMappings": []
                       },
                       {
+                        "label": "Local redness",
+                        "concept": "e0f8f506-2ff9-5442-b46d-b5c472351326",
+                        "conceptMappings": []
+                      },
+                      {
                         "label": "Other non-coded",
                         "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                         "conceptMappings": []
                       }
                     ]
-                  },
-                  "required": true
+                  }
                 }
               ]
             },
@@ -170,8 +214,9 @@
                   }
                 ]
               },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') || includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             },
             {
               "label": "Respiratory Signs or Symptoms",
@@ -203,8 +248,9 @@
                   }
                 ]
               },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') || includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             },
             {
               "label": "Cardiovascular Signs or Symptoms",
@@ -236,8 +282,9 @@
                   }
                 ]
               },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') || includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             },
             {
               "label": "Abdominal/Pelvic Signs or Symptoms",
@@ -269,8 +316,9 @@
                   }
                 ]
               },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') || includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             },
             {
               "label": "Neurological Signs or Symptoms",
@@ -302,8 +350,9 @@
                   }
                 ]
               },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') || includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             },
             {
               "label": "Signs or Symptoms Risk Factors",
@@ -335,8 +384,33 @@
                   }
                 ]
               },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') || includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
+            },
+            {
+              "label": "Describe Anaphylaxis Events",
+              "id": "describe_anaphylaxis_events",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "01ca2486-79e4-5988-86b2-953fb45bf927"
+              },
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') || includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
+            },
+            {
+              "label": "Time Between Injection and Symptom Onset",
+              "id": "time_between_injection_and_symptom_onset",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "252beae5-5112-5d47-9f24-167847850018"
+              },
+              "hide": {
+                "hideWhenExpression": "!(includes(adverse_reaction, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') || includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))"
+              }
             }
           ]
         }

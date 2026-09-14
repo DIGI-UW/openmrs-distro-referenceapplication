@@ -1,6 +1,6 @@
 {
   "name": "RHD Hospital Admission",
-  "description": "ACT RHD registry \u2014 RHD Hospital Admission",
+  "description": "ACT RHD registry: RHD Hospital Admission",
   "version": "1",
   "published": true,
   "retired": false,
@@ -81,6 +81,37 @@
               }
             },
             {
+              "label": "Outcome",
+              "id": "outcome",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "ae69bb65-cd0a-5035-aee5-ba5521e7b889",
+                "answers": [
+                  {
+                    "label": "Discharge to home",
+                    "concept": "98ea6c57-5f77-549b-97ca-32604c5b9220",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Transfer to another facility",
+                    "concept": "8a4f573d-ebc2-5073-b396-39ebe01fe56d",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Transfer to another department",
+                    "concept": "a283c1fb-c248-5f0a-9503-6fd496193a2c",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Deceased",
+                    "concept": "159AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
               "label": "Details (Hospital Admission)",
               "id": "details_hospital_admission",
               "type": "obs",
@@ -97,7 +128,9 @@
                 "rendering": "text",
                 "concept": "15951587-62e3-536f-a471-958b4f210b6c"
               },
-              "_specBranching": "If Outcome = Transfer to another facility"
+              "hide": {
+                "hideWhenExpression": "outcome !== '8a4f573d-ebc2-5073-b396-39ebe01fe56d' && outcome !== 'a283c1fb-c248-5f0a-9503-6fd496193a2c'"
+              }
             },
             {
               "label": "Date of Discharge",
@@ -107,7 +140,9 @@
                 "rendering": "date",
                 "concept": "f17fbfad-6208-53ee-a97a-17583d2f6259"
               },
-              "_specBranching": "If Outcome = Discharge to home"
+              "hide": {
+                "hideWhenExpression": "outcome !== '98ea6c57-5f77-549b-97ca-32604c5b9220'"
+              }
             }
           ]
         }

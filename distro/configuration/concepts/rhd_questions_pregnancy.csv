@@ -12,3 +12,8 @@ d476b4e0-5c24-5d99-9588-26aadc1e35c6,,ACT-RHD:q_maternal_complications_during_pr
 a81827f3-5832-530f-91ef-b3a0c58079ca,,ACT-RHD:q_neontal_cause_of_death,Neontal Cause of Death,,,Question,Text,,,
 0574bebd-028b-5f69-b92c-48d26d04afb1,,ACT-RHD:q_number_of_fetuses,Number of Fetuses,,,Question,Text,,,
 8245f302-13c3-5754-a199-95040901fbc4,,ACT-RHD:q_pregnancy_number,Pregnancy Number,,,Question,Text,,,
+06ffd716-291b-5aa2-bb50-b029e58cdcae,,ACT-RHD:q_gravidity,Gravidity,,"number of pregnancies",Question,Numeric,,,
+7ae7a2b2-dc78-5519-998a-76640d778caa,,ACT-RHD:q_parity,Parity,,"number of births past 20 weeks",Question,Numeric,,,
+09d79b49-7c3f-5500-983d-336219bb91fe,,ACT-RHD:q_reason_for_cesarean_section,Reason for Cesarean Section,,,Question,Text,,,
+45971515-88d0-5707-83ed-4401f9247878,,ACT-RHD:q_describe_postpartum_complications,Describe Postpartum Complications Further,,,Question,Text,,,
+9e97bc2d-971b-550a-9c4f-7bd1901e2370,,ACT-RHD:q_describe_neonatal_outcomes,Describe Neonatal Outcomes Further,,,Question,Text,,,

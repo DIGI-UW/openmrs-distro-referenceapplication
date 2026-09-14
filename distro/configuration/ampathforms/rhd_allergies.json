@@ -1,6 +1,6 @@
 {
   "name": "RHD Allergies",
-  "description": "ACT RHD registry \u2014 RHD Allergies",
+  "description": "ACT RHD registry: RHD Allergies",
   "version": "1",
   "published": true,
   "retired": false,
@@ -34,8 +34,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "required": true
+              }
             },
             {
               "label": "Evidence",
@@ -57,8 +56,9 @@
                   }
                 ]
               },
-              "required": true,
-              "_specBranching": "If Penicillin Allergy = Yes"
+              "hide": {
+                "hideWhenExpression": "penicillin_allergy !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             },
             {
               "label": "Reaction (Allergies)",
@@ -103,8 +103,7 @@
                         "conceptMappings": []
                       }
                     ]
-                  },
-                  "required": true
+                  }
                 }
               ]
             },

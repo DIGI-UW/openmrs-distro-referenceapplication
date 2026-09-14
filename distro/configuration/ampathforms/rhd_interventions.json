@@ -1,6 +1,6 @@
 {
   "name": "RHD Interventions and Outcomes",
-  "description": "ACT RHD registry \u2014 RHD Interventions and Outcomes",
+  "description": "ACT RHD registry: RHD Interventions and Outcomes",
   "version": "1",
   "published": true,
   "retired": false,
@@ -69,6 +69,384 @@
                   }
                 }
               ]
+            },
+            {
+              "label": "Primary Surgeon/Cardiologist",
+              "id": "primary_surgeon_or_cardiologist",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "1f652fbc-39de-56f5-9ac0-633b6e618218"
+              }
+            },
+            {
+              "label": "With Visiting Team",
+              "id": "with_visiting_team",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "1eb39d33-bbea-53f6-83ad-bb499d4dcbcc",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Blood Group",
+              "id": "blood_group",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "67fb01b3-8b06-51b4-a9fc-a7fef0410b1c",
+                "answers": [
+                  {
+                    "label": "A+",
+                    "concept": "b64ac407-b3ce-5134-a7e7-20d2be1189dc",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "A-",
+                    "concept": "11dbc823-40e2-5ee7-aa16-52a17bcf396b",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "B+",
+                    "concept": "fe6c2f16-2762-5e3f-8907-c3afe9bc8f84",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "B-",
+                    "concept": "623a2ca4-4388-50c8-a94d-28342caaf998",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "AB+",
+                    "concept": "0c794883-e4a2-5a5e-8321-062255bc121d",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "AB-",
+                    "concept": "8b96b336-8917-5966-8007-6245e4bccff3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "O+",
+                    "concept": "4037ad7c-4811-5464-a842-c44babdca843",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "O-",
+                    "concept": "bd4e617c-37cc-5843-905b-ef4660603f6b",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "RACHS Score",
+              "id": "rachs_score",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "c23c29e7-70b2-5096-b294-e4df1728dcda",
+                "answers": [
+                  {
+                    "label": "RACHS category 1",
+                    "concept": "fa12688a-4c1e-5f63-9f6f-7cd97a939359",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "RACHS category 2",
+                    "concept": "92aa7da3-f611-5f71-8273-d15c4848443e",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "RACHS category 3",
+                    "concept": "7afb81aa-1c54-5053-8795-9ed01449015f",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "RACHS category 4",
+                    "concept": "4a0b0405-8c3a-56a8-9af3-1486153ab98a",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "RACHS category 5",
+                    "concept": "72705bc9-b136-5223-b463-049b5f81d536",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "RACHS category 6",
+                    "concept": "9791ebf9-e8ab-5711-babe-4d1af09e3c6b",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Pre-Surgical Diagnosis",
+              "id": "presurgical_diagnosis",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "08c2c1d4-1de4-5be7-b811-6e0eea6208de"
+              },
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
+            },
+            {
+              "label": "Post-Surgical Diagnosis",
+              "id": "post_surgical_diagnosis",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "39ab4186-74ff-5715-9d5c-a212acba2801"
+              },
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
+            },
+            {
+              "label": "Key Findings and Surgical Notes",
+              "id": "key_findings_surgical_notes",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "f95ce45d-6b93-555a-8ee8-3f0d96b20184"
+              },
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
+            },
+            {
+              "label": "Cardiopulmonary Bypass Time",
+              "id": "cardiopulmonary_bypass_time",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "6acafff7-7a23-50e6-8bca-24d8fc77c87d"
+              },
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
+            },
+            {
+              "label": "Reoperation Required",
+              "id": "reoperation_required",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "2261ce30-1c1e-51d8-95c7-7752e4e9cfb4",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
+            },
+            {
+              "label": "Describe Reason for Reoperation",
+              "id": "describe_reason_for_reoperation",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "c9a8f53f-03ea-5425-97aa-f335a97e4e0f"
+              },
+              "hide": {
+                "hideWhenExpression": "reoperation_required !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
+            },
+            {
+              "label": "Degree of MR",
+              "id": "degree_of_mr",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "a34decd1-434a-5ca6-815c-a1b502b11fa5",
+                "answers": [
+                  {
+                    "label": "None",
+                    "concept": "1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Mild",
+                    "concept": "1498AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Moderate",
+                    "concept": "1499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Severe",
+                    "concept": "1500AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Pericardial Effusion Post-Procedure",
+              "id": "pericardial_effusion",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "09a8788a-a8c2-57cd-b583-bf83254315a7",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Date of Death",
+              "id": "date_of_death",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "07534416-c1c2-5772-83d8-76a429986ec0"
+              }
+            },
+            {
+              "label": "Describe Events Around Patient Death",
+              "id": "describe_events_around_patient_death",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "d0546da8-7871-517e-8444-cdb19ffbae97"
+              }
+            },
+            {
+              "label": "Rehospitalized Within 30 Days",
+              "id": "rehospitalized_within_30_days",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "cfcfa842-520c-5020-8b6a-54cf47d40d1a",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Rehospitalization Related to the Procedure",
+              "id": "rehospitalization_procedure_related",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "186f7677-c0f6-5359-b5b2-22c7f3b962a8",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "rehospitalized_within_30_days !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
+            },
+            {
+              "label": "Describe Rehospitalization",
+              "id": "describe_rehospitalization",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "f61ec9e8-4f6d-554f-aa58-915e0715f11f"
+              },
+              "hide": {
+                "hideWhenExpression": "rehospitalized_within_30_days !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
+            },
+            {
+              "label": "Patient Follow-Up Required",
+              "id": "patient_followup_required",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "32c3afed-6be4-5b50-9555-2ea75238a3dc",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Patient Follow-Up Arranged",
+              "id": "patient_followup_arranged",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "c916b451-9a62-51cf-8d47-d6dd85557d14",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "patient_followup_required !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             }
           ]
         },
@@ -120,7 +498,9 @@
                       }
                     ]
                   },
-                  "_specBranching": "If Procedure Type is Surgery"
+                  "hide": {
+                    "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+                  }
                 }
               ]
             },
@@ -154,7 +534,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Reason for Surgery",
@@ -164,7 +546,9 @@
                 "rendering": "text",
                 "concept": "c997adcd-e9ab-5705-91bb-1dbea2a3abb8"
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Open Chest After Surgery",
@@ -186,7 +570,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Required Additional Surgery for Bleeding",
@@ -208,7 +594,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Describe",
@@ -218,7 +606,9 @@
                 "rendering": "text",
                 "concept": "d81dfd3d-a882-5451-815d-ae6e98c291af"
               },
-              "_specBranching": "If Other Major Complications is Y"
+              "hide": {
+                "hideWhenExpression": "other_major_complications_assiciated_with_surgery !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             },
             {
               "label": "Other Pertinent Medical Information",
@@ -228,7 +618,9 @@
                 "rendering": "text",
                 "concept": "8b9ccf9e-ab44-56d2-885e-61a626cb6569"
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             }
           ]
         },
@@ -261,7 +653,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Date of Hospital Discharge",
@@ -271,7 +665,9 @@
                 "rendering": "date",
                 "concept": "d4317b82-5d37-5b59-ac32-4922f18cd65b"
               },
-              "_specBranching": "If Surgical Outcome is Discharge to home"
+              "hide": {
+                "hideWhenExpression": "surgery_outcome !== '98ea6c57-5f77-549b-97ca-32604c5b9220'"
+              }
             },
             {
               "label": "ICU Stay",
@@ -281,7 +677,9 @@
                 "rendering": "number",
                 "concept": "5b409279-ec02-50a9-8d68-9953f526beeb"
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Ventilation Time",
@@ -291,7 +689,9 @@
                 "rendering": "number",
                 "concept": "26f8371b-ef08-5a2d-ab3d-88d384b142a5"
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Perfusion Issues",
@@ -313,7 +713,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Surgical Site Infection",
@@ -335,7 +737,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Bacterial Sepsis",
@@ -357,7 +761,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Organism Identified (if Known)",
@@ -367,7 +773,9 @@
                 "rendering": "text",
                 "concept": "7961d827-0af9-5c92-9818-24e2e886de6f"
               },
-              "_specBranching": "If Bacterial Sepsis is Y"
+              "hide": {
+                "hideWhenExpression": "bacterial_sepsis !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             },
             {
               "label": "Other Major Complications Assiciated with Surgery",
@@ -389,7 +797,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             }
           ]
         },
@@ -405,7 +815,9 @@
                 "rendering": "date",
                 "concept": "49f9238d-2ca4-5efd-a5cb-f00a0b44828d"
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "Is Patient Alive?",
@@ -427,7 +839,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "!(includes(procedure_type, 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'))"
+              }
             },
             {
               "label": "How was the patient contacted?",
@@ -437,7 +851,9 @@
                 "rendering": "text",
                 "concept": "2075f5e4-b8e5-50c1-83d7-81234fff3653"
               },
-              "_specBranching": "If Is Patient Alive is Y"
+              "hide": {
+                "hideWhenExpression": "is_patient_alive !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             },
             {
               "label": "Is the patient OK?",
@@ -459,7 +875,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Is Patient Alive is Y"
+              "hide": {
+                "hideWhenExpression": "is_patient_alive !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             },
             {
               "label": "Describe the patient's current condition",
@@ -469,7 +887,9 @@
                 "rendering": "text",
                 "concept": "445ebd06-b013-5afd-a59c-c82c80748ae7"
               },
-              "_specBranching": "If Is Patient Alive is Y"
+              "hide": {
+                "hideWhenExpression": "is_patient_alive !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             }
           ]
         },
@@ -511,7 +931,9 @@
                       }
                     ]
                   },
-                  "_specBranching": "If Procedure Type is Catheterization"
+                  "hide": {
+                    "hideWhenExpression": "!(includes(procedure_type, '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'))"
+                  }
                 }
               ]
             },
@@ -624,7 +1046,9 @@
                 "rendering": "text",
                 "concept": "57d774b1-9060-5615-ad9b-f740d513e410"
               },
-              "_specBranching": "itral balloon valvuloplasty"
+              "hide": {
+                "hideWhenExpression": "!(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
             },
             {
               "label": "Pre-Inflation: LV Pressure",
@@ -634,7 +1058,9 @@
                 "rendering": "text",
                 "concept": "ada941f5-77f2-56f4-b3c2-82d1d528be04"
               },
-              "_specBranching": "itral balloon valvuloplasty"
+              "hide": {
+                "hideWhenExpression": "!(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
             },
             {
               "label": "Post-Inflation: LA Pressure",
@@ -644,7 +1070,9 @@
                 "rendering": "text",
                 "concept": "9ccd8043-d9be-5b24-8fc4-4890d46e716f"
               },
-              "_specBranching": "itral balloon valvuloplasty"
+              "hide": {
+                "hideWhenExpression": "!(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
             },
             {
               "label": "Post-Inflation: LV Pressure",
@@ -654,7 +1082,9 @@
                 "rendering": "text",
                 "concept": "18060962-d3fe-5d6b-89ef-2d5386c2ad44"
               },
-              "_specBranching": "itral balloon valvuloplasty"
+              "hide": {
+                "hideWhenExpression": "!(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
             },
             {
               "label": "Mitral Valve Area",
@@ -676,7 +1106,9 @@
                   }
                 ]
               },
-              "_specBranching": "itral balloon valvuloplasty"
+              "hide": {
+                "hideWhenExpression": "!(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
             }
           ]
         }
