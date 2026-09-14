@@ -1146,7 +1146,136 @@
                 },
                 {
                   "label": "Interventional Recommendation(s)",
-                  "id": "interventional_recommendation_s",
+                  "id": "interventional_recommendation_surgery",
+                  "type": "obs",
+                  "questionOptions": {
+                    "rendering": "select",
+                    "concept": "ce93d393-1df5-587f-bf11-c373eac2ccf4",
+                    "answers": [
+                      {
+                        "label": "Anomalous pulmonary vein repair",
+                        "concept": "323cdabc-ba7b-5c38-9cb8-c2690f0f44db",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Aortic coarctation repair",
+                        "concept": "f114270e-e6c2-5ab8-b484-b62b105d441d",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Aortic valve repair/replacement",
+                        "concept": "cd9c582a-71f9-5441-97a8-6d50d7dc15c8",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Aortopulmonary shunt",
+                        "concept": "02ce0f4b-7793-52c3-9830-6f16bafac564",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Arterial switch",
+                        "concept": "912d50cd-d1b8-53de-9f74-df1446aa35fa",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Atrial septal defect repair",
+                        "concept": "a70a1179-acf1-56d4-9856-760a3aaf3add",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Atrioventricular septal defect repair",
+                        "concept": "1d506ef8-457f-5b9e-9bef-6fe58710c351",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Double outlet right ventricular repair",
+                        "concept": "64cce236-0e71-505c-a0ce-3f1dc4475787",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Fontan",
+                        "concept": "f9e45c35-1bff-544b-ab25-2cc0c2336d27",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Glenn",
+                        "concept": "642fe2f0-52b8-5ea9-8e8c-1ec6e33ca2b4",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Mitral valve repair/replacement",
+                        "concept": "7af8595d-407e-5705-bd8a-812735e2f188",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pericardiectomy",
+                        "concept": "7fd8b076-60c7-5103-83c4-6b15f1dd5930",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pulmonary artery band placement",
+                        "concept": "0b8091e6-70ae-54b1-b503-78a045dfb595",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pulmonary arteryplasty",
+                        "concept": "de858611-1930-5faa-823e-7b67763e2a58",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pulmonary valve repair/replacement",
+                        "concept": "7bf4ae57-d4ba-5572-b7ab-5b98ae0d677d",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Subaortic stenosis repair",
+                        "concept": "7349b961-5ead-58e0-ae1a-24ecfa1f495a",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Tetralogy of fallot repair",
+                        "concept": "8344f52c-309c-535f-86b3-0c15edef0d8b",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Tricuspid valve repair",
+                        "concept": "f05d740b-f6ee-572e-b194-f313688c28fb",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Truncus arteriosus repair",
+                        "concept": "11d830c4-8d68-5ba0-b2f6-5e6feeab9d96",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Vascular ring division",
+                        "concept": "9380f911-1a7f-5ea0-8b3e-8843fe1103eb",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Ventricular septal defect repair",
+                        "concept": "23681599-4b81-517c-b5a5-6b24833c57cb",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Patent ductus arteriosus ligation",
+                        "concept": "2f22d53b-e5d4-5799-aa8c-0524871f66f2",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Other (with field to complete)",
+                        "concept": "4ff41d80-a6f6-5e65-b20a-66b31ce1baa6",
+                        "conceptMappings": []
+                      }
+                    ]
+                  },
+                  "hide": {
+                    "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+                  }
+                },
+                {
+                  "label": "Interventional Recommendation(s)",
+                  "id": "interventional_recommendation_catheterization",
                   "type": "obs",
                   "questionOptions": {
                     "rendering": "select",
@@ -1155,324 +1284,102 @@
                       {
                         "label": "Aortic valvuloplasty",
                         "concept": "69678122-dc66-5b8a-93bc-3358d241ad1b",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Atrial septal defect closure",
                         "concept": "d8d6a848-70c0-5f93-ba8d-0bd5a45b4868",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Atrial septal defect device closure",
                         "concept": "823c07d2-aed4-54cc-9274-11f176927a59",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Atrial septostomy",
                         "concept": "a0069775-61c7-544c-8be2-d1948d78add6",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Balloon atrial septostomy",
                         "concept": "2574901c-bc82-57a5-84da-831e696abea6",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Coarctation balloon / stent angioplasty",
                         "concept": "f72ea691-f09f-591b-b383-27160fe4a41f",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Coronary artery stent",
                         "concept": "fcef8402-70b4-5789-a841-80cbdf1ea1c7",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Diagnostic cardiac catheterization",
                         "concept": "409a8f23-38a2-5cb2-9cff-1f67a74b7092",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Mitral balloon valvuloplasty",
                         "concept": "af9429ff-1b76-55f3-81ca-a9f775d93fb4",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Mitral valvuloplasty",
                         "concept": "aca1be99-d090-5078-be63-81353ae89195",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Pacemaker placement",
                         "concept": "13a0d832-9e52-5305-9631-58f2e21793f5",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Patent ductus arteriosus closure",
                         "concept": "e027966c-0be2-5bb6-beda-27f3a9fbbdff",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
-                      },
-                      {
-                        "label": "Patent ductus arteriosus ligation",
-                        "concept": "2f22d53b-e5d4-5799-aa8c-0524871f66f2",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "isEmpty(procedureType)"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Patent ductus arteriosus stent",
                         "concept": "f6be7d34-9bc7-55fd-b8a5-eaa306e2f175",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Pulmonary",
                         "concept": "305a891f-052c-5d45-b816-9c7ffe103a1d",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Pulmonary artery balloon / stent angioplasty",
                         "concept": "70fe1957-1b27-5a88-b029-49aa478a8567",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Pulmonary valvuloplasty",
                         "concept": "36b3cc68-c53f-5a23-8380-24dbaf9c88fb",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
                         "label": "Ventricular septal defect closure",
                         "concept": "3fe8e0c8-a2dc-53db-88a0-9fd88cbe1291",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
-                        }
+                        "conceptMappings": []
                       },
                       {
-                        "label": "Anomalous pulmonary vein repair",
-                        "concept": "323cdabc-ba7b-5c38-9cb8-c2690f0f44db",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Aortic coarctation repair",
-                        "concept": "f114270e-e6c2-5ab8-b484-b62b105d441d",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Aortic valve repair/replacement",
-                        "concept": "cd9c582a-71f9-5441-97a8-6d50d7dc15c8",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Aortopulmonary shunt",
-                        "concept": "02ce0f4b-7793-52c3-9830-6f16bafac564",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Arterial switch",
-                        "concept": "912d50cd-d1b8-53de-9f74-df1446aa35fa",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Atrial septal defect repair",
-                        "concept": "a70a1179-acf1-56d4-9856-760a3aaf3add",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Atrioventricular septal defect repair",
-                        "concept": "1d506ef8-457f-5b9e-9bef-6fe58710c351",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Double outlet right ventricular repair",
-                        "concept": "64cce236-0e71-505c-a0ce-3f1dc4475787",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Fontan",
-                        "concept": "f9e45c35-1bff-544b-ab25-2cc0c2336d27",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Glenn",
-                        "concept": "642fe2f0-52b8-5ea9-8e8c-1ec6e33ca2b4",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Mitral valve repair/replacement",
-                        "concept": "7af8595d-407e-5705-bd8a-812735e2f188",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Pericardiectomy",
-                        "concept": "7fd8b076-60c7-5103-83c4-6b15f1dd5930",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Pulmonary artery band placement",
-                        "concept": "0b8091e6-70ae-54b1-b503-78a045dfb595",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Pulmonary arteryplasty",
-                        "concept": "de858611-1930-5faa-823e-7b67763e2a58",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Pulmonary valve repair/replacement",
-                        "concept": "7bf4ae57-d4ba-5572-b7ab-5b98ae0d677d",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Subaortic stenosis repair",
-                        "concept": "7349b961-5ead-58e0-ae1a-24ecfa1f495a",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Tetralogy of fallot repair",
-                        "concept": "8344f52c-309c-535f-86b3-0c15edef0d8b",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Tricuspid valve repair",
-                        "concept": "f05d740b-f6ee-572e-b194-f313688c28fb",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Truncus arteriosus repair",
-                        "concept": "11d830c4-8d68-5ba0-b2f6-5e6feeab9d96",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Vascular ring division",
-                        "concept": "9380f911-1a7f-5ea0-8b3e-8843fe1103eb",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
-                      },
-                      {
-                        "label": "Ventricular septal defect repair",
-                        "concept": "23681599-4b81-517c-b5a5-6b24833c57cb",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "procedureType !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-                        }
+                        "label": "Patent ductus arteriosus ligation",
+                        "concept": "2f22d53b-e5d4-5799-aa8c-0524871f66f2",
+                        "conceptMappings": []
                       },
                       {
                         "label": "Other (with field to complete)",
                         "concept": "4ff41d80-a6f6-5e65-b20a-66b31ce1baa6",
-                        "conceptMappings": [],
-                        "hide": {
-                          "hideWhenExpression": "isEmpty(procedureType)"
-                        }
+                        "conceptMappings": []
                       }
                     ]
+                  },
+                  "hide": {
+                    "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
                   }
                 },
                 {
