@@ -6,3 +6,4 @@ f583bdb7-d010-5f68-a772-035e2a965684,,ACT-RHD:q_reason_for_completiong,Reason fo
 df495209-b144-521b-b35a-8314872f538d,,ACT-RHD:q_relation_of_person_consenting,Relation of person consenting,,,Question,Coded,Mother; Father; Grandmother; Grandfather; Aunt; Uncle; Other legal guardian; Self,,
 13ff5409-eda2-5fb9-9dde-95cc4afb75d3,,ACT-RHD:q_study_completion,Study Completion,,,Question,Date,,,
 1ba73207-ba91-5279-a078-f2be8d4b03fd,,ACT-RHD:q_study_name,Study Name,,,Question,Coded,National RHD registry (Mak SOMREC 2013-072); ADD-RHD ACT decentralization (Mak-SOMREC-2021-61),,
+5f63f9aa-dfe2-5500-810e-0a045f3406bc,,ACT-RHD:q_research_opt_in,Would You Like to Be Considered for Research,,,Question,Coded,"cf82933b-3f3f-45e7-a5ab-5d31aaee3da3; 488b58ff-64f5-4f8a-8979-fa79940b1594",,

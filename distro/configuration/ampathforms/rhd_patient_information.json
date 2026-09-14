@@ -12,7 +12,7 @@
       "label": "RHD Patient Information",
       "sections": [
         {
-          "label": "Patient information",
+          "label": "Diagnosis",
           "isExpanded": "true",
           "questions": [
             {
@@ -64,8 +64,25 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "required": true
+              }
+            },
+            {
+              "label": "Date Diagnosed",
+              "id": "date_diagnosed",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "159948AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
+              "label": "Primary Diagnosis Details",
+              "id": "primary_diagnosis_details",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "48d8e6a8-9095-5d16-8d0e-739004566b03"
+              }
             },
             {
               "label": "Case Detected By",
@@ -116,59 +133,42 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "required": true
-            },
-            {
-              "label": "Relocation Area",
-              "id": "relocation_area",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "32f3e45d-c2a8-5c19-b4d1-9306251426f6"
               }
             },
             {
-              "label": "Date of Death",
-              "id": "date_of_death",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "date",
-                "concept": "07534416-c1c2-5772-83d8-76a429986ec0"
-              },
-              "required": true
-            },
-            {
-              "label": "Details of events leading up to death",
-              "id": "details_of_events_leading_up_to_death",
+              "label": "School Name",
+              "id": "school_name",
               "type": "obs",
               "questionOptions": {
                 "rendering": "text",
-                "concept": "a4d27e8c-0c90-571f-be54-a6132c7a1d69"
-              }
-            },
-            {
-              "label": "Pregnant or Postpartum (60 Days After Delivery) at Time of Death",
-              "id": "pregnant_or_postpartum_60_days_after_delivery_at_time_of_death",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "select",
-                "concept": "6ffe2fe5-f7c0-5993-b20e-13d1ccd384dc",
-                "answers": [
-                  {
-                    "label": "Yes",
-                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "No",
-                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  }
-                ]
+                "concept": "cfd8f77a-a2b5-5836-96c1-d3e5fdd48e02"
               },
               "hide": {
-                "hideWhenExpression": "patient.gender !== 'female'"
+                "hideWhenExpression": "case_detected_by !== '5b7d5eb4-4c6a-52cb-95f3-ac5033708fc9'"
+              }
+            }
+          ]
+        },
+        {
+          "label": "Contact and location",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Home Address",
+              "id": "home_address",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "1af5b942-8747-5dfb-aa40-805b5575f2e3"
+              }
+            },
+            {
+              "label": "Additional information to help locate patient",
+              "id": "additional_information_to_help_locate_patient",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "2cebe220-2a9d-5c53-be68-f2257a4bfc9e"
               }
             },
             {
@@ -193,16 +193,7 @@
               }
             },
             {
-              "label": "Home Address",
-              "id": "home_address",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "1af5b942-8747-5dfb-aa40-805b5575f2e3"
-              }
-            },
-            {
-              "label": "Tertiary Phone Ownder",
+              "label": "Tertiary Phone Owner",
               "id": "tertiary_phone_ownder",
               "type": "obs",
               "questionOptions": {
@@ -211,12 +202,66 @@
               }
             },
             {
-              "label": "Additional information to help locate patient",
-              "id": "additional_information_to_help_locate_patient",
+              "label": "Relocation Area",
+              "id": "relocation_area",
               "type": "obs",
               "questionOptions": {
                 "rendering": "text",
-                "concept": "2cebe220-2a9d-5c53-be68-f2257a4bfc9e"
+                "concept": "32f3e45d-c2a8-5c19-b4d1-9306251426f6"
+              }
+            }
+          ]
+        },
+        {
+          "label": "Death",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Date of Death",
+              "id": "date_of_death",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "07534416-c1c2-5772-83d8-76a429986ec0"
+              },
+              "hide": {
+                "hideWhenExpression": "!patient.deceasedDateTime && !patient.deceasedBoolean"
+              }
+            },
+            {
+              "label": "Details of events leading up to death",
+              "id": "details_of_events_leading_up_to_death",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "a4d27e8c-0c90-571f-be54-a6132c7a1d69"
+              },
+              "hide": {
+                "hideWhenExpression": "!patient.deceasedDateTime && !patient.deceasedBoolean"
+              }
+            },
+            {
+              "label": "Pregnant or Postpartum (60 Days After Delivery) at Time of Death",
+              "id": "pregnant_or_postpartum_60_days_after_delivery_at_time_of_death",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "6ffe2fe5-f7c0-5993-b20e-13d1ccd384dc",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "(!patient.deceasedDateTime && !patient.deceasedBoolean) || (patient.gender !== 'female')"
               }
             }
           ]

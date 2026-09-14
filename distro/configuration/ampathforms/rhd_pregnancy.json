@@ -26,6 +26,33 @@
               "required": true
             },
             {
+              "label": "Parity",
+              "id": "parity",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "7ae7a2b2-dc78-5519-998a-76640d778caa"
+              }
+            },
+            {
+              "label": "Gravidity",
+              "id": "gravidity",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "06ffd716-291b-5aa2-bb50-b029e58cdcae"
+              }
+            },
+            {
+              "label": "Date of Last Menstrual Period",
+              "id": "date_of_last_menstrual_period",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
               "label": "Pregnancy Number",
               "id": "pregnancy_number",
               "type": "obs",
@@ -108,6 +135,36 @@
                   }
                 }
               ]
+            },
+            {
+              "label": "Reason for Cesarean Section",
+              "id": "reason_for_cesarean_section",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "09d79b49-7c3f-5500-983d-336219bb91fe"
+              },
+              "hide": {
+                "hideWhenExpression": "delivery_mode !== '4ba666f7-f45e-5be1-b17a-5de2ae6e2107'"
+              }
+            },
+            {
+              "label": "Describe Postpartum Complications Further",
+              "id": "describe_postpartum_complications",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "45971515-88d0-5707-83ed-4401f9247878"
+              }
+            },
+            {
+              "label": "Describe Neonatal Outcomes Further",
+              "id": "describe_neonatal_outcomes",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "9e97bc2d-971b-550a-9c4f-7bd1901e2370"
+              }
             }
           ]
         },
