@@ -1,0 +1,2 @@
+Uuid,Void/Retire,Name,Description,Hl7 Code
+4e9d2d90-c0d6-5671-96ff-e41edf7f1bf2,,SNOMED CT,"Space-variant alias of SNOMED-CT -- added because this OpenMRS core version seeds the concept source as SNOMED-CT (hyphen), but the bundled reference-application-demo concept CSVs (e.g. findings-core_demo.csv) map to SNOMED CT (space), causing those concepts (including Oxygen Saturation, BP, Pulse, MUAC, Respiratory rate) to fail ConceptMap validation and be silently skipped on every fresh seed",
