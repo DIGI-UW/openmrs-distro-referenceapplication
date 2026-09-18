@@ -1,6 +1,6 @@
 {
   "name": "RHD Echocardiogram",
-  "description": "ACT RHD registry \u2014 RHD Echocardiogram",
+  "description": "ACT RHD registry: RHD Echocardiogram",
   "version": "1",
   "published": true,
   "retired": false,
@@ -53,8 +53,43 @@
                     "conceptMappings": []
                   }
                 ]
+              }
+            },
+            {
+              "label": "Is patient suitable for mitral valve repair",
+              "id": "is_patient_suitable_for_mitral_valve_repair",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "8d6e9ea5-aa27-57d6-bf43-198aca63a951",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
               },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_regurgitation) || mitral_regurgitation === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            },
+            {
+              "label": "Reasoning",
+              "id": "mitral_valve_repair_reasoning",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "53c3d6ce-6468-5533-848a-1c1e21057b64"
+              },
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_regurgitation) || mitral_regurgitation === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Mitral stenosis severity",
@@ -85,8 +120,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Is patient suitable for BAV?",
@@ -108,7 +142,9 @@
                   }
                 ]
               },
-              "_specBranching": "Show if Mitral stenosis Is \"Mild\" \"Moderate\" or \"Severe\""
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_stenosis_severity) || mitral_stenosis_severity === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Reasoning",
@@ -118,7 +154,9 @@
                 "rendering": "text",
                 "concept": "06898c35-63d1-5b2c-8f61-d3c972b252f5"
               },
-              "_specBranching": "Show if Mitral stenosis Is \"Mild\" \"Moderate\" or \"Severe\""
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_stenosis_severity) || mitral_stenosis_severity === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Aortic Regurgitation",
@@ -149,8 +187,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Aortic Stenosis",
@@ -181,8 +218,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Tricuspid Regurgitation",
@@ -213,8 +249,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Tricuspid Stenosis",
@@ -245,8 +280,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Left Ventricular Ejection Fraction (%)",
@@ -255,8 +289,7 @@
               "questionOptions": {
                 "rendering": "number",
                 "concept": "ed630fda-8451-53c0-929e-40eafd9bca9b"
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Left Ventricular Function",
@@ -287,8 +320,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Left Ventricular Size",
@@ -350,8 +382,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             },
             {
               "label": "Mitral Valve Annulus Diameter (cm)",
@@ -461,7 +492,9 @@
                   }
                 ]
               },
-              "_specBranching": "Show if Mitral stenosis Is \"Mild\" \"Moderate\" or \"Severe\""
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_stenosis_severity) || mitral_stenosis_severity === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Other Findings on Echocardiogram",
@@ -471,8 +504,7 @@
                 "rendering": "textarea",
                 "concept": "ad533240-b503-5b82-a2fd-c7b69868d632",
                 "rows": "3"
-              },
-              "_specBranching": "Show if \"Echocardiogram\" = \"Yes\""
+              }
             }
           ]
         }

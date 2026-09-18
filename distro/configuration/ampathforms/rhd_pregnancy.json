@@ -1,6 +1,6 @@
 {
   "name": "RHD Pregnancy",
-  "description": "ACT RHD registry \u2014 RHD Pregnancy",
+  "description": "ACT RHD registry: RHD Pregnancy",
   "version": "1",
   "published": true,
   "retired": false,
@@ -24,6 +24,33 @@
                 "concept": "3ad5133c-80d0-5007-ba1a-c5be27cbb10c"
               },
               "required": true
+            },
+            {
+              "label": "Parity",
+              "id": "parity",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "7ae7a2b2-dc78-5519-998a-76640d778caa"
+              }
+            },
+            {
+              "label": "Gravidity",
+              "id": "gravidity",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "06ffd716-291b-5aa2-bb50-b029e58cdcae"
+              }
+            },
+            {
+              "label": "Date of Last Menstrual Period",
+              "id": "date_of_last_menstrual_period",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
             },
             {
               "label": "Pregnancy Number",
@@ -108,6 +135,36 @@
                   }
                 }
               ]
+            },
+            {
+              "label": "Reason for Cesarean Section",
+              "id": "reason_for_cesarean_section",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "09d79b49-7c3f-5500-983d-336219bb91fe"
+              },
+              "hide": {
+                "hideWhenExpression": "delivery_mode !== '4ba666f7-f45e-5be1-b17a-5de2ae6e2107'"
+              }
+            },
+            {
+              "label": "Describe Postpartum Complications Further",
+              "id": "describe_postpartum_complications",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "45971515-88d0-5707-83ed-4401f9247878"
+              }
+            },
+            {
+              "label": "Describe Neonatal Outcomes Further",
+              "id": "describe_neonatal_outcomes",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "9e97bc2d-971b-550a-9c4f-7bd1901e2370"
+              }
             }
           ]
         },
@@ -135,7 +192,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Fetal Outcomes =  stillbirth or livebirth"
+              "hide": {
+                "hideWhenExpression": "!(includes(fetal_outcomes, '125872AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') || includes(fetal_outcomes, '8656c519-49db-54f6-a32f-eb73a734a5ec') || includes(fetal_outcomes, 'd39a4a5f-f8ff-50d8-be27-f08f93066ab5'))"
+              }
             },
             {
               "label": "Location of Delivery",
@@ -177,7 +236,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Fetal Outcomes = livebirth"
+              "hide": {
+                "hideWhenExpression": "!(includes(fetal_outcomes, '8656c519-49db-54f6-a32f-eb73a734a5ec') || includes(fetal_outcomes, 'd39a4a5f-f8ff-50d8-be27-f08f93066ab5'))"
+              }
             },
             {
               "label": "Estimated Gestational Age at Delivery (weeks)",
@@ -187,7 +248,9 @@
                 "rendering": "text",
                 "concept": "e52a3150-1b3f-5ee5-89df-20439c08ef22"
               },
-              "_specBranching": "If Fetal Outcomes =  livebirth"
+              "hide": {
+                "hideWhenExpression": "!(includes(fetal_outcomes, '8656c519-49db-54f6-a32f-eb73a734a5ec') || includes(fetal_outcomes, 'd39a4a5f-f8ff-50d8-be27-f08f93066ab5'))"
+              }
             },
             {
               "label": "Neonatal weight (kg)",
@@ -197,7 +260,9 @@
                 "rendering": "text",
                 "concept": "864deea0-d006-559e-b5fb-5b26c4c56fa5"
               },
-              "_specBranching": "If Fetal Outcomes = livebirth"
+              "hide": {
+                "hideWhenExpression": "!(includes(fetal_outcomes, '8656c519-49db-54f6-a32f-eb73a734a5ec') || includes(fetal_outcomes, 'd39a4a5f-f8ff-50d8-be27-f08f93066ab5'))"
+              }
             },
             {
               "label": "Maternal Complications Within 30 Days After Pregnancy",
@@ -215,8 +280,7 @@
               "questionOptions": {
                 "rendering": "text",
                 "concept": "062a66ad-8efb-5d28-a6d9-511bb396d661"
-              },
-              "_specBranching": "If Maternal Prenatal outcome is not death + 30 day outcome is deceased"
+              }
             },
             {
               "label": "Neonatal Outcomes 30 Days After Delivery",
@@ -243,7 +307,9 @@
                   }
                 ]
               },
-              "_specBranching": "If Fetal Outcomes = livebirth"
+              "hide": {
+                "hideWhenExpression": "!(includes(fetal_outcomes, '8656c519-49db-54f6-a32f-eb73a734a5ec') || includes(fetal_outcomes, 'd39a4a5f-f8ff-50d8-be27-f08f93066ab5'))"
+              }
             },
             {
               "label": "Neontal Cause of Death",
@@ -253,7 +319,9 @@
                 "rendering": "text",
                 "concept": "a81827f3-5832-530f-91ef-b3a0c58079ca"
               },
-              "_specBranching": "If Fetal Outcomes =  livebirth + 30 day outcome is deceased"
+              "hide": {
+                "hideWhenExpression": "!((includes(fetal_outcomes, '8656c519-49db-54f6-a32f-eb73a734a5ec') || includes(fetal_outcomes, 'd39a4a5f-f8ff-50d8-be27-f08f93066ab5')) && neonatal_outcomes_30_days_after_delivery === '159AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
+              }
             }
           ]
         }

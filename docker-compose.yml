@@ -60,9 +60,9 @@ services:
       - ./distro/configuration/concepts:/openmrs/distribution/openmrs_config/concepts/rhd:ro
       - ./distro/configuration/visittypes:/openmrs/distribution/openmrs_config/visittypes:ro
       - ./distro/configuration/patientidentifiertypes:/openmrs/distribution/openmrs_config/patientidentifiertypes:ro
-      - ./distro/configuration/locationtags:/openmrs/distribution/openmrs_config/locationtags:ro
+      - ./distro/configuration/locationtags:/openmrs/distribution/openmrs_config/locationtags/rhd:ro
       - ./distro/configuration/locationtagmaps:/openmrs/distribution/openmrs_config/locationtagmaps/rhd:ro
-      - ./distro/configuration/encountertypes:/openmrs/distribution/openmrs_config/encountertypes:ro
+      - ./distro/configuration/encountertypes:/openmrs/distribution/openmrs_config/encountertypes/rhd:ro
       - ./distro/configuration/attributetypes:/openmrs/distribution/openmrs_config/attributetypes:ro
       - ./distro/configuration/locations:/openmrs/distribution/openmrs_config/locations:ro
       - ./distro/configuration/idgen:/openmrs/distribution/openmrs_config/idgen:ro

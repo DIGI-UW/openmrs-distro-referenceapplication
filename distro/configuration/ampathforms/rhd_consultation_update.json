@@ -1,6 +1,6 @@
 {
   "name": "RHD Consultation Update",
-  "description": "ACT RHD registry \u2014 RHD Consultation Update",
+  "description": "ACT RHD registry: RHD Consultation Update",
   "version": "1",
   "published": true,
   "retired": false,
@@ -77,7 +77,9 @@
                   }
                 ]
               },
-              "_specBranching": "Follow-up Appointments = RHD Clinic"
+              "hide": {
+                "hideWhenExpression": "!(includes(follow_up_appointments, 'aa0fc44c-3214-5916-86db-c13d4ea4654e'))"
+              }
             }
           ]
         }

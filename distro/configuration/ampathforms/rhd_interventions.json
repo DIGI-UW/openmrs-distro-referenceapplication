@@ -1,6 +1,6 @@
 {
-  "name": "RHD Interventions and Outcomes",
-  "description": "ACT RHD registry \u2014 RHD Interventions and Outcomes",
+  "name": "Procedures and Outcomes",
+  "description": "ACT RHD registry: Procedures and Outcomes",
   "version": "1",
   "published": true,
   "retired": false,
@@ -9,16 +9,17 @@
   "referencedForms": [],
   "pages": [
     {
-      "label": "RHD Interventions and Outcomes",
+      "label": "Procedures and Outcomes",
       "sections": [
         {
           "label": "Procedure details",
           "isExpanded": "true",
           "questions": [
             {
-              "label": "Procedure Date",
+              "label": "Date of Procedure",
               "id": "procedure_date",
               "type": "obs",
+              "required": true,
               "questionOptions": {
                 "rendering": "date",
                 "concept": "6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a"
@@ -28,15 +29,144 @@
               "label": "Procedure Location",
               "id": "procedure_location",
               "type": "obs",
+              "required": true,
               "questionOptions": {
-                "rendering": "text",
-                "concept": "1e45a974-f99d-5072-a2bf-28d1f6cf9850"
+                "rendering": "ui-select-extended",
+                "concept": "1e45a974-f99d-5072-a2bf-28d1f6cf9850",
+                "datasource": {
+                  "name": "location_datasource",
+                  "config": {
+                    "tag": "Login Location"
+                  }
+                },
+                "isSearchable": true
+              }
+            },
+            {
+              "label": "Primary Surgeon/Cardiologist",
+              "id": "primary_surgeon_or_cardiologist",
+              "type": "encounterProvider",
+              "questionOptions": {
+                "rendering": "ui-select-extended"
+              }
+            },
+            {
+              "label": "With Visiting Team",
+              "id": "with_visiting_team",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "1eb39d33-bbea-53f6-83ad-bb499d4dcbcc",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Height",
+              "id": "height",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
+              "label": "Weight",
+              "id": "weight",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
+              "label": "BSA",
+              "id": "bsa",
+              "type": "obs",
+              "readonly": true,
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "98775f75-0e36-58dd-9d83-1bbadc24d40c",
+                "calculate": {
+                  "calculateExpression": "isEmpty(height) || isEmpty(weight) ? 0 : Number((0.024265 * Math.pow(height, 0.3964) * Math.pow(weight, 0.5378)).toFixed(3))"
+                }
+              }
+            },
+            {
+              "label": "Oxygen Saturation",
+              "id": "oxygen_saturation",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "5092AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
+              "label": "Blood Group",
+              "id": "blood_group",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "67fb01b3-8b06-51b4-a9fc-a7fef0410b1c",
+                "answers": [
+                  {
+                    "label": "A+",
+                    "concept": "b64ac407-b3ce-5134-a7e7-20d2be1189dc",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "A-",
+                    "concept": "11dbc823-40e2-5ee7-aa16-52a17bcf396b",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "B+",
+                    "concept": "fe6c2f16-2762-5e3f-8907-c3afe9bc8f84",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "B-",
+                    "concept": "623a2ca4-4388-50c8-a94d-28342caaf998",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "AB+",
+                    "concept": "0c794883-e4a2-5a5e-8321-062255bc121d",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "AB-",
+                    "concept": "8b96b336-8917-5966-8007-6245e4bccff3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "O+",
+                    "concept": "4037ad7c-4811-5464-a842-c44babdca843",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "O-",
+                    "concept": "bd4e617c-37cc-5843-905b-ef4660603f6b",
+                    "conceptMappings": []
+                  }
+                ]
               }
             },
             {
               "label": "Procedure Type",
               "id": "procedure_type_group",
               "type": "obsGroup",
+              "required": true,
               "questionOptions": {
                 "rendering": "group",
                 "concept": "3a576b80-744a-59ee-9515-d9fdca06f3d7"
@@ -46,8 +176,9 @@
                   "label": "Procedure Type",
                   "id": "procedure_type",
                   "type": "obs",
+                  "required": true,
                   "questionOptions": {
-                    "rendering": "checkbox",
+                    "rendering": "select",
                     "concept": "3a576b80-744a-59ee-9515-d9fdca06f3d7",
                     "answers": [
                       {
@@ -59,25 +190,63 @@
                         "label": "Catheterization",
                         "concept": "91a4d13f-4bc8-54b0-a107-f4ab84cb7d60",
                         "conceptMappings": []
-                      },
-                      {
-                        "label": "Other non-coded",
-                        "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                        "conceptMappings": []
                       }
                     ]
                   }
                 }
               ]
-            }
-          ]
-        },
-        {
-          "label": "Surgery",
-          "isExpanded": "true",
-          "questions": [
+            },
             {
-              "label": "Surgery Type(s)",
+              "label": "RACHs Score",
+              "id": "rachs_score",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "c23c29e7-70b2-5096-b294-e4df1728dcda",
+                "answers": [
+                  {
+                    "label": "1",
+                    "concept": "57eab69e-f125-573c-b0cb-9531295e9b08",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "2",
+                    "concept": "d6c57238-716c-5334-b145-891f663ca2a3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "3",
+                    "concept": "b3fdf658-cd2b-5a25-b3e9-77e3fdccc1b7",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "4",
+                    "concept": "cec8b2cc-d6c4-5202-9512-7c70edb5ce3d",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "5",
+                    "concept": "3daca705-4f6b-53e0-bcc4-1a0ce8796b8e",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "6",
+                    "concept": "01400697-c20a-5150-9528-5bddfbda2b4a",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "n/a",
+                    "concept": "1600a5b7-465e-501a-88b3-7b038e5b8c73",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
+            },
+            {
+              "label": "Surgery Type",
               "id": "surgery_type_s_group",
               "type": "obsGroup",
               "questionOptions": {
@@ -86,93 +255,188 @@
               },
               "questions": [
                 {
-                  "label": "Surgery Type(s)",
+                  "label": "Surgery Type",
                   "id": "surgery_type_s",
                   "type": "obs",
+                  "required": true,
                   "questionOptions": {
                     "rendering": "checkbox",
                     "concept": "46f4af80-b783-59f4-beb1-81144ccf3084",
                     "answers": [
                       {
-                        "label": "Mitral valve replacement",
-                        "concept": "a76e4d83-18c0-5ed8-b039-03d137ed70ea",
+                        "label": "Anomalous pulmonary vein repair",
+                        "concept": "323cdabc-ba7b-5c38-9cb8-c2690f0f44db",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Mitral valve repair",
-                        "concept": "3b1bec9d-85f2-50aa-ad74-5b7bf920e8de",
+                        "label": "Aortic coarctation repair",
+                        "concept": "f114270e-e6c2-5ab8-b484-b62b105d441d",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Aortic valve replacement",
-                        "concept": "6ba15d4b-921d-52f4-9d56-aaed9df33239",
+                        "label": "Aortic valve repair / replacement",
+                        "concept": "cd9c582a-71f9-5441-97a8-6d50d7dc15c8",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Aortic valve repair",
-                        "concept": "f7e76d81-d3ce-5759-bf0d-6fda118cac70",
+                        "label": "Aortopulmonary shunt",
+                        "concept": "02ce0f4b-7793-52c3-9830-6f16bafac564",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Other (with field to complete)",
-                        "concept": "4ff41d80-a6f6-5e65-b20a-66b31ce1baa6",
+                        "label": "Arterial switch",
+                        "concept": "912d50cd-d1b8-53de-9f74-df1446aa35fa",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Atrial septal defect repair",
+                        "concept": "a70a1179-acf1-56d4-9856-760a3aaf3add",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Atrioventricular septal defect repair",
+                        "concept": "1d506ef8-457f-5b9e-9bef-6fe58710c351",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Double outlet right ventricular repair",
+                        "concept": "64cce236-0e71-505c-a0ce-3f1dc4475787",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Fontan",
+                        "concept": "f9e45c35-1bff-544b-ab25-2cc0c2336d27",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Glenn",
+                        "concept": "642fe2f0-52b8-5ea9-8e8c-1ec6e33ca2b4",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Mitral valve repair / replacement",
+                        "concept": "7af8595d-407e-5705-bd8a-812735e2f188",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Patent ductus arteriosus ligation",
+                        "concept": "2f22d53b-e5d4-5799-aa8c-0524871f66f2",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pericardiectomy",
+                        "concept": "7fd8b076-60c7-5103-83c4-6b15f1dd5930",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pulmonary artery band placement",
+                        "concept": "0b8091e6-70ae-54b1-b503-78a045dfb595",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pulmonary arteryplasty",
+                        "concept": "de858611-1930-5faa-823e-7b67763e2a58",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pulmonary valve repair / replacement",
+                        "concept": "7bf4ae57-d4ba-5572-b7ab-5b98ae0d677d",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Subaortic stenosis repair",
+                        "concept": "7349b961-5ead-58e0-ae1a-24ecfa1f495a",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Tetralogy of fallot repair",
+                        "concept": "8344f52c-309c-535f-86b3-0c15edef0d8b",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Tricuspid valve repair",
+                        "concept": "f05d740b-f6ee-572e-b194-f313688c28fb",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Truncus arteriosus repair",
+                        "concept": "11d830c4-8d68-5ba0-b2f6-5e6feeab9d96",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Vascular ring division",
+                        "concept": "9380f911-1a7f-5ea0-8b3e-8843fe1103eb",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Ventricular septal defect repair",
+                        "concept": "23681599-4b81-517c-b5a5-6b24833c57cb",
                         "conceptMappings": []
                       }
                     ]
                   },
-                  "_specBranching": "If Procedure Type is Surgery"
+                  "hide": {
+                    "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+                  }
                 }
               ]
             },
             {
-              "label": "Indication for Surgery",
-              "id": "indication_for_surgery",
+              "label": "Pre-Surgical Diagnosis",
+              "id": "presurgical_diagnosis",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "08c2c1d4-1de4-5be7-b811-6e0eea6208de"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
+            },
+            {
+              "label": "Key Findings/Surgical Notes",
+              "id": "key_findings_surgical_notes",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "f95ce45d-6b93-555a-8ee8-3f0d96b20184"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
+            },
+            {
+              "label": "Post-Surgical Diagnosis",
+              "id": "post_surgical_diagnosis",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "39ab4186-74ff-5715-9d5c-a212acba2801"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
+            },
+            {
+              "label": "Cardiopulmonary Bypass Time",
+              "id": "cardiopulmonary_bypass_time",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "6acafff7-7a23-50e6-8bca-24d8fc77c87d",
+                "placeholder": "Minutes"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
+            },
+            {
+              "label": "Reoperation Required",
+              "id": "reoperation_required",
               "type": "obs",
               "questionOptions": {
                 "rendering": "select",
-                "concept": "a5c71d6d-240c-535e-afa8-371a6c0e3a79",
-                "answers": [
-                  {
-                    "label": "Routine/Surveillance",
-                    "concept": "235fae67-41f9-5b8e-a373-a52007038cb7",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Clinical Change/Findings",
-                    "concept": "cee375ca-7c28-5347-a844-728b4b8878fb",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Urgent/Emergent",
-                    "concept": "5e8fe279-af21-5059-947a-cc06f71391d2",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Other (with field to complete)",
-                    "concept": "4ff41d80-a6f6-5e65-b20a-66b31ce1baa6",
-                    "conceptMappings": []
-                  }
-                ]
-              },
-              "_specBranching": "If Procedure Type is Surgery"
-            },
-            {
-              "label": "Reason for Surgery",
-              "id": "reason_for_surgery",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "c997adcd-e9ab-5705-91bb-1dbea2a3abb8"
-              },
-              "_specBranching": "If Procedure Type is Surgery"
-            },
-            {
-              "label": "Open Chest After Surgery",
-              "id": "open_chest_after_surgery",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "radio",
-                "concept": "33c77c14-f1fc-5e16-98a5-ca8ac72a1536",
+                "concept": "2261ce30-1c1e-51d8-95c7-7752e4e9cfb4",
                 "answers": [
                   {
                     "label": "Yes",
@@ -186,15 +450,335 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
             },
             {
-              "label": "Required Additional Surgery for Bleeding",
-              "id": "required_additional_surgery_for_bleeding",
+              "label": "Describe Reason for Reoperation",
+              "id": "describe_reason_for_reoperation",
               "type": "obs",
               "questionOptions": {
-                "rendering": "radio",
-                "concept": "0749d05e-6c8a-57e7-84cb-0b04d9e89574",
+                "rendering": "checkbox",
+                "concept": "c9a8f53f-03ea-5425-97aa-f335a97e4e0f",
+                "answers": [
+                  {
+                    "label": "Bleeding",
+                    "concept": "147241AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Residual defect",
+                    "concept": "345d08e3-3e7e-50b3-8deb-17f44715bedf",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616' || reoperation_required !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
+            },
+            {
+              "label": "Catheterization Type",
+              "id": "catheterization_type_s_group",
+              "type": "obsGroup",
+              "questionOptions": {
+                "rendering": "group",
+                "concept": "bb4a77ee-836a-57e7-a262-632fa22288d2"
+              },
+              "questions": [
+                {
+                  "label": "Catheterization Type",
+                  "id": "catheterization_type_s",
+                  "type": "obs",
+                  "required": true,
+                  "questionOptions": {
+                    "rendering": "checkbox",
+                    "concept": "bb4a77ee-836a-57e7-a262-632fa22288d2",
+                    "answers": [
+                      {
+                        "label": "Aortic valvuloplasty",
+                        "concept": "69678122-dc66-5b8a-93bc-3358d241ad1b",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Atrial septal defect closure",
+                        "concept": "d8d6a848-70c0-5f93-ba8d-0bd5a45b4868",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Atrial septal defect device closure",
+                        "concept": "823c07d2-aed4-54cc-9274-11f176927a59",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Atrial septostomy",
+                        "concept": "a0069775-61c7-544c-8be2-d1948d78add6",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Balloon atrial septostomy",
+                        "concept": "2574901c-bc82-57a5-84da-831e696abea6",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Coarctation balloon / stent angioplasty",
+                        "concept": "f72ea691-f09f-591b-b383-27160fe4a41f",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Coronary artery stent",
+                        "concept": "fcef8402-70b4-5789-a841-80cbdf1ea1c7",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Diagnostic cardiac catheterization",
+                        "concept": "409a8f23-38a2-5cb2-9cff-1f67a74b7092",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Mitral balloon valvuloplasty",
+                        "concept": "af9429ff-1b76-55f3-81ca-a9f775d93fb4",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Mitral valvuloplasty",
+                        "concept": "aca1be99-d090-5078-be63-81353ae89195",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pacemaker placement",
+                        "concept": "13a0d832-9e52-5305-9631-58f2e21793f5",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Patent ductus arteriosus closure",
+                        "concept": "e027966c-0be2-5bb6-beda-27f3a9fbbdff",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Patent ductus arteriosus ligation",
+                        "concept": "2f22d53b-e5d4-5799-aa8c-0524871f66f2",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Patent ductus arteriosus stent",
+                        "concept": "f6be7d34-9bc7-55fd-b8a5-eaa306e2f175",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pulmonary",
+                        "concept": "305a891f-052c-5d45-b816-9c7ffe103a1d",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pulmonary artery balloon / stent angioplasty",
+                        "concept": "70fe1957-1b27-5a88-b029-49aa478a8567",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Pulmonary valvuloplasty",
+                        "concept": "36b3cc68-c53f-5a23-8380-24dbaf9c88fb",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Ventricular septal defect closure",
+                        "concept": "3fe8e0c8-a2dc-53db-88a0-9fd88cbe1291",
+                        "conceptMappings": []
+                      }
+                    ]
+                  },
+                  "hide": {
+                    "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
+                  }
+                }
+              ]
+            },
+            {
+              "label": "Pre-Catheterization Diagnosis",
+              "id": "pre_catheterization_diagnosis",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "87002af1-9c93-5dcc-8f9b-fca84d80f6b3"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
+              }
+            },
+            {
+              "label": "Brief Summary of Catheterization",
+              "id": "brief_summary_of_catheterization",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "27dbb0d6-100e-5696-b7ea-6ed036c40735"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
+              }
+            },
+            {
+              "label": "Post-Catheterization Diagnosis",
+              "id": "post_catheterization_diagnosis",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "4c631baa-7585-57c4-a4b2-cc67cb6ce19c"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
+              }
+            },
+            {
+              "label": "Anesthesia Type",
+              "id": "anaesthesia",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "8e0a8feb-0ac5-5670-b92e-9ae0d0008520",
+                "answers": [
+                  {
+                    "label": "Conscious sedation",
+                    "concept": "3e3438a1-07a1-5a64-a370-d8763751a283",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "General anesthesia",
+                    "concept": "ddcc6a36-af80-595e-ae53-bfe482ad1701",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
+              }
+            },
+            {
+              "label": "Pre-Inflation LA Pressure",
+              "id": "pre_inflation_la_pressure",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "57d774b1-9060-5615-ad9b-f740d513e410"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60' || !(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
+            },
+            {
+              "label": "Pre-Inflation LV Pressure",
+              "id": "pre_inflation_lv_pressure",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "ada941f5-77f2-56f4-b3c2-82d1d528be04"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60' || !(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
+            },
+            {
+              "label": "Post-Inflation LA Pressure",
+              "id": "post_inflation_la_pressure",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "9ccd8043-d9be-5b24-8fc4-4890d46e716f"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60' || !(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
+            },
+            {
+              "label": "Post-Inflation LV Pressure",
+              "id": "post_inflation_lv_pressure",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "18060962-d3fe-5d6b-89ef-2d5386c2ad44"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60' || !(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
+            },
+            {
+              "label": "Mitral Valve Area",
+              "id": "mitral_valve_area_measurement",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "e7f9a339-28a7-512c-b6d1-3f81741b860f"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60' || !(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
+            },
+            {
+              "label": "Mitral Valve Assessment",
+              "id": "mitral_valve_area",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "b8df8430-b9bb-5bd4-8215-6f92bf7e9419",
+                "answers": [
+                  {
+                    "label": "Sufficient (>1.5cm2 or >50% of baseline)",
+                    "concept": "e126aa33-b37e-5ad5-974d-f2f422b6489c",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Insufficient",
+                    "concept": "a0cad40e-51f3-5104-86b1-d9fc21c8597a",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60' || !(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
+            },
+            {
+              "label": "Degree of MR",
+              "id": "degree_of_mr",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "a34decd1-434a-5ca6-815c-a1b502b11fa5",
+                "answers": [
+                  {
+                    "label": "None",
+                    "concept": "1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Mild",
+                    "concept": "1498AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Moderate",
+                    "concept": "1499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Severe",
+                    "concept": "1500AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60' || !(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
+            },
+            {
+              "label": "Pericardial Effusion",
+              "id": "pericardial_effusion",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "09a8788a-a8c2-57cd-b583-bf83254315a7",
                 "answers": [
                   {
                     "label": "Yes",
@@ -208,38 +792,15 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "procedure_type !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60' || !(includes(catheterization_type_s, 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'))"
+              }
             },
             {
-              "label": "Describe",
-              "id": "describe",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "d81dfd3d-a882-5451-815d-ae6e98c291af"
-              },
-              "_specBranching": "If Other Major Complications is Y"
-            },
-            {
-              "label": "Other Pertinent Medical Information",
-              "id": "other_pertinent_medical_information",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "8b9ccf9e-ab44-56d2-885e-61a626cb6569"
-              },
-              "_specBranching": "If Procedure Type is Surgery"
-            }
-          ]
-        },
-        {
-          "label": "Post-procedure outcome",
-          "isExpanded": "true",
-          "questions": [
-            {
-              "label": "Surgery Outcome",
+              "label": "Procedural Outcome",
               "id": "surgery_outcome",
               "type": "obs",
+              "required": true,
               "questionOptions": {
                 "rendering": "select",
                 "concept": "7a54d2d6-0d34-5e5d-b8e7-84a3cf7e9dca",
@@ -255,33 +816,65 @@
                     "conceptMappings": []
                   },
                   {
-                    "label": "Death",
+                    "label": "In-hospital death",
                     "concept": "2567da9f-864e-5408-b5ae-6686f80d0a99",
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "If Procedure Type is Surgery"
+              }
             },
             {
               "label": "Date of Hospital Discharge",
               "id": "date_of_hospital_discharge",
               "type": "obs",
+              "required": true,
               "questionOptions": {
                 "rendering": "date",
                 "concept": "d4317b82-5d37-5b59-ac32-4922f18cd65b"
               },
-              "_specBranching": "If Surgical Outcome is Discharge to home"
+              "hide": {
+                "hideWhenExpression": "surgery_outcome !== '98ea6c57-5f77-549b-97ca-32604c5b9220'"
+              }
             },
+            {
+              "label": "Date of Death",
+              "id": "date_of_death",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "07534416-c1c2-5772-83d8-76a429986ec0"
+              },
+              "hide": {
+                "hideWhenExpression": "surgery_outcome !== '2567da9f-864e-5408-b5ae-6686f80d0a99'"
+              }
+            },
+            {
+              "label": "Please Describe Events Around Patient's Death",
+              "id": "describe_events_around_patient_death",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "d0546da8-7871-517e-8444-cdb19ffbae97"
+              },
+              "hide": {
+                "hideWhenExpression": "surgery_outcome !== '2567da9f-864e-5408-b5ae-6686f80d0a99'"
+              }
+            }
+          ]
+        },
+        {
+          "label": "Hospitalization Outcomes (Complete After Discharge)",
+          "isExpanded": "true",
+          "questions": [
             {
               "label": "ICU Stay",
               "id": "icu_stay",
               "type": "obs",
               "questionOptions": {
                 "rendering": "number",
-                "concept": "5b409279-ec02-50a9-8d68-9953f526beeb"
-              },
-              "_specBranching": "If Procedure Type is Surgery"
+                "concept": "5b409279-ec02-50a9-8d68-9953f526beeb",
+                "placeholder": "days"
+              }
             },
             {
               "label": "Ventilation Time",
@@ -289,16 +882,16 @@
               "type": "obs",
               "questionOptions": {
                 "rendering": "number",
-                "concept": "26f8371b-ef08-5a2d-ab3d-88d384b142a5"
-              },
-              "_specBranching": "If Procedure Type is Surgery"
+                "concept": "26f8371b-ef08-5a2d-ab3d-88d384b142a5",
+                "placeholder": "hours"
+              }
             },
             {
               "label": "Perfusion Issues",
               "id": "perfusion_issues",
               "type": "obs",
               "questionOptions": {
-                "rendering": "radio",
+                "rendering": "select",
                 "concept": "1c14c3f1-1532-51b0-8680-d761e7f25ad5",
                 "answers": [
                   {
@@ -312,15 +905,23 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "If Procedure Type is Surgery"
+              }
             },
             {
-              "label": "Surgical Site Infection",
+              "label": "Describe Perfusion Issues",
+              "id": "describe_perfusion_issues",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "d81dfd3d-a882-5451-815d-ae6e98c291af"
+              }
+            },
+            {
+              "label": "Site Infection",
               "id": "surgical_site_infection",
               "type": "obs",
               "questionOptions": {
-                "rendering": "radio",
+                "rendering": "select",
                 "concept": "15e033f6-704e-5bde-ac1d-b401294f416c",
                 "answers": [
                   {
@@ -334,15 +935,23 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "If Procedure Type is Surgery"
+              }
+            },
+            {
+              "label": "Describe Site Infection",
+              "id": "describe_site_infection",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "8b9ccf9e-ab44-56d2-885e-61a626cb6569"
+              }
             },
             {
               "label": "Bacterial Sepsis",
               "id": "bacterial_sepsis",
               "type": "obs",
               "questionOptions": {
-                "rendering": "radio",
+                "rendering": "select",
                 "concept": "86c4348a-1ec0-5ca2-a9a6-15f0f282cb95",
                 "answers": [
                   {
@@ -356,26 +965,87 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "If Procedure Type is Surgery"
+              }
             },
             {
-              "label": "Organism Identified (if Known)",
+              "label": "Describe Bacterial Sepsis",
+              "id": "describe_bacterial_sepsis",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "c997adcd-e9ab-5705-91bb-1dbea2a3abb8"
+              }
+            },
+            {
+              "label": "Organism Identified (please enter none if no organism recovered)",
               "id": "organism_identified_if_known",
               "type": "obs",
               "questionOptions": {
                 "rendering": "text",
                 "concept": "7961d827-0af9-5c92-9818-24e2e886de6f"
-              },
-              "_specBranching": "If Bacterial Sepsis is Y"
+              }
             },
             {
-              "label": "Other Major Complications Assiciated with Surgery",
+              "label": "Other Major Complications associated with procedure? Please describe or include \"none\"",
               "id": "other_major_complications_assiciated_with_surgery",
               "type": "obs",
               "questionOptions": {
-                "rendering": "radio",
-                "concept": "a79a6ac1-619a-5c55-9129-bd0e46e05cb8",
+                "rendering": "textarea",
+                "concept": "a79a6ac1-619a-5c55-9129-bd0e46e05cb8"
+              }
+            }
+          ]
+        },
+        {
+          "label": "30-day follow-up",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Date of Patient Follow-Up",
+              "id": "date_of_patient_follow_up_contact",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "49f9238d-2ca4-5efd-a5cb-f00a0b44828d"
+              }
+            },
+            {
+              "label": "How was the patient contacted?",
+              "id": "how_was_the_patient_contacted",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "2075f5e4-b8e5-50c1-83d7-81234fff3653"
+              }
+            },
+            {
+              "label": "Was the patient rehospitalized within 30 days?",
+              "id": "rehospitalized_within_30_days",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "cfcfa842-520c-5020-8b6a-54cf47d40d1a",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Was the rehospitalization related to the procedure?",
+              "id": "rehospitalization_procedure_related",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "186f7677-c0f6-5359-b5b2-22c7f3b962a8",
                 "answers": [
                   {
                     "label": "Yes",
@@ -389,30 +1059,40 @@
                   }
                 ]
               },
-              "_specBranching": "If Procedure Type is Surgery"
-            }
-          ]
-        },
-        {
-          "label": "30-day follow-up",
-          "isExpanded": "true",
-          "questions": [
+              "hide": {
+                "hideWhenExpression": "rehospitalized_within_30_days !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
+            },
             {
-              "label": "Date of Patient Follow-up Contact",
-              "id": "date_of_patient_follow_up_contact",
+              "label": "Date of Rehospitalization",
+              "id": "date_of_rehospitalization",
               "type": "obs",
               "questionOptions": {
                 "rendering": "date",
-                "concept": "49f9238d-2ca4-5efd-a5cb-f00a0b44828d"
+                "concept": "c76b304e-746e-5b70-8ba3-1c4fac127eac"
               },
-              "_specBranching": "If Procedure Type is Surgery"
+              "hide": {
+                "hideWhenExpression": "rehospitalized_within_30_days !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             },
             {
-              "label": "Is Patient Alive?",
+              "label": "Describe Rehospitalization",
+              "id": "describe_rehospitalization",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "f61ec9e8-4f6d-554f-aa58-915e0715f11f"
+              },
+              "hide": {
+                "hideWhenExpression": "rehospitalized_within_30_days !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
+            },
+            {
+              "label": "Is Patient Alive",
               "id": "is_patient_alive",
               "type": "obs",
               "questionOptions": {
-                "rendering": "radio",
+                "rendering": "select",
                 "concept": "726b7eaa-3ecf-5c6b-ba21-cd81c58d6a0d",
                 "answers": [
                   {
@@ -426,26 +1106,27 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "If Procedure Type is Surgery"
+              }
             },
             {
-              "label": "How was the patient contacted?",
-              "id": "how_was_the_patient_contacted",
+              "label": "Date of Death",
+              "id": "date_of_death_follow_up",
               "type": "obs",
               "questionOptions": {
-                "rendering": "text",
-                "concept": "2075f5e4-b8e5-50c1-83d7-81234fff3653"
+                "rendering": "date",
+                "concept": "07534416-c1c2-5772-83d8-76a429986ec0"
               },
-              "_specBranching": "If Is Patient Alive is Y"
+              "hide": {
+                "hideWhenExpression": "is_patient_alive !== '488b58ff-64f5-4f8a-8979-fa79940b1594'"
+              }
             },
             {
-              "label": "Is the patient OK?",
-              "id": "is_the_patient_ok",
+              "label": "Patient Follow-Up Required",
+              "id": "patient_followup_required",
               "type": "obs",
               "questionOptions": {
-                "rendering": "radio",
-                "concept": "225911b3-f49b-5ec5-8da8-09a4b95b5219",
+                "rendering": "select",
+                "concept": "32c3afed-6be4-5b50-9555-2ea75238a3dc",
                 "answers": [
                   {
                     "label": "Yes",
@@ -458,225 +1139,41 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "_specBranching": "If Is Patient Alive is Y"
-            },
-            {
-              "label": "Describe the patient's current condition",
-              "id": "describe_the_patient_s_current_condition",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "445ebd06-b013-5afd-a59c-c82c80748ae7"
-              },
-              "_specBranching": "If Is Patient Alive is Y"
-            }
-          ]
-        },
-        {
-          "label": "Catheterization",
-          "isExpanded": "true",
-          "questions": [
-            {
-              "label": "Catheterization Type(s)",
-              "id": "catheterization_type_s_group",
-              "type": "obsGroup",
-              "questionOptions": {
-                "rendering": "group",
-                "concept": "bb4a77ee-836a-57e7-a262-632fa22288d2"
-              },
-              "questions": [
-                {
-                  "label": "Catheterization Type(s)",
-                  "id": "catheterization_type_s",
-                  "type": "obs",
-                  "questionOptions": {
-                    "rendering": "checkbox",
-                    "concept": "bb4a77ee-836a-57e7-a262-632fa22288d2",
-                    "answers": [
-                      {
-                        "label": "Diagnostic cardiac catheterization",
-                        "concept": "409a8f23-38a2-5cb2-9cff-1f67a74b7092",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Mitral balloon valvuloplasty",
-                        "concept": "af9429ff-1b76-55f3-81ca-a9f775d93fb4",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Other (with field to complete)",
-                        "concept": "4ff41d80-a6f6-5e65-b20a-66b31ce1baa6",
-                        "conceptMappings": []
-                      }
-                    ]
-                  },
-                  "_specBranching": "If Procedure Type is Catheterization"
-                }
-              ]
-            },
-            {
-              "label": "Indication for catheterization",
-              "id": "indication_for_catheterization_group",
-              "type": "obsGroup",
-              "questionOptions": {
-                "rendering": "group",
-                "concept": "38b35726-3ea0-537d-92e8-4768af5e1cd3"
-              },
-              "questions": [
-                {
-                  "label": "Indication for catheterization",
-                  "id": "indication_for_catheterization",
-                  "type": "obs",
-                  "questionOptions": {
-                    "rendering": "checkbox",
-                    "concept": "38b35726-3ea0-537d-92e8-4768af5e1cd3",
-                    "answers": [
-                      {
-                        "label": "Routine/Surveillance",
-                        "concept": "235fae67-41f9-5b8e-a373-a52007038cb7",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Clinical Change/Findings",
-                        "concept": "cee375ca-7c28-5347-a844-728b4b8878fb",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Urgent/Emergent",
-                        "concept": "5e8fe279-af21-5059-947a-cc06f71391d2",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Other (with field to complete)",
-                        "concept": "4ff41d80-a6f6-5e65-b20a-66b31ce1baa6",
-                        "conceptMappings": []
-                      }
-                    ]
-                  }
-                }
-              ]
-            },
-            {
-              "label": "Pre-Catheterization Diagnosis",
-              "id": "pre_catheterization_diagnosis",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "87002af1-9c93-5dcc-8f9b-fca84d80f6b3"
               }
             },
             {
-              "label": "Brief Summary of Catheterization",
-              "id": "brief_summary_of_catheterization",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "27dbb0d6-100e-5696-b7ea-6ed036c40735"
-              }
-            },
-            {
-              "label": "Post-Catheterization Diagnosis",
-              "id": "post_catheterization_diagnosis",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "4c631baa-7585-57c4-a4b2-cc67cb6ce19c"
-              }
-            },
-            {
-              "label": "Anaesthesia",
-              "id": "anaesthesia_group",
-              "type": "obsGroup",
-              "questionOptions": {
-                "rendering": "group",
-                "concept": "8e0a8feb-0ac5-5670-b92e-9ae0d0008520"
-              },
-              "questions": [
-                {
-                  "label": "Anaesthesia",
-                  "id": "anaesthesia",
-                  "type": "obs",
-                  "questionOptions": {
-                    "rendering": "checkbox",
-                    "concept": "8e0a8feb-0ac5-5670-b92e-9ae0d0008520",
-                    "answers": [
-                      {
-                        "label": "Conscious sedation",
-                        "concept": "3e3438a1-07a1-5a64-a370-d8763751a283",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "General anaesthesia",
-                        "concept": "ddcc6a36-af80-595e-ae53-bfe482ad1701",
-                        "conceptMappings": []
-                      }
-                    ]
-                  }
-                }
-              ]
-            },
-            {
-              "label": "Pre-Inflation: LA Pressure",
-              "id": "pre_inflation_la_pressure",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "57d774b1-9060-5615-ad9b-f740d513e410"
-              },
-              "_specBranching": "itral balloon valvuloplasty"
-            },
-            {
-              "label": "Pre-Inflation: LV Pressure",
-              "id": "pre_inflation_lv_pressure",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "ada941f5-77f2-56f4-b3c2-82d1d528be04"
-              },
-              "_specBranching": "itral balloon valvuloplasty"
-            },
-            {
-              "label": "Post-Inflation: LA Pressure",
-              "id": "post_inflation_la_pressure",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "9ccd8043-d9be-5b24-8fc4-4890d46e716f"
-              },
-              "_specBranching": "itral balloon valvuloplasty"
-            },
-            {
-              "label": "Post-Inflation: LV Pressure",
-              "id": "post_inflation_lv_pressure",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "18060962-d3fe-5d6b-89ef-2d5386c2ad44"
-              },
-              "_specBranching": "itral balloon valvuloplasty"
-            },
-            {
-              "label": "Mitral Valve Area",
-              "id": "mitral_valve_area",
+              "label": "Patient Follow-Up Arranged (if no, enter reason in free text)",
+              "id": "patient_followup_arranged",
               "type": "obs",
               "questionOptions": {
                 "rendering": "select",
-                "concept": "b8df8430-b9bb-5bd4-8215-6f92bf7e9419",
+                "concept": "c916b451-9a62-51cf-8d47-d6dd85557d14",
+                "isSearchable": true,
                 "answers": [
                   {
-                    "label": "Sufficient (>1.5mL or 50% of baseline)",
-                    "concept": "e126aa33-b37e-5ad5-974d-f2f422b6489c",
+                    "label": "Yes, clinician phone call",
+                    "concept": "dda9180a-14cd-5409-9569-cda3ec0c69c5",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Insufficient",
-                    "concept": "a0cad40e-51f3-5104-86b1-d9fc21c8597a",
+                    "label": "Yes, follow-up appointment",
+                    "concept": "66378fd1-0168-5be4-b101-988a7bd66d70",
                     "conceptMappings": []
                   }
                 ]
               },
-              "_specBranching": "itral balloon valvuloplasty"
+              "hide": {
+                "hideWhenExpression": "patient_followup_required !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
+            },
+            {
+              "label": "Describe Patient's Current Condition",
+              "id": "describe_the_patient_s_current_condition",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "445ebd06-b013-5afd-a59c-c82c80748ae7"
+              }
             }
           ]
         }

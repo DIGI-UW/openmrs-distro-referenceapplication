@@ -1,6 +1,6 @@
 {
   "name": "RHD Oral Adherence",
-  "description": "ACT RHD registry \u2014 RHD Oral Adherence",
+  "description": "ACT RHD registry: RHD Oral Adherence",
   "version": "1",
   "published": true,
   "retired": false,
@@ -22,8 +22,7 @@
               "questionOptions": {
                 "rendering": "number",
                 "concept": "75cd7e15-5f05-58d1-acb1-4a046eb1b437"
-              },
-              "required": true
+              }
             },
             {
               "label": "Adherence Estimage",
@@ -32,8 +31,7 @@
               "questionOptions": {
                 "rendering": "number",
                 "concept": "8edff8dc-4af6-5d0f-bf1d-8e349c7a1b15"
-              },
-              "required": true
+              }
             },
             {
               "label": "Adherence Estimate Based On",
@@ -64,8 +62,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "required": true
+              }
             },
             {
               "label": "Other Details (Oral Adherence)",
@@ -75,7 +72,9 @@
                 "rendering": "text",
                 "concept": "3fd2d82e-c664-5d77-b151-daf328e77bd9"
               },
-              "_specBranching": "if Dosing = Other"
+              "hide": {
+                "hideWhenExpression": "dosing_oral_adherence !== '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Dosing (Oral Adherence)",
@@ -101,8 +100,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "required": true
+              }
             },
             {
               "label": "Prescription Duration",
@@ -133,8 +131,7 @@
                     "conceptMappings": []
                   }
                 ]
-              },
-              "required": true
+              }
             },
             {
               "label": "Tablets Given/Prescribed",
@@ -143,8 +140,19 @@
               "questionOptions": {
                 "rendering": "number",
                 "concept": "f1343ee0-b1ed-5145-949e-dba989f81cf7"
+              }
+            },
+            {
+              "label": "Explanation if Adherence is Below 80%",
+              "id": "explanation_adherence_below_80",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "a9fbf67b-65d7-57f6-8270-7bb65cd49469"
               },
-              "required": true
+              "hide": {
+                "hideWhenExpression": "isEmpty(adherence_estimage) || adherence_estimage >= 80"
+              }
             }
           ]
         }

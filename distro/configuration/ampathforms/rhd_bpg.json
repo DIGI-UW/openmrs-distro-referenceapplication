@@ -1,6 +1,6 @@
 {
   "name": "RHD BPG Delivery",
-  "description": "ACT RHD registry \u2014 RHD BPG Delivery",
+  "description": "ACT RHD registry: RHD BPG Delivery",
   "version": "1",
   "published": true,
   "retired": false,
@@ -16,7 +16,7 @@
           "isExpanded": "true",
           "questions": [
             {
-              "label": "Date of Service",
+              "label": "Date of Injection",
               "id": "date_of_service",
               "type": "obs",
               "questionOptions": {
@@ -26,21 +26,83 @@
               "required": true
             },
             {
-              "label": "If Injection is Late, Why?",
+              "label": "Any adverse reactions to last injection?",
+              "id": "adverse_reaction",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "b77cd4f2-85a0-520d-9cc4-c2a667fc6c3f",
+                "answers": [
+                  {
+                    "label": "Injection site infection",
+                    "concept": "e6bde973-9fe5-5a6e-accf-d1ab16dd7ddc",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Leg swelling > 48 hours post-injection",
+                    "concept": "f96ecc22-a114-5b7a-a334-2bdc2d4b62f4",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Limp >48 hours post-injection",
+                    "concept": "ef11f3e5-dbc2-5e21-85dc-12d984f238c3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Pain >48 hours post-injection",
+                    "concept": "6b7af79b-ac82-5e31-92c6-28c98f25f349",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Rash thought to be from injection",
+                    "concept": "4d6c8b64-ae48-5307-a0e3-00cec3eeaea3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "None",
+                    "concept": "1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Facility",
+              "id": "facility",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "ui-select-extended",
+                "concept": "01e6dd39-b8ba-5b0a-bcd7-6b8d5973c1bc",
+                "datasource": {
+                  "name": "location_datasource",
+                  "config": {
+                    "tag": "Login Location"
+                  }
+                },
+                "isSearchable": true
+              }
+            },
+            {
+              "label": "If injection(s) late, why?",
               "id": "if_injection_is_late_why",
               "type": "obs",
               "questionOptions": {
-                "rendering": "select",
+                "rendering": "checkbox",
                 "concept": "f7cbfcdc-58bb-5e85-86ab-ffce26a08615",
                 "answers": [
                   {
-                    "label": "Could not arrange transportation",
-                    "concept": "56fb6a9e-a90e-5bad-b701-88199d74f7a9",
+                    "label": "BPG supply stockout",
+                    "concept": "76cd4ace-1a6f-5e2c-b69f-d9dfc157afa2",
                     "conceptMappings": []
                   },
                   {
                     "label": "Could not afford injection supplies",
                     "concept": "1e628c9a-0f9c-56ba-a7f8-61da24a538e8",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Could not arrange transportation",
+                    "concept": "56fb6a9e-a90e-5bad-b701-88199d74f7a9",
                     "conceptMappings": []
                   },
                   {
@@ -54,13 +116,44 @@
                     "conceptMappings": []
                   },
                   {
-                    "label": "BPG supply stockout",
-                    "concept": "76cd4ace-1a6f-5e2c-b69f-d9dfc157afa2",
+                    "label": "Other (free text)",
+                    "concept": "a620dfe1-9626-5d26-8149-e85646e0c3cc",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Injection Tolerance",
+              "id": "injection_tolerance",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "9684b2da-a340-5a70-b8c5-114ba0b1ebcc",
+                "answers": [
+                  {
+                    "label": "Anaphylaxis",
+                    "concept": "148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Other (free text)",
-                    "concept": "a620dfe1-9626-5d26-8149-e85646e0c3cc",
+                    "label": "Excessive pain",
+                    "concept": "5633b68d-30a2-5325-9e7c-31e133f43156",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Leg numbness",
+                    "concept": "5085f024-7bc7-5791-b7f5-e816007ee59c",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Tolerated without major issue",
+                    "concept": "384326ed-1860-5756-b6d2-9c05b7952b32",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Other",
+                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
@@ -73,270 +166,154 @@
           "isExpanded": "true",
           "questions": [
             {
-              "label": "Adverse Reaction",
-              "id": "adverse_reaction_group",
-              "type": "obsGroup",
+              "label": "Time Since Injection (Symptom Onset)",
+              "id": "time_since_injection_symptom_onset",
+              "type": "obs",
               "questionOptions": {
-                "rendering": "group",
-                "concept": "b77cd4f2-85a0-520d-9cc4-c2a667fc6c3f"
+                "rendering": "text",
+                "concept": "87986835-7aed-5489-80e9-cbe407bfce23"
               },
-              "questions": [
-                {
-                  "label": "Adverse Reaction",
-                  "id": "adverse_reaction",
-                  "type": "obs",
-                  "questionOptions": {
-                    "rendering": "checkbox",
-                    "concept": "b77cd4f2-85a0-520d-9cc4-c2a667fc6c3f",
-                    "answers": [
-                      {
-                        "label": "None",
-                        "concept": "1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Anaphylaxis",
-                        "concept": "148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Rash",
-                        "concept": "512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Pain",
-                        "concept": "114403AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Limp",
-                        "concept": "4e513376-7f1d-5f1a-9628-929f576403a7",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Leg numbness",
-                        "concept": "5085f024-7bc7-5791-b7f5-e816007ee59c",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Local redness",
-                        "concept": "e0f8f506-2ff9-5442-b46d-b5c472351326",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Injection site infection",
-                        "concept": "e6bde973-9fe5-5a6e-accf-d1ab16dd7ddc",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Other non-coded",
-                        "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                        "conceptMappings": []
-                      }
-                    ]
-                  },
-                  "required": true
-                }
-              ]
+              "hide": {
+                "hideWhenExpression": "!includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
+              }
             },
             {
-              "label": "Skin Mucosa Signs or Symptoms",
+              "label": "Skin and Mucosal Symptoms",
               "id": "skin_mucosa_signs_or_symptoms",
               "type": "obs",
               "questionOptions": {
-                "rendering": "select",
+                "rendering": "checkbox",
                 "concept": "090e096b-372d-5219-9b72-dd1026358259",
                 "answers": [
                   {
-                    "label": "Absent",
-                    "concept": "163747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Flushing",
+                    "concept": "140039AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Mild",
-                    "concept": "1498AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Generalized hives",
+                    "concept": "5f56cb3e-4101-5c63-b657-114f7db473ea",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Moderate",
-                    "concept": "1499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Pruritus",
+                    "concept": "879AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Severe",
-                    "concept": "1500AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Swollen lips-tongue-uvula",
+                    "concept": "de3ba9b9-cf38-5286-8120-a3dcb425495b",
                     "conceptMappings": []
                   }
                 ]
               },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
+              }
             },
             {
-              "label": "Respiratory Signs or Symptoms",
-              "id": "respiratory_signs_or_symptoms",
+              "label": "Cardiovascular Compromise",
+              "id": "cardiovascular_compromise",
               "type": "obs",
               "questionOptions": {
-                "rendering": "select",
-                "concept": "dd715f25-a92a-594b-8d65-74e2fcbf4cc2",
+                "rendering": "checkbox",
+                "concept": "94df4862-8f47-5ea6-8b8c-86e47dbff692",
                 "answers": [
                   {
-                    "label": "Absent",
-                    "concept": "163747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Hypotonia (Collapse)",
+                    "concept": "b2f5fbde-85d1-50cc-9254-04a46d53c9a2",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Mild",
-                    "concept": "1498AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Moderate",
-                    "concept": "1499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Severe",
-                    "concept": "1500AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Syncope",
+                    "concept": "125166AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
               },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
+              }
             },
             {
-              "label": "Cardiovascular Signs or Symptoms",
-              "id": "cardiovascular_signs_or_symptoms",
+              "label": "Respiratory Compromise",
+              "id": "respiratory_compromise",
               "type": "obs",
               "questionOptions": {
-                "rendering": "select",
-                "concept": "fda86f45-c4bf-5eb0-96fd-c0e161de60e2",
+                "rendering": "checkbox",
+                "concept": "cadb3da5-ed36-51fb-98f5-0ae20cb38846",
                 "answers": [
                   {
-                    "label": "Absent",
-                    "concept": "163747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Dyspnea",
+                    "concept": "122496AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Mild",
-                    "concept": "1498AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Hypoxemia",
+                    "concept": "1ef5505d-edce-5984-9d8f-7e8e5aeda26b",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Moderate",
-                    "concept": "1499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Stridor",
+                    "concept": "104cc643-90bc-58bd-9962-e81a03c63093",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Severe",
-                    "concept": "1500AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Wheeze-bronchospasm",
+                    "concept": "06f0cce9-64f3-5ae8-873c-8926cd6d5057",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "None",
+                    "concept": "1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
               },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
+              }
             },
             {
-              "label": "Abdominal/Pelvic Signs or Symptoms",
-              "id": "abdominal_pelvic_signs_or_symptoms",
+              "label": "Severe GI Symptoms",
+              "id": "severe_gi_symptoms",
               "type": "obs",
               "questionOptions": {
-                "rendering": "select",
-                "concept": "e2dff4f5-da9e-5847-a8a3-e862d2988f64",
+                "rendering": "checkbox",
+                "concept": "9a17075d-9e41-5142-bc25-4ee7caa990c6",
                 "answers": [
                   {
-                    "label": "Absent",
-                    "concept": "163747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Abdominal Pain",
+                    "concept": "151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Mild",
-                    "concept": "1498AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Diarrhea",
+                    "concept": "142412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Moderate",
-                    "concept": "1499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Severe",
-                    "concept": "1500AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Vomiting",
+                    "concept": "122983AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
               },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
+              }
             },
             {
-              "label": "Neurological Signs or Symptoms",
-              "id": "neurological_signs_or_symptoms",
+              "label": "Describe Anaphylaxis Events",
+              "id": "describe_anaphylaxis_events",
               "type": "obs",
               "questionOptions": {
-                "rendering": "select",
-                "concept": "a67e51cf-b30b-5e85-a99a-fa700cbc838e",
-                "answers": [
-                  {
-                    "label": "Absent",
-                    "concept": "163747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Mild",
-                    "concept": "1498AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Moderate",
-                    "concept": "1499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Severe",
-                    "concept": "1500AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  }
-                ]
+                "rendering": "textarea",
+                "concept": "01ca2486-79e4-5988-86b2-953fb45bf927"
               },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
-            },
-            {
-              "label": "Signs or Symptoms Risk Factors",
-              "id": "signs_or_symptoms_risk_factors",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "select",
-                "concept": "1527c78f-c908-5c77-bc9e-a7f963093174",
-                "answers": [
-                  {
-                    "label": "Absent",
-                    "concept": "163747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Moderate risk",
-                    "concept": "b47abe39-3817-5e34-b123-8b8985f69f6b",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "High risk",
-                    "concept": "b03e545e-ac65-5c4b-9516-39e895e09be6",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Severe risk",
-                    "concept": "719957d3-80ec-5e1c-9d94-2a02a8335054",
-                    "conceptMappings": []
-                  }
-                ]
-              },
-              "required": true,
-              "_specBranching": "If Adverse Reaction = Anaphylaxis"
+              "hide": {
+                "hideWhenExpression": "!includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
+              }
             }
           ]
         }

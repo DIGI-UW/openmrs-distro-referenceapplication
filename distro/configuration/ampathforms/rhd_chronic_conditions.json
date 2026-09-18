@@ -1,6 +1,6 @@
 {
   "name": "RHD Chronic Health Conditions",
-  "description": "ACT RHD registry \u2014 RHD Chronic Health Conditions",
+  "description": "ACT RHD registry: RHD Chronic Health Conditions",
   "version": "1",
   "published": true,
   "retired": false,
@@ -100,8 +100,7 @@
                         "conceptMappings": []
                       }
                     ]
-                  },
-                  "required": true
+                  }
                 }
               ]
             },
