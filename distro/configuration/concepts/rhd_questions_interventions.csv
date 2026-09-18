@@ -32,7 +32,6 @@ a79a6ac1-619a-5c55-9129-bd0e46e05cb8,,ACT-RHD:q_other_major_complications_assici
 57d774b1-9060-5615-ad9b-f740d513e410,,ACT-RHD:q_pre_inflation_la_pressure,Pre-Inflation: LA Pressure,,,Question,Text,,,,
 ada941f5-77f2-56f4-b3c2-82d1d528be04,,ACT-RHD:q_pre_inflation_lv_pressure,Pre-Inflation: LV Pressure,,,Question,Text,,,,
 6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a,,ACT-RHD:q_procedure_date,Procedure Date,,,Question,Date,,,,
-1e45a974-f99d-5072-a2bf-28d1f6cf9850,,ACT-RHD:q_procedure_location,Procedure Location,,coded in spec but no answer set resolved -- using Text,Question,Text,,,,
 3a576b80-744a-59ee-9515-d9fdca06f3d7,,ACT-RHD:q_procedure_type,Procedure Type,,,Question,Coded,,Surgery; Catheterization; 5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,
 2e290fa3-977b-5fb4-83c1-d8499bedb65e,,ACT-RHD:q_procedure_performed,Procedure performed,,,Question,Coded,,Diagnostic cardiac catheterization; Mitral balloon valvuloplasty; Other catheter-based intervention; Mitral valve replacement; Mitral valve repair; Aortic valve replacement; 5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,
 c997adcd-e9ab-5705-91bb-1dbea2a3abb8,,ACT-RHD:q_reason_for_surgery,Reason for Surgery,,,Question,Text,,,,

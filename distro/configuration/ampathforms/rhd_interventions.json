@@ -28,18 +28,10 @@
             {
               "label": "Procedure Location",
               "id": "procedure_location",
-              "type": "obs",
+              "type": "encounterLocation",
               "required": true,
               "questionOptions": {
-                "rendering": "ui-select-extended",
-                "concept": "1e45a974-f99d-5072-a2bf-28d1f6cf9850",
-                "datasource": {
-                  "name": "location_datasource",
-                  "config": {
-                    "tag": "Login Location"
-                  }
-                },
-                "isSearchable": true
+                "rendering": "ui-select-extended"
               }
             },
             {
