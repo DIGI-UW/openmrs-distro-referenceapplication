@@ -191,6 +191,18 @@
     </dependency>
     <dependency>
       <groupId>org.openmrs.module</groupId>
+      <artifactId>commonreports-omod</artifactId>
+      <version>${commonreports.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>patientsummary-omod</artifactId>
+      <version>${patientsummary.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
       <artifactId>calculation-omod</artifactId>
       <version>${calculation.version}</version>
       <scope>provided</scope>
