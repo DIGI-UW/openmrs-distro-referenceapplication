@@ -31,6 +31,65 @@
     "defaultPatientIdentifierTypes": [
       "fdd6f720-743b-57fc-915a-87c0f571097b",
       "060a2595-da89-5509-8cf4-645a8e50ad8a"
+    ],
+    "sections": ["demographics", "contact", "relationships", "rhd-registration"],
+    "sectionDefinitions": [
+      {
+        "id": "rhd-registration",
+        "name": "RHD Registration",
+        "fields": [
+          "assignedCardiacClinic",
+          "consentGiven",
+          "consentPerson",
+          "consentDate",
+          "textItSettings"
+        ]
+      }
+    ],
+    "fieldDefinitions": [
+      {
+        "id": "assignedCardiacClinic",
+        "type": "person attribute",
+        "uuid": "fe261119-2911-5b36-be40-8f9827826987",
+        "label": "Assigned Cardiac Clinic",
+        "showHeading": true
+      },
+      {
+        "id": "consentGiven",
+        "type": "person attribute",
+        "uuid": "e15bf9b7-249e-5d75-907d-937b8d9b0c46",
+        "label": "Consent Obtained",
+        "showHeading": true,
+        "customConceptAnswers": [
+          { "uuid": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3", "label": "Yes" },
+          { "uuid": "488b58ff-64f5-4f8a-8979-fa79940b1594", "label": "No" }
+        ]
+      },
+      {
+        "id": "consentPerson",
+        "type": "person attribute",
+        "uuid": "a8ff9d47-dcdc-579a-a9b3-1d883c4d344b",
+        "label": "Relationship to Patient",
+        "showHeading": true
+      },
+      {
+        "id": "consentDate",
+        "type": "person attribute",
+        "uuid": "b29617e3-c49e-5893-8dc7-e06b125a0264",
+        "label": "Date of Consent",
+        "showHeading": true
+      },
+      {
+        "id": "textItSettings",
+        "type": "person attribute",
+        "uuid": "68b50c5e-250e-5dab-bd34-fb007756a7ed",
+        "label": "Text-It Settings",
+        "showHeading": true,
+        "customConceptAnswers": [
+          { "uuid": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3", "label": "Yes" },
+          { "uuid": "488b58ff-64f5-4f8a-8979-fa79940b1594", "label": "No" }
+        ]
+      }
     ]
   },
   "@openmrs/esm-login-app": {
