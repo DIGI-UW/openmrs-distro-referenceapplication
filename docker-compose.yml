@@ -51,7 +51,7 @@ services:
       # RHD migration config (Phase 2). Mounted per-domain rather than mounting the whole
       # configuration/ directory, so the demo content package's own domain folders are left intact.
       - ./distro/configuration/conceptsources:/openmrs/distribution/openmrs_config/conceptsources:ro
-      - ./distro/configuration/ampathforms:/openmrs/distribution/openmrs_config/ampathforms/rhd:ro
+      - ./distro/configuration/ampathforms:/openmrs/distribution/openmrs_config/ampathforms:ro
       - ./distro/configuration/programs:/openmrs/distribution/openmrs_config/programs/rhd:ro
       - ./distro/configuration/programworkflows:/openmrs/distribution/openmrs_config/programworkflows/rhd:ro
       - ./distro/configuration/programworkflowstates:/openmrs/distribution/openmrs_config/programworkflowstates/rhd:ro
