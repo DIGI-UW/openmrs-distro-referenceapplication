@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Global properties for openmrs-module-reporting.
+  Processed by the Initializer module (globalproperties domain).
+
+  IMPORTANT: reporting.loadReportsFromConfigurationAtStartup must be true
+  for ReportLoader to scan reports/reportdescriptors/ at startup.
+-->
+<globalProperties>
+    <globalProperty>
+        <property>reporting.loadReportsFromConfigurationAtStartup</property>
+        <value>true</value>
+        <description>
+            When true, ReportingModuleActivator.started() calls
+            ReportLoader.loadReportsFromConfig() which scans
+            {appDataDir}/configuration/reports/reportdescriptors/**/*.yml
+            and registers each as a ReportDefinition (upserted by UUID).
+        </description>
+    </globalProperty>
+</globalProperties>

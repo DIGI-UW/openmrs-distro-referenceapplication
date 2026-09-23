@@ -67,6 +67,8 @@ services:
       - ./distro/configuration/locations:/openmrs/distribution/openmrs_config/locations:ro
       - ./distro/configuration/idgen:/openmrs/distribution/openmrs_config/idgen:ro
       - ./distro/configuration/autogenerationoptions:/openmrs/distribution/openmrs_config/autogenerationoptions:ro
+      - ./distro/configuration/globalproperties:/openmrs/distribution/openmrs_config/globalproperties/rhd:ro
+      - ./distro/configuration/reports:/openmrs/distribution/openmrs_config/reports:ro
 
 
   # MariaDB
