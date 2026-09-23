@@ -9,8 +9,7 @@ parameters:
 datasets:
   - key: screeningCascadeData
     type: sql
-    config:
-      sql: "sql/rhd_screening_cascade.sql"
+    config: "sql/rhd_screening_cascade.sql"
 designs:
   - type: csv
     uuid: "3723a374-a8f8-50ca-987c-e427eaf350e4"

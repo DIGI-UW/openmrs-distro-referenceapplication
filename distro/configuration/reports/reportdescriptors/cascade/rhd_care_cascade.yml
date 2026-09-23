@@ -9,8 +9,7 @@ parameters:
 datasets:
   - key: careCascadeData
     type: sql
-    config:
-      sql: "sql/rhd_care_cascade.sql"
+    config: "sql/rhd_care_cascade.sql"
 designs:
   - type: csv
     uuid: "95dd9028-4d50-5263-a0b3-3bc99a7abb91"
