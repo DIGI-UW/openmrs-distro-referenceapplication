@@ -10,7 +10,7 @@ SELECT
     TIMESTAMPDIFF(YEAR, p.birthdate, e.encounter_datetime)              AS age_at_encounter,
     et.name                                                             AS encounter_type,
     DATE(e.encounter_datetime)                                          AS encounter_date,
-    TIME(e.encounter_datetime)                                          AS encounter_time,
+    DATE_FORMAT(e.encounter_datetime, '%H:%i')                          AS encounter_time,
     l.name                                                              AS location,
 
     -- Provider (first listed)
