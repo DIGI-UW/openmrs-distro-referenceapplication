@@ -1,7 +1,7 @@
 -- =============================================================================
 -- RHD Care Cascade
 -- Equivalent to RhdCareCascadeReportManager (migrated from Java to YAML descriptor)
--- Parameter: :endDate
+-- Parameter: @endDate
 -- =============================================================================
 WITH rhd_active AS (
     SELECT DISTINCT pp.patient_id
@@ -16,7 +16,7 @@ WITH rhd_active AS (
           JOIN concept ans ON ans.concept_id = o.value_coded
           WHERE o.person_id = pp.patient_id AND o.voided = 0
             AND o.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22')
-            AND o.obs_datetime <= :endDate
+            AND o.obs_datetime <= @endDate
             AND ans.uuid IN ('7cfaaf46-1939-5437-8d40-31095cb29812','2a648c80-594c-5442-bdfc-70e7472ef5b7',
                              '5458f2f7-9eba-5ba4-b2a8-6c736d574ca9','19fb7b40-528e-5b1c-a610-f2e624c98038',
                              'cbfcf051-bee3-549d-b233-e5be0e7d691a'))
@@ -29,7 +29,7 @@ sap_latest AS (
     JOIN rhd_active a ON a.patient_id = o.person_id
     WHERE o.voided = 0
       AND o.concept_id = (SELECT concept_id FROM concept WHERE uuid = '668e0221-8b41-5669-9ad8-78e193d42494')
-      AND o.obs_datetime <= :endDate
+      AND o.obs_datetime <= @endDate
     GROUP BY o.person_id
 ),
 prescribed AS (
@@ -51,7 +51,7 @@ adherence AS (
     JOIN bpg b ON b.person_id = o.person_id
     WHERE o.voided = 0
       AND o.concept_id = (SELECT concept_id FROM concept WHERE uuid = '8edff8dc-4af6-5d0f-bf1d-8e349c7a1b15')
-      AND o.obs_datetime <= :endDate
+      AND o.obs_datetime <= @endDate
     GROUP BY o.person_id
 )
 SELECT 1 AS step_order, 'Active' AS step, COUNT(*) AS patients FROM rhd_active
@@ -68,7 +68,7 @@ UNION ALL
 SELECT 5, 'Initiated BPG', COUNT(*) FROM bpg b
  WHERE EXISTS (SELECT 1 FROM obs d WHERE d.person_id = b.person_id AND d.voided = 0
                  AND d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '5bcc7d12-b279-5955-815c-090a1f392071')
-                 AND d.value_datetime IS NOT NULL AND d.obs_datetime <= :endDate)
+                 AND d.value_datetime IS NOT NULL AND d.obs_datetime <= @endDate)
 UNION ALL
 SELECT 6, 'Adherent', COUNT(*) FROM adherence WHERE CAST(latest AS DECIMAL(10,2)) >= 80
 ORDER BY step_order

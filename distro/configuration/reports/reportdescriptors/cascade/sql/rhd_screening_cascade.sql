@@ -1,7 +1,7 @@
 -- =============================================================================
 -- RHD Screening Cascade
 -- Equivalent to RhdScreeningCascadeReportManager (migrated from Java to YAML descriptor)
--- Parameter: :endDate
+-- Parameter: @endDate
 -- =============================================================================
 WITH scr_active AS (
     SELECT DISTINCT pp.patient_id
@@ -19,7 +19,7 @@ category_obs AS (
     JOIN scr_active a ON a.patient_id = o.person_id
     WHERE o.voided = 0
       AND o.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22')
-      AND o.obs_datetime <= :endDate
+      AND o.obs_datetime <= @endDate
 ),
 latest_category AS (
     SELECT person_id,

@@ -11,7 +11,7 @@
 --     Answer 2.5-3.5: ea841a3a-f9cb-5761-aac6-939ffb158d94
 --   Date Updated:  be9041b1-3948-5de0-a8b1-974e84b95715
 --   INR Value:     161482AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
--- Parameters:     :startDate, :endDate
+-- Parameters:     @startDate, @endDate
 -- =============================================================================
 
 SELECT
@@ -116,8 +116,8 @@ LEFT JOIN obs inr_value_obs
 
 WHERE
     e.voided = 0
-    AND e.encounter_datetime >= :startDate
-    AND e.encounter_datetime < DATE_ADD(:endDate, INTERVAL 1 DAY)
+    AND e.encounter_datetime >= @startDate
+    AND e.encounter_datetime < DATE_ADD(@endDate, INTERVAL 1 DAY)
 
 ORDER BY
     pid.identifier,

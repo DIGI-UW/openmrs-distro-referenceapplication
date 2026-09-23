@@ -1,7 +1,7 @@
 -- =============================================================================
 -- RHD Visits Report
 -- One row per visit (OpenMRS visit). Aggregates encounter types seen per visit.
--- Parameters: :startDate, :endDate
+-- Parameters: @startDate, @endDate
 -- =============================================================================
 SELECT
     rhd_id.identifier                                                   AS rhd_id,
@@ -39,7 +39,7 @@ SELECT
 
 FROM visit v
 
-JOIN visit_type vt ON vt.visit_type_id = v.visit_type
+JOIN visit_type vt ON vt.visit_type_id = v.visit_type_id
 
 JOIN patient pat ON pat.patient_id = v.patient_id AND pat.voided = 0
 JOIN person p    ON p.person_id    = v.patient_id  AND p.voided = 0
@@ -69,8 +69,8 @@ JOIN encounter_type et ON et.encounter_type_id = e.encounter_type AND et.retired
 
 WHERE
     v.voided = 0
-    AND DATE(v.date_started) >= :startDate
-    AND DATE(v.date_started) <= :endDate
+    AND DATE(v.date_started) >= @startDate
+    AND DATE(v.date_started) <= @endDate
 
 GROUP BY v.visit_id
 

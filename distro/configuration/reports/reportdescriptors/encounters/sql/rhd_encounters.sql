@@ -1,7 +1,7 @@
 -- =============================================================================
 -- RHD Encounters Export
 -- One row per encounter across all RHD encounter types.
--- Parameters: :startDate, :endDate
+-- Parameters: @startDate, @endDate
 -- =============================================================================
 SELECT
     rhd_id.identifier                                                   AS rhd_id,
@@ -86,7 +86,7 @@ LEFT JOIN patient_identifier rhd_id
 
 WHERE
     e.voided = 0
-    AND e.encounter_datetime >= :startDate
-    AND e.encounter_datetime < DATE_ADD(:endDate, INTERVAL 1 DAY)
+    AND e.encounter_datetime >= @startDate
+    AND e.encounter_datetime < DATE_ADD(@endDate, INTERVAL 1 DAY)
 
 ORDER BY e.encounter_datetime DESC, rhd_id.identifier

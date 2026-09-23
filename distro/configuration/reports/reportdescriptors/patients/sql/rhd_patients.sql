@@ -1,7 +1,7 @@
 -- =============================================================================
 -- RHD Patient List
 -- One row per patient enrolled in the RHD program.
--- Parameters: :startDate, :endDate  (program enrollment date range)
+-- Parameters: @startDate, @endDate  (program enrollment date range)
 -- =============================================================================
 SELECT
     -- Identifiers
@@ -60,8 +60,10 @@ SELECT
 
     -- Penicillin allergy
     (
-        SELECT CASE o_pen.value_boolean WHEN 1 THEN 'Yes' WHEN 0 THEN 'No' ELSE NULL END
+        SELECT cn_pen.name
         FROM obs o_pen
+        JOIN concept_name cn_pen ON cn_pen.concept_id = o_pen.value_coded
+            AND cn_pen.locale = 'en' AND cn_pen.locale_preferred = 1 AND cn_pen.voided = 0
         WHERE o_pen.person_id = p.person_id AND o_pen.voided = 0
           AND o_pen.concept_id = (SELECT concept_id FROM concept WHERE uuid = '5cc3b707-b8ea-52ee-8e82-ea4de393a4a5')
         ORDER BY o_pen.obs_datetime DESC LIMIT 1
@@ -119,8 +121,8 @@ LEFT JOIN person_attribute pa_village
 
 WHERE
     pp.voided = 0
-    AND DATE(pp.date_enrolled) >= :startDate
-    AND DATE(pp.date_enrolled) <= :endDate
+    AND DATE(pp.date_enrolled) >= @startDate
+    AND DATE(pp.date_enrolled) <= @endDate
 
 GROUP BY pp.patient_program_id
 
