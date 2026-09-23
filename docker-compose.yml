@@ -69,6 +69,10 @@ services:
       - ./distro/configuration/autogenerationoptions:/openmrs/distribution/openmrs_config/autogenerationoptions:ro
       - ./distro/configuration/globalproperties:/openmrs/distribution/openmrs_config/globalproperties/rhd:ro
       - ./distro/configuration/reports:/openmrs/distribution/openmrs_config/reports:ro
+      # reportdescriptorloader triggers ReportLoader after reporting and Initializer have started.
+      # The reporting module reads reporting.loadReportsFromConfigurationAtStartup while it
+      # starts, before Initializer can set it, so descriptors never load on a fresh database.
+      - ./distro/modules/reportdescriptorloader-1.0.0-SNAPSHOT.omod:/openmrs/distribution/openmrs_modules/reportdescriptorloader-1.0.0-SNAPSHOT.omod:ro
 
 
   # MariaDB
