@@ -70,6 +70,7 @@ services:
       - ./distro/configuration/flagpriorities:/openmrs/distribution/openmrs_config/flagpriorities:ro
       - ./distro/configuration/flagtags:/openmrs/distribution/openmrs_config/flagtags:ro
       - ./distro/configuration/flags:/openmrs/distribution/openmrs_config/flags:ro
+      - ./modules/rhdflags-1.0.0-SNAPSHOT.omod:/openmrs/distribution/openmrs_modules/rhdflags-1.0.0-SNAPSHOT.omod:ro
 
 
   # MariaDB
@@ -77,26 +78,6 @@ services:
   # change (AOP) or on demand. Rules that become true by the passage of time (prophylaxis
   # overdue, lost to follow-up, follow-up due) would otherwise never fire. This rebuilds
   # every flag periodically, which also clears the duplicate rows the AOP path leaves.
-  flag-evaluator:
-    image: alpine:3.20
-    restart: "unless-stopped"
-    depends_on:
-      - backend
-      - db
-    environment:
-      OMRS_BASE_URL: ${OMRS_BASE_URL:-http://backend:8080/openmrs}
-      OMRS_FLAG_REBUILD_INTERVAL: ${OMRS_FLAG_REBUILD_INTERVAL:-86400}
-      OMRS_FLAG_ADMIN_USER: ${OMRS_FLAG_ADMIN_USER:-admin}
-      OMRS_FLAG_ADMIN_PASSWORD: ${OMRS_FLAG_ADMIN_PASSWORD:-Admin123}
-      OMRS_DB_HOST: ${OMRS_DB_HOST:-db}
-      OMRS_DB_NAME: ${OMRS_DB_NAME:-openmrs}
-      OMRS_DB_USER: ${OMRS_DB_USER:-openmrs}
-      OMRS_DB_PASSWORD: ${OMRS_DB_PASSWORD:-openmrs}
-      OMRS_LIST_FLAG_TAG: ${OMRS_LIST_FLAG_TAG:-}
-    volumes:
-      - ./scripts:/opt/flags:ro
-    entrypoint: [ "/bin/sh", "-c", "apk add --no-cache curl mariadb-client >/dev/null && exec /bin/sh /opt/flags/flag-maintenance.sh" ]
-
   db:
     image: mariadb:10.11.7
     restart: "unless-stopped"
