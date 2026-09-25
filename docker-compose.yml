@@ -74,10 +74,6 @@ services:
 
 
   # MariaDB
-  # Patient flags have no scheduler of their own: the module only re-evaluates on data
-  # change (AOP) or on demand. Rules that become true by the passage of time (prophylaxis
-  # overdue, lost to follow-up, follow-up due) would otherwise never fire. This rebuilds
-  # every flag periodically, which also clears the duplicate rows the AOP path leaves.
   db:
     image: mariadb:10.11.7
     restart: "unless-stopped"
