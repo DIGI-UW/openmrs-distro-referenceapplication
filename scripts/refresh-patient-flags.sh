@@ -1,5 +1,5 @@
 #!/bin/sh
-# Periodically re-evaluates every enabled patient flag.
+# Re-evaluates every enabled patient flag, once. The caller decides the cadence.
 #
 # The patientflags module evaluates a flag when the flag definition is saved, and
 # otherwise only through AOP advice on write operations. Three of the RHD flags are
@@ -13,12 +13,12 @@
 # Each sweep deletes and recreates every row, so a flag's date_created is the time of
 # the last sweep rather than the time the patient first met the criteria. Anything that
 # reports how long a flag has been raised is wrong by up to one interval, which is why
-# this runs daily rather than hourly. Reconciling rows in place needs FlagEvaluator
-# .evalCohort(flag, null) from a scheduled task, which is a module rather than a script.
+# whatever reports how long a flag has been raised is wrong by up to one interval, which
+# is why the driver runs this daily rather than hourly. Reconciling rows in place needs
+# FlagEvaluator.evalCohort(flag, null) from a scheduled task, which is a module not a script.
 set -eu
 
 BASE="${OMRS_BASE_URL:-http://backend:8080/openmrs}"
-INTERVAL="${OMRS_FLAG_REBUILD_INTERVAL:-86400}"
 USER="${OMRS_FLAG_ADMIN_USER:-admin}"
 PASS="${OMRS_FLAG_ADMIN_PASSWORD:-Admin123}"
 REST="$BASE/ws/rest/v1"
@@ -40,23 +40,14 @@ refresh_flag() {
     "$REST/patientflags/flag/$1"
 }
 
-until curl -sf -o /dev/null -u "$USER:$PASS" "$REST/session"; do
-  log "waiting for $BASE"
-  sleep 10
+ok=0
+failed=0
+for uuid in $(enabled_flag_uuids); do
+  if refresh_flag "$uuid"; then
+    ok=$((ok + 1))
+  else
+    failed=$((failed + 1))
+    log "failed to refresh $uuid"
+  fi
 done
-log "backend reachable, refreshing every ${INTERVAL}s"
-
-while true; do
-  ok=0
-  failed=0
-  for uuid in $(enabled_flag_uuids); do
-    if refresh_flag "$uuid"; then
-      ok=$((ok + 1))
-    else
-      failed=$((failed + 1))
-      log "failed to refresh $uuid"
-    fi
-  done
-  log "refreshed $ok flag(s), $failed failure(s)"
-  sleep "$INTERVAL"
-done
+log "refreshed $ok flag(s), $failed failure(s)"

@@ -133,6 +133,11 @@
         "priority": "RHD High",
         "color": "red",
         "isRiskPriority": true
+      },
+      {
+        "priority": "RHD Data Quality",
+        "color": "orange",
+        "isRiskPriority": false
       }
     ]
   }
