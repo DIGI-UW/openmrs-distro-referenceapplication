@@ -33,6 +33,14 @@ def mk(ident,label):
     if r.get("uuid"): return r["uuid"]
     f=call("patient?q=%s&v=custom:(uuid)"%ident).get("results",[])
     return f[0]["uuid"] if f else None
+def reset(pu):
+    """Void everything recorded for this patient so a re-run starts in the gap state again.
+    The previous run's clearing step would otherwise leave the gap already filled."""
+    for e in call("encounter?patient=%s&v=custom:(uuid)"%pu).get("results",[]):
+        call("encounter/%s"%e["uuid"], None, "DELETE")
+    for o in call("obs?patient=%s&v=custom:(uuid)"%pu).get("results",[]):
+        call("obs/%s"%o["uuid"], None, "DELETE")
+
 def enc(pu,et,n,obs):
     return call("encounter",{"patient":pu,"encounterType":et,"location":LOC,
         "encounterDatetime":d(n)+"T09:00:00.000+0000","obs":obs})
@@ -52,11 +60,14 @@ def check(name, cond, detail=""):
 
 # --- build patients that each carry one gap
 P={}
-P['sap']=mk("rhd96001","sap");      enc(P['sap'],ENC_CONS,5,[C(DX,RHD_A)])
-P['inr']=mk("rhd96002","inr");      enc(P['inr'],ENC_INR,5,[C(ANTI,WARF)])
-P['perf']=mk("rhd96003","perf");    e3=enc(P['perf'],ENC_IANDO,20,[C(PROC,DHOME),D(DDATE,15)])
-P['fu']=mk("rhd96004","fu");        e4=enc(P['fu'],ENC_IANDO,45,[D(DDATE,40)])
-P['deliv']=mk("rhd96005","deliv");  e5=enc(P['deliv'],ENC_PREG,60,[D(EDD,40)])
+for key,ident in (("sap","rhd96001"),("inr","rhd96002"),("perf","rhd96003"),
+                  ("fu","rhd96004"),("deliv","rhd96005")):
+    P[key]=mk(ident,key); reset(P[key])
+enc(P['sap'],ENC_CONS,5,[C(DX,RHD_A)])
+enc(P['inr'],ENC_INR,5,[C(ANTI,WARF)])
+e3=enc(P['perf'],ENC_IANDO,20,[C(PROC,DHOME),D(DDATE,15)])
+e4=enc(P['fu'],ENC_IANDO,45,[D(DDATE,40)])
+e5=enc(P['deliv'],ENC_PREG,60,[D(EDD,40)])
 evaluate()
 
 SAPM="RHD prophylaxis not prescribed"; INRM="RHD INR target missing"
@@ -71,9 +82,7 @@ check("raise: fu",    FUD   in flags(P['fu']))
 check("raise: deliv", DELIVM in flags(P['deliv']))
 
 print("\n--- a clinician fills the gap ---")
-call("obs",{"person":P['sap'],"concept":SAP,"value":Q28,"obsDatetime":d(0)+"T10:00:00.000+0000",
-            "encounter":e3.get("uuid") if False else None} if False else
-           {"person":P['sap'],"concept":SAP,"value":Q28,"obsDatetime":d(0)+"T10:00:00.000+0000"})
+call("obs",{"person":P['sap'],"concept":SAP,"value":Q28,"obsDatetime":d(0)+"T10:00:00.000+0000"})
 call("obs",{"person":P['inr'],"concept":INRT,"value":INRV,"obsDatetime":d(0)+"T10:00:00.000+0000"})
 call("obs",{"person":P['perf'],"concept":PERF,"value":False,"obsDatetime":d(0)+"T10:00:00.000+0000",
             "encounter":e3.get("uuid")})
@@ -96,10 +105,16 @@ check("voided obs re-raises sap", SAPM in flags(P['sap']),
       "voided SAP should not satisfy the rule")
 
 print("\n--- idempotence ---")
-before=call("patientflags/patientflag?patient=%s&v=full"%P['inr']).get("results",[])
+# Count against a patient that is actually carrying flags; a cleared patient has none and
+# would make this pass without exercising anything.
+P['idem']=mk("rhd96006","idem"); reset(P['idem'])
+enc(P['idem'],ENC_IANDO,20,[C(PROC,DHOME),D(DDATE,15)])
+evaluate()
+before=call("patientflags/patientflag?patient=%s&v=full"%P['idem']).get("results",[])
 evaluate(); evaluate()
-after=call("patientflags/patientflag?patient=%s&v=full"%P['inr']).get("results",[])
-check("no duplicate rows after 2 more passes", len(after)==len(before),
+after=call("patientflags/patientflag?patient=%s&v=full"%P['idem']).get("results",[])
+check("carries flags to count", len(before)>0, "rows=%d"%len(before))
+check("no duplicates after 2 more passes", len(after)==len(before),
       "before=%d after=%d"%(len(before),len(after)))
 
 ok=sum(1 for _,c,_ in results if c)

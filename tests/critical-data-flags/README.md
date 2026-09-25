@@ -7,8 +7,10 @@ should have been completed on a form and was not.
     python3 test_flag_rules.py       # 35 cases: does each rule match the right patients
     python3 test_flag_lifecycle.py   # 12 cases: does a flag clear when the gap is filled
 
-Both talk to `http://localhost/openmrs` as `admin`, seed their own patients under the identifiers
-`rhd95xxx` and `rhd96xxx`, and are safe to re-run. They evaluate flags by re-saving each flag
+Both talk to `http://localhost/openmrs` as `admin` and seed their own patients under the
+identifiers `rhd95xxx` and `rhd96xxx`. The lifecycle test voids everything it recorded for its
+patients before it starts, because the previous run ends with each gap filled and would otherwise
+never see the flag raised. Both are safe to re-run. They evaluate flags by re-saving each flag
 definition over REST, which is what the patientflags module does on a definition change, so they
 do not wait for the scheduled task.
 
@@ -18,6 +20,7 @@ either side of every time window. Two defects it caught, both now fixed:
 - the 30-day follow-up rule chased patients who had died in hospital, which ACT 2.0 excludes
 - the death rule tested CIEL's `1066` for a boolean No, but a boolean obs stores whatever
   `concept.false` points at, which is a different concept here, so that branch never matched
+- the lifecycle test itself only passed the first time, which is how the reset above came about
 
 What these do not cover: the scheduled refresh and the list sync, which belong to the
 [rhdflags module](https://github.com/mherman22/openmrs-module-rhd-flags) and need a running
