@@ -9,10 +9,16 @@
 #
 # The module's admin rebuild page cannot be driven from here: it is behind CSRFGuard,
 # whose token is only issued to a browser session.
+#
+# Each sweep deletes and recreates every row, so a flag's date_created is the time of
+# the last sweep rather than the time the patient first met the criteria. Anything that
+# reports how long a flag has been raised is wrong by up to one interval, which is why
+# this runs daily rather than hourly. Reconciling rows in place needs FlagEvaluator
+# .evalCohort(flag, null) from a scheduled task, which is a module rather than a script.
 set -eu
 
 BASE="${OMRS_BASE_URL:-http://backend:8080/openmrs}"
-INTERVAL="${OMRS_FLAG_REBUILD_INTERVAL:-3600}"
+INTERVAL="${OMRS_FLAG_REBUILD_INTERVAL:-86400}"
 USER="${OMRS_FLAG_ADMIN_USER:-admin}"
 PASS="${OMRS_FLAG_ADMIN_PASSWORD:-Admin123}"
 REST="$BASE/ws/rest/v1"
