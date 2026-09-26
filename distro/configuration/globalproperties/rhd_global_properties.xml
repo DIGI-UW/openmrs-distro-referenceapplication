@@ -1,0 +1,13 @@
+<config>
+    <globalProperties>
+        <globalProperty>
+            <property>log.level</property>
+            <!-- Carries the rhdflags entry so an operator can turn the module's task logging on by
+                 re-saving this property, rather than retyping the whole list. Setting it here is not
+                 enough on its own: measured on 2.8.10, core packages take effect at startup but a
+                 module package only takes effect when the property is saved while the server is up. -->
+            <value>org.openmrs.api:info,org.openmrs.module.rhdflags:info</value>
+            <description>Log levels, as a comma separated list of package:level pairs.</description>
+        </globalProperty>
+    </globalProperties>
+</config>
