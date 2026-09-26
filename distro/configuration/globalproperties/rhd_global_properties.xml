@@ -1,0 +1,13 @@
+<config>
+    <globalProperties>
+        <globalProperty>
+            <property>log.level</property>
+            <!-- The rhdflags entry turns on that module's task logging, which the module reads from
+                 here and applies itself when it starts. Nothing in core reads this property at
+                 startup, so the levels a server otherwise boots with come from the packaged
+                 log4j2.xml, which is where org.openmrs.api:info comes from. -->
+            <value>org.openmrs.api:info,org.openmrs.module.rhdflags:info</value>
+            <description>Log levels, as a comma separated list of package:level pairs.</description>
+        </globalProperty>
+    </globalProperties>
+</config>
