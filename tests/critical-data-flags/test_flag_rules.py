@@ -1,5 +1,5 @@
 """Critical data flag migration suite: seeds a matrix, evaluates, asserts."""
-import json, urllib.request, urllib.error, base64, sys, time
+import json, urllib.request, urllib.error, urllib.parse, base64, sys, time
 from datetime import date, timedelta
 
 B = "http://localhost/openmrs/ws/rest/v1"
@@ -11,10 +11,14 @@ ENC_IANDO = "c9b87090-8768-50be-987e-8ca0a8983429"
 ENC_PREG  = "ce6b111e-9beb-5a91-91ad-ec5043976fd5"
 ENC_CONS  = "c2503561-c00d-5460-8157-43d594472b4a"
 ENC_INR   = "b4bb88a3-9a04-5142-85bd-bb63c270f632"
+ENC_BPG   = "04cf03db-3b8e-5020-84b0-50b06338767a"
 
 DX       = "1a5aa050-661d-5e89-95d7-c1eba476df22"
 SAP      = "668e0221-8b41-5669-9ad8-78e193d42494"
 Q28      = "50be4b26-6c5b-5aaa-9254-3bfd313b4522"
+Q21      = "2f3ee632-dd14-51b0-a4ec-de10e7958019"
+ORAL_PEN = "b9884219-358a-594b-94f5-f8a8863a25f3"
+INJ      = "183fb30e-b861-5b7c-806f-7118a40f2b51"
 PROC     = "7a54d2d6-0d34-5e5d-b8e7-84a3cf7e9dca"
 DEATH    = "2567da9f-864e-5408-b5ae-6686f80d0a99"
 DHOME    = "98ea6c57-5f77-549b-97ca-32604c5b9220"
@@ -45,6 +49,7 @@ SAP_MISSING="RHD prophylaxis not prescribed"; INR_MISSING="RHD INR target missin
 PERF_MISSING="RHD perfusion issues not recorded"; SITE_MISSING="RHD site infection not recorded"
 SEPS_MISSING="RHD bacterial sepsis not recorded"; FU_DUE="RHD 30-day follow-up due"
 DELIV="RHD delivery outcome overdue"; DEAD="RHD death not recorded on patient"
+OVERDUE="RHD prophylaxis overdue"; LTFU="RHD lost to follow-up"
 HOSP3 = {PERF_MISSING, SITE_MISSING, SEPS_MISSING}
 
 
@@ -74,9 +79,32 @@ def mk(ident, label):
     return found[0]["uuid"] if found else None
 
 
-def enc(pu, etype, days_ago, obs):
-    return call("encounter", {"patient": pu, "encounterType": etype, "location": LOC,
-        "encounterDatetime": d(days_ago) + "T09:00:00.000+0000", "obs": obs})
+_forms = {}
+
+
+def form(name):
+    """The uuid of a form by name, as the form engine records it on the encounter."""
+    if name not in _forms:
+        hits = [f for f in call("form?q=%s&v=custom:(uuid,name)" % urllib.parse.quote(name)).get("results", [])
+                if f["name"] == name]
+        _forms[name] = hits[0]["uuid"] if hits else None
+    return _forms[name]
+
+
+def enc(pu, etype, days_ago, obs, form_name=None):
+    payload = {"patient": pu, "encounterType": etype, "location": LOC,
+               "encounterDatetime": d(days_ago) + "T09:00:00.000+0000", "obs": obs}
+    if form_name:
+        payload["form"] = form(form_name)
+    return call("encounter", payload)
+
+
+def consult(pu, days_ago, obs, form_name="RHD Consultation Visit"):
+    return enc(pu, ENC_CONS, days_ago, obs, form_name)
+
+
+def injection(pu, days_ago):
+    return enc(pu, ENC_BPG, days_ago, [D(INJ, days_ago)], "RHD BPG Delivery")
 
 
 C = lambda c, v: {"concept": c, "value": v}
@@ -124,6 +152,19 @@ CASES = [
  ("rhd95033","death_maternal",     lambda p: enc(p,ENC_PREG,20,[C(MPREG,"Maternal Death during labour")]), {DEAD}),
  ("rhd95034","death_alive_yes",    lambda p: enc(p,ENC_CONS,5,[C(ALIVE,True)]),                       set()),
  ("rhd95035","death_transfer",     lambda p: enc(p,ENC_IANDO,20,[C(PROC,TRANSFER),C(PERF,False),C(SITE,False),C(SEPS,False)]), set()),
+
+ # Overdue follows the regimen on the latest prescription, as ACT 2.0's Not Covered filter does.
+ ("rhd95036","ov_q28_overdue",     lambda p: [consult(p,40,[C(SAP,Q28)]), injection(p,40)],                 {OVERDUE}),
+ ("rhd95037","ov_q28_covered",     lambda p: [consult(p,40,[C(SAP,Q28)]), injection(p,10)],                 set()),
+ ("rhd95038","ov_switched_to_oral",lambda p: [consult(p,100,[C(SAP,Q28)]), consult(p,20,[C(SAP,ORAL_PEN)]), injection(p,60)], set()),
+ ("rhd95039","ov_q21_then_q28",    lambda p: [consult(p,100,[C(SAP,Q21)]), consult(p,10,[C(SAP,Q28)]), injection(p,25)], set()),
+
+ # Lost to follow-up counts only consultations, as ACT 2.0's most_recent_rhd_consultation does.
+ ("rhd95040","ltfu_no_contact",    lambda p: [consult(p,240,[C(SAP,Q28)]), injection(p,240)],               {OVERDUE,LTFU}),
+ ("rhd95041","ltfu_consent_only",  lambda p: [consult(p,240,[C(SAP,Q28)]), injection(p,240), consult(p,10,[],"RHD Consent")], {OVERDUE,LTFU}),
+ ("rhd95042","ltfu_allergies_only",lambda p: [consult(p,240,[C(SAP,Q28)]), injection(p,240), consult(p,10,[],"RHD Allergies")], {OVERDUE,LTFU}),
+ ("rhd95043","ltfu_recent_consult",lambda p: [consult(p,240,[C(SAP,Q28)]), injection(p,240), consult(p,100,[])], {OVERDUE}),
+ ("rhd95044","ltfu_recent_update", lambda p: [consult(p,240,[C(SAP,Q28)]), injection(p,240), consult(p,10,[],"RHD Consultation Update")], {OVERDUE}),
 ]
 
 
@@ -134,8 +175,9 @@ def seed():
         if not pu:
             print("  SEED FAIL %s" % ident); continue
         r = build(pu)
-        if isinstance(r, dict) and not r.get("uuid"):
-            print("  ENC FAIL %s: %s" % (ident, r.get("__error", "")[:160]))
+        for one in r if isinstance(r, list) else [r]:
+            if isinstance(one, dict) and not one.get("uuid"):
+                print("  ENC FAIL %s: %s" % (ident, one.get("__error", "")[:160]))
         made[ident] = pu
     return made
 
