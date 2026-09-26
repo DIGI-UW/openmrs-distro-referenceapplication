@@ -4,19 +4,31 @@
     "showUpcomingAppointments": true,
     "extensionSlots": {
       "action-menu-patient-chart-items-slot": {
-        "order": ["order-basket-action-menu"]
+        "order": [
+          "order-basket-action-menu"
+        ]
       }
     }
   },
   "@openmrs/esm-ward-app": {
     "extensionSlots": {
       "action-menu-ward-patient-items-slot": {
-        "add": ["order-basket-action-menu"]
+        "add": [
+          "order-basket-action-menu"
+        ]
       }
     }
   },
   "@openmrs/esm-laboratory-app": {
-    "labTableColumns": ["name", "patientId", "urgency", "age", "sex", "totalOrders", "action"]
+    "labTableColumns": [
+      "name",
+      "patientId",
+      "urgency",
+      "age",
+      "sex",
+      "totalOrders",
+      "action"
+    ]
   },
   "@openmrs/esm-styleguide": {
     "Brand color #1": "#005d5d"
@@ -32,7 +44,12 @@
       "fdd6f720-743b-57fc-915a-87c0f571097b",
       "060a2595-da89-5509-8cf4-645a8e50ad8a"
     ],
-    "sections": ["demographics", "contact", "relationships", "rhd-registration"],
+    "sections": [
+      "demographics",
+      "contact",
+      "relationships",
+      "rhd-registration"
+    ],
     "sectionDefinitions": [
       {
         "id": "rhd-registration",
@@ -61,8 +78,14 @@
         "label": "Consent Obtained",
         "showHeading": true,
         "customConceptAnswers": [
-          { "uuid": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3", "label": "Yes" },
-          { "uuid": "488b58ff-64f5-4f8a-8979-fa79940b1594", "label": "No" }
+          {
+            "uuid": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+            "label": "Yes"
+          },
+          {
+            "uuid": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+            "label": "No"
+          }
         ]
       },
       {
@@ -86,8 +109,14 @@
         "label": "Text-It Settings",
         "showHeading": true,
         "customConceptAnswers": [
-          { "uuid": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3", "label": "Yes" },
-          { "uuid": "488b58ff-64f5-4f8a-8979-fa79940b1594", "label": "No" }
+          {
+            "uuid": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+            "label": "Yes"
+          },
+          {
+            "uuid": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+            "label": "No"
+          }
         ]
       }
     ]
@@ -97,5 +126,33 @@
       "src": "${openmrsSpaBase}/act.png",
       "alt": "ACT logo"
     }
+  },
+  "@openmrs/esm-app-shell": {
+    "Enabled feature flags": ["patient-flags"]
+  },
+  "@openmrs/esm-patient-flags-app": {
+    "allowFlagDeletion": false,
+    "tagActions": [
+      {
+        "tagName": "RHD",
+        "workspace": "clinical-forms-workspace"
+      },
+      {
+        "tagName": "Critical data",
+        "workspace": "clinical-forms-workspace"
+      }
+    ],
+    "priorities": [
+      {
+        "priority": "RHD High",
+        "color": "red",
+        "isRiskPriority": true
+      },
+      {
+        "priority": "RHD Data Quality",
+        "color": "orange",
+        "isRiskPriority": false
+      }
+    ]
   }
 }
