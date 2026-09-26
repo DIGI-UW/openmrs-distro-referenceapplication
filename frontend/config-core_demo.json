@@ -127,7 +127,21 @@
       "alt": "ACT logo"
     }
   },
+  "@openmrs/esm-app-shell": {
+    "Enabled feature flags": ["patient-flags"]
+  },
   "@openmrs/esm-patient-flags-app": {
+    "allowFlagDeletion": false,
+    "tagActions": [
+      {
+        "tagName": "RHD",
+        "workspace": "clinical-forms-workspace"
+      },
+      {
+        "tagName": "Critical data",
+        "workspace": "clinical-forms-workspace"
+      }
+    ],
     "priorities": [
       {
         "priority": "RHD High",
