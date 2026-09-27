@@ -15,6 +15,30 @@ The OpenMRS 3.x UI is accessible at http://localhost/openmrs/spa
 
 OpenMRS Legacy UI is accessible at http://localhost/openmrs
 
+### RHD flags
+
+The backend image builds the [rhdflags](https://github.com/mherman22/openmrs-module-rhd-flags) module
+from source at `RHDFLAGS_REF` (default `main`), so build it locally:
+
+```bash
+docker compose up --build
+docker compose build --build-arg RHDFLAGS_REF=<commit or branch> backend
+```
+
+The workspace that lists the data missing behind a critical data flag comes from the
+[RHD frontend module](https://github.com/mherman22/openmrs-esm-rhd-app), which is not on npm yet. From
+a checkout of it, with this repository beside it, run the following and open
+http://localhost:8090/openmrs/spa:
+
+```bash
+npx openmrs develop --backend http://localhost --port 8090 \
+  --config-file ../openmrs-distro-referenceapplication/frontend/config-core_demo.json \
+  --config-file ../openmrs-distro-referenceapplication/frontend/config-rhd-develop.json
+```
+
+Clinician roles get the View Patient Flags privilege from the second start of the backend after it is
+first created.
+
 ### Production deployment with SSL
 
 For production deployments with HTTPS/SSL certificates, create a `.env` file in the project root:
