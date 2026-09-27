@@ -34,20 +34,18 @@ docker compose build --build-arg RHDFLAGS_REF=<commit or branch> backend
 ```
 
 Clicking a critical data flag opens a list of the data missing behind it, from the
-[RHD frontend module](https://github.com/mherman22/openmrs-esm-rhd-app). That module, and the
-[patient flags app](https://github.com/mherman22/openmrs-esm-patient-chart/tree/main/packages/esm-patient-flags-app)
-change it depends on, are not on npm yet, so run them from source against this stack. From a checkout
-of the patient chart fork, with this repository and a checkout of the RHD module beside it:
+[RHD frontend module](https://github.com/mherman22/openmrs-esm-rhd-app). That module is not on npm
+yet, so run it from source against this stack. From a checkout of the RHD module, with this repository
+beside it:
 
 ```bash
 npx openmrs develop --backend http://localhost --port 8090 \
   --config-file ../openmrs-distro-referenceapplication/frontend/config-core_demo.json \
-  --config-file ../openmrs-distro-referenceapplication/frontend/config-rhd-develop.json \
-  --sources packages/esm-patient-flags-app --sources ../openmrs-esm-rhd-app
+  --config-file ../openmrs-distro-referenceapplication/frontend/config-rhd-develop.json
 ```
 
-and open http://localhost:8090/openmrs/spa. Every other app comes from the stack. The dev server also
-takes the next port for each source, 8091 and 8092 here. `config-rhd-develop.json` sends critical data
+and open http://localhost:8090/openmrs/spa. Every other app, the patient flags app included, comes from
+the stack. The dev server also takes the next port for the module, 8091 here. `config-rhd-develop.json` sends critical data
 flags to the RHD workspace; the stack's own frontend keeps them on Clinical forms, since it does not
 load that workspace.
 
