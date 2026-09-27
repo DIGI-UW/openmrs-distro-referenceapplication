@@ -1,15 +1,11 @@
 # syntax=docker/dockerfile:1
 
 ### RHD Flags Stage
-# rhdflags is not published to a Maven repository yet, so the image builds it from source. ADD
-# resolves the ref to a commit, so a new commit on it rebuilds this stage and nothing else does.
 FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS rhdflags
 ARG RHDFLAGS_REPO=https://github.com/mherman22/openmrs-module-rhd-flags.git
 ARG RHDFLAGS_REF=main
 ADD ${RHDFLAGS_REPO}#${RHDFLAGS_REF} /rhdflags
 WORKDIR /rhdflags
-# The module's own CI runs its tests; here they would only lengthen every image build. The cache
-# mount keeps the Maven repository between builds, so a new ref does not download it all again.
 RUN --mount=type=cache,target=/root/.m2/repository mvn -B -q -DskipTests package
 
 ### Dev Stage

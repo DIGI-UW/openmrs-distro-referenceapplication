@@ -1,14 +1,8 @@
 {
   "@openmrs/esm-patient-flags-app": {
     "tagActions": [
-      {
-        "tagName": "RHD",
-        "workspace": "clinical-forms-workspace"
-      },
-      {
-        "tagName": "Critical data",
-        "workspace": "rhd-flag-gaps-workspace"
-      }
+      { "tagName": "RHD", "workspace": "clinical-forms-workspace" },
+      { "tagName": "Critical data", "workspace": "rhd-flag-gaps-workspace" }
     ]
   }
 }
