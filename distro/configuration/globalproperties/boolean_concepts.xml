@@ -1,7 +1,4 @@
 <config>
-    <!-- Core stores the answer to a Boolean question as the concept these name, by concept id. Without
-         them a form cannot save a Yes or No answer to one, such as Perfusion Issues on Procedures and
-         Outcomes. 1 and 2 are core's own True and False, the answers those questions offer. -->
     <globalProperties>
         <globalProperty>
             <property>concept.true</property>

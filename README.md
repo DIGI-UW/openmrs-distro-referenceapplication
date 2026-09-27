@@ -17,26 +17,18 @@ OpenMRS Legacy UI is accessible at http://localhost/openmrs
 
 ### RHD flags
 
-The RHD critical data flags need the [rhdflags](https://github.com/mherman22/openmrs-module-rhd-flags)
-module, which is not published yet, so the backend image builds it from source: the `rhdflags` stage
-of the `Dockerfile` fetches the module at `RHDFLAGS_REF` (default `main`), builds its omod and adds it
-to the distribution's modules. Build the image locally rather than using the pre-built one, which does
-not include it:
+The backend image builds the [rhdflags](https://github.com/mherman22/openmrs-module-rhd-flags) module
+from source at `RHDFLAGS_REF` (default `main`), so build it locally:
 
 ```bash
 docker compose up --build
-```
-
-A new commit on the ref is picked up by the next build. To build a particular commit or branch:
-
-```bash
 docker compose build --build-arg RHDFLAGS_REF=<commit or branch> backend
 ```
 
-Clicking a critical data flag opens a list of the data missing behind it, from the
-[RHD frontend module](https://github.com/mherman22/openmrs-esm-rhd-app). That module is not on npm
-yet, so run it from source against this stack. From a checkout of the RHD module, with this repository
-beside it:
+The workspace that lists the data missing behind a critical data flag comes from the
+[RHD frontend module](https://github.com/mherman22/openmrs-esm-rhd-app), which is not on npm yet. From
+a checkout of it, with this repository beside it, run the following and open
+http://localhost:8090/openmrs/spa:
 
 ```bash
 npx openmrs develop --backend http://localhost --port 8090 \
@@ -44,14 +36,8 @@ npx openmrs develop --backend http://localhost --port 8090 \
   --config-file ../openmrs-distro-referenceapplication/frontend/config-rhd-develop.json
 ```
 
-and open http://localhost:8090/openmrs/spa. Every other app, the patient flags app included, comes from
-the stack. The dev server also takes the next port for the module, 8091 here. `config-rhd-develop.json` sends critical data
-flags to the RHD workspace; the stack's own frontend keeps them on Clinical forms, since it does not
-load that workspace.
-
-View Patient Flags, which patientflags checks but does not create, comes from
-`distro/configuration/privileges`. Clinician roles get it through `Privilege Level: High`, from the
-second start of the backend after the privilege is first created.
+Clinician roles get the View Patient Flags privilege from the second start of the backend after it is
+first created.
 
 ### Production deployment with SSL
 
