@@ -174,6 +174,12 @@ def seed():
         pu = mk(ident, label)
         if not pu:
             print("  SEED FAIL %s" % ident); continue
+        # Start from nothing: dates are relative to today, and a stale obs from another day or a
+        # hand-made one would decide the case instead of what this run records.
+        for e in call("encounter?patient=%s&v=custom:(uuid)" % pu).get("results", []):
+            call("encounter/%s" % e["uuid"], None, "DELETE")
+        for o in call("obs?patient=%s&v=custom:(uuid)" % pu).get("results", []):
+            call("obs/%s" % o["uuid"], None, "DELETE")
         r = build(pu)
         for one in r if isinstance(r, list) else [r]:
             if isinstance(one, dict) and not one.get("uuid"):

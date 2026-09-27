@@ -10,3 +10,6 @@ CLAUDE.md
 .cursor/
 .aider*
 .clinerules
+
+# Built from openmrs-module-rhd-flags and copied in; see "RHD flags" in the README
+modules/*.omod
