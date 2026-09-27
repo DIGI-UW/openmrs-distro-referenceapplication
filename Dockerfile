@@ -1,5 +1,16 @@
 # syntax=docker/dockerfile:1
 
+### RHD Flags Stage
+# rhdflags is not published to a Maven repository yet, so the image builds it from source. ADD
+# resolves the ref to a commit, so a new commit on it rebuilds this stage and nothing else does.
+FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS rhdflags
+ARG RHDFLAGS_REPO=https://github.com/mherman22/openmrs-module-rhd-flags.git
+ARG RHDFLAGS_REF=main
+ADD ${RHDFLAGS_REPO}#${RHDFLAGS_REF} /rhdflags
+WORKDIR /rhdflags
+# The module's own CI runs its tests; here they would only lengthen every image build.
+RUN mvn -B -q -DskipTests package
+
 ### Dev Stage
 FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS dev
 WORKDIR /openmrs_distro
@@ -36,5 +47,6 @@ COPY --from=dev /openmrs/distribution/openmrs_core/openmrs.war /openmrs/distribu
 
 COPY --from=dev /openmrs/distribution/openmrs-distro.properties /openmrs/distribution/
 COPY --from=dev /openmrs/distribution/openmrs_modules /openmrs/distribution/openmrs_modules
+COPY --from=rhdflags /rhdflags/omod/target/rhdflags-omod-*.omod /openmrs/distribution/openmrs_modules/
 COPY --from=dev /openmrs/distribution/openmrs_owas /openmrs/distribution/openmrs_owas
 COPY --from=dev  /openmrs/distribution/openmrs_config /openmrs/distribution/openmrs_config
