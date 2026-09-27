@@ -155,6 +155,12 @@
   },
   "@openmrs/esm-patient-flags-app": {
     "allowFlagDeletion": false,
+    "flagActions": [
+      {
+        "flagName": "RHD death not recorded on patient",
+        "workspace": "clinical-forms-workspace"
+      }
+    ],
     "tagActions": [
       {
         "tagName": "RHD",

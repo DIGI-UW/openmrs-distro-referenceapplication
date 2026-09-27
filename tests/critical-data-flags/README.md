@@ -5,14 +5,20 @@ the "critical data flags" from the ACT 2.0 registry. A critical data flag marks 
 should have been completed on a form and was not.
 
     python3 test_flag_rules.py       # 44 cases: does each rule match the right patients
-    python3 test_flag_lifecycle.py   # 12 cases: does a flag clear when the gap is filled
+    python3 test_flag_lifecycle.py   # 13 cases: does a flag clear when the gap is filled
+    python3 test_gap_queries.py      # 7 cases: does each flag's gap query name the encounter to complete
 
-Both talk to `http://localhost/openmrs` as `admin` and seed their own patients under the
-identifiers `rhd95xxx` and `rhd96xxx`. The lifecycle test voids everything it recorded for its
-patients before it starts, because the previous run ends with each gap filled and would otherwise
-never see the flag raised. Both are safe to re-run. They evaluate flags by re-saving each flag
-definition over REST, which is what the patientflags module does on a definition change, so they
-do not wait for the scheduled task.
+All three talk to `http://localhost/openmrs` as `admin` and seed their own patients under the
+identifiers `rhd95xxx`, `rhd96xxx` and `rhd97xxx`. Each voids what an earlier run recorded for its
+patients before it seeds them: the rule cases are dated relative to today, so a patient seeded on an
+earlier day would decide a boundary case on stale dates, and the lifecycle run ends with each gap
+filled, so it would otherwise never see the flag raised. So all three are safe to re-run. The rule
+and lifecycle tests evaluate flags by re-saving each flag definition over REST, which is what the
+patientflags module does on a definition change, so they do not wait for the scheduled task.
+
+`test_gap_queries.py` checks the gap queries in
+`distro/configuration/globalproperties/rhd_flag_gap_queries.xml` through the rhdflags gap look-up,
+which needs the rhdflags omod described in the top-level README.
 
 `test_flag_rules.py` covers each rule's positive cases, its negatives, and the boundary a day
 either side of every time window. Defects it caught, all now fixed:
