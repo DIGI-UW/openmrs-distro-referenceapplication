@@ -1,7 +1,4 @@
 <config>
-    <!-- Gap queries for the rhdflags gap look-up (GET /ws/rest/v1/rhdflags/gap), one per critical data
-         flag. Each returns (encounter uuid, question concept uuid) rows for the patient named :patientId.
-         "RHD death not recorded on patient" has none: it is fixed on the patient record, not on a form. -->
     <globalProperties>
         <globalProperty>
             <property>rhdflags.gapQuery.b1f7a2c0-0005-4a00-9000-000000000005</property>

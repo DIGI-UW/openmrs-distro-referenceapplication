@@ -3,8 +3,6 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <!-- O3 saves the signed-in user as an encounter's provider, so a user without one cannot save a form.
-         Clinicians get a provider when their account is set up; the built-in admin has none. -->
     <changeSet id="act3-admin-provider-1" author="act3">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="1">SELECT COUNT(*) FROM users WHERE system_id = 'admin'</sqlCheck>
