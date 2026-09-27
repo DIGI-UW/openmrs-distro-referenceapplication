@@ -8,8 +8,9 @@ ARG RHDFLAGS_REPO=https://github.com/mherman22/openmrs-module-rhd-flags.git
 ARG RHDFLAGS_REF=main
 ADD ${RHDFLAGS_REPO}#${RHDFLAGS_REF} /rhdflags
 WORKDIR /rhdflags
-# The module's own CI runs its tests; here they would only lengthen every image build.
-RUN mvn -B -q -DskipTests package
+# The module's own CI runs its tests; here they would only lengthen every image build. The cache
+# mount keeps the Maven repository between builds, so a new ref does not download it all again.
+RUN --mount=type=cache,target=/root/.m2/repository mvn -B -q -DskipTests package
 
 ### Dev Stage
 FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS dev
