@@ -72,6 +72,7 @@ services:
       - ./distro/configuration/flags:/openmrs/distribution/openmrs_config/flags:ro
       - ./distro/configuration/privileges:/openmrs/distribution/openmrs_config/privileges/rhd:ro
       - ./distro/configuration/globalproperties:/openmrs/distribution/openmrs_config/globalproperties:ro
+      - ./distro/configuration/liquibase:/openmrs/distribution/openmrs_config/liquibase:ro
 
 
   # MariaDB
