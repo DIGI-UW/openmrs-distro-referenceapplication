@@ -72,7 +72,6 @@ services:
       - ./distro/configuration/flags:/openmrs/distribution/openmrs_config/flags:ro
       - ./distro/configuration/privileges:/openmrs/distribution/openmrs_config/privileges/rhd:ro
       - ./distro/configuration/globalproperties:/openmrs/distribution/openmrs_config/globalproperties:ro
-      - ./modules/rhdflags-1.0.0-SNAPSHOT.omod:/openmrs/distribution/openmrs_modules/rhdflags-1.0.0-SNAPSHOT.omod:ro
 
 
   # MariaDB

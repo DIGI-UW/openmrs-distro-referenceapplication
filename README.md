@@ -18,17 +18,20 @@ OpenMRS Legacy UI is accessible at http://localhost/openmrs
 ### RHD flags
 
 The RHD critical data flags need the [rhdflags](https://github.com/mherman22/openmrs-module-rhd-flags)
-module, which is not published yet, so `docker compose up` mounts it from
-`modules/rhdflags-1.0.0-SNAPSHOT.omod`. Build it and copy it there before starting the stack:
+module, which is not published yet, so the backend image builds it from source: the `rhdflags` stage
+of the `Dockerfile` fetches the module at `RHDFLAGS_REF` (default `main`), builds its omod and adds it
+to the distribution's modules. Build the image locally rather than using the pre-built one, which does
+not include it:
 
 ```bash
-(cd ../openmrs-module-rhd-flags && mvn clean install)
-cp ../openmrs-module-rhd-flags/omod/target/rhdflags-omod-1.0.0-SNAPSHOT.omod modules/rhdflags-1.0.0-SNAPSHOT.omod
+docker compose up --build
 ```
 
-The file is not committed, since it changes with every build of the module. Without it Docker mounts
-an empty directory in its place and the backend starts without rhdflags. After copying a new build,
-restart the backend.
+A new commit on the ref is picked up by the next build. To build a particular commit or branch:
+
+```bash
+docker compose build --build-arg RHDFLAGS_REF=<commit or branch> backend
+```
 
 Clicking a critical data flag opens a list of the data missing behind it, from the
 [RHD frontend module](https://github.com/mherman22/openmrs-esm-rhd-app). That module, and the
