@@ -39,6 +39,14 @@ npx openmrs develop --backend http://localhost --port 8090 \
 Clinician roles get the View Patient Flags privilege from the second start of the backend after it is
 first created.
 
+Each critical data flag's criteria return a row per missing answer: the patient, the encounter, and
+the question. rhdflags lists those rows as the flag's gaps. When a patient has no encounter to point
+at yet, such as no RHD Consultation Visit, the flag still shows and the workspace offers a new form.
+
+Change a flag's criteria in `distro/configuration/flags/rhd_flags.csv` and restart the backend so
+Initializer loads it. Saving criteria through the patientflags REST API stores `<` as `&lt;`, which
+breaks every criterion that compares dates.
+
 ### Production deployment with SSL
 
 For production deployments with HTTPS/SSL certificates, create a `.env` file in the project root:
