@@ -1,6 +1,6 @@
 -- =============================================================================
 -- RHD Patient List
--- One row per patient enrolled in the RHD program.
+-- One row per patient enrolled in the RHD Registry program.
 -- Parameters: @startDate, @endDate  (program enrollment date range)
 -- =============================================================================
 SELECT
@@ -78,15 +78,47 @@ SELECT
         WHERE e_last.patient_id = p.person_id AND e_last.voided = 0
     )                                                               AS last_consultation_date,
 
+    -- Latest Secondary Antibiotic Prophylaxis answer
+    (
+        SELECT cn_sap.name
+        FROM obs o_sap
+        JOIN concept_name cn_sap ON cn_sap.concept_id = o_sap.value_coded
+            AND cn_sap.locale = 'en' AND cn_sap.locale_preferred = 1 AND cn_sap.voided = 0
+        WHERE o_sap.person_id = p.person_id AND o_sap.voided = 0
+          AND o_sap.concept_id = (SELECT concept_id FROM concept WHERE uuid = '668e0221-8b41-5669-9ad8-78e193d42494')
+        ORDER BY o_sap.obs_datetime DESC, o_sap.obs_id DESC LIMIT 1
+    )                                                               AS prophylaxis_regimen,
+
+    -- Next consultation: the latest Next Consultation Time Amount after its encounter's date, in the
+    -- Time Period recorded on the same encounter
+    (
+        SELECT DATE(CASE per.uuid
+            WHEN '1072AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' THEN DATE_ADD(e_amt.encounter_datetime, INTERVAL ROUND(amt.value_numeric) DAY)
+            WHEN '1073AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' THEN DATE_ADD(e_amt.encounter_datetime, INTERVAL ROUND(amt.value_numeric) WEEK)
+            WHEN '1074AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' THEN DATE_ADD(e_amt.encounter_datetime, INTERVAL ROUND(amt.value_numeric) MONTH)
+            WHEN '1734AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' THEN DATE_ADD(e_amt.encounter_datetime, INTERVAL ROUND(amt.value_numeric) YEAR)
+        END)
+        FROM obs amt
+        JOIN encounter e_amt ON e_amt.encounter_id = amt.encounter_id AND e_amt.voided = 0
+        JOIN obs o_per ON o_per.encounter_id = amt.encounter_id AND o_per.voided = 0
+            AND o_per.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1732AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+        JOIN concept per ON per.concept_id = o_per.value_coded
+        WHERE amt.person_id = p.person_id AND amt.voided = 0
+          AND amt.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'ba4b8a87-2ce8-559e-9a30-45504a9b6c1f')
+        ORDER BY e_amt.encounter_datetime DESC, amt.obs_id DESC LIMIT 1
+    )                                                               AS next_consultation_date,
+
+    -- Clinics, from the Assigned Cardiac Clinic and Health Center location attributes
+    cardiac_loc.name                                                AS cardiac_clinic,
+    primary_loc.name                                                AS primary_care_clinic,
+
     p.uuid                                                          AS patient_uuid
 
 FROM patient_program pp
 
--- Only the RHD program (identified by the active workflow state concept used throughout the module)
-JOIN patient_state ps ON ps.patient_program_id = pp.patient_program_id
-    AND ps.voided = 0
-JOIN program_workflow_state pws ON pws.program_workflow_state_id = ps.state
+-- Only the RHD Registry program
 JOIN program pw ON pw.program_id = pp.program_id AND pw.retired = 0
+    AND pw.uuid = '7d73e143-a550-5a9d-aecd-dd771add098d'
 
 JOIN patient pat ON pat.patient_id = pp.patient_id AND pat.voided = 0
 JOIN person p    ON p.person_id    = pp.patient_id  AND p.voided = 0
@@ -118,6 +150,12 @@ LEFT JOIN person_attribute pa_village
     ON pa_village.person_id = p.person_id AND pa_village.voided = 0
     AND pa_village.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
                                                 WHERE name = 'Health Center' LIMIT 1)
+LEFT JOIN person_attribute pa_cardiac
+    ON pa_cardiac.person_id = p.person_id AND pa_cardiac.voided = 0
+    AND pa_cardiac.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
+                                                WHERE uuid = 'fe261119-2911-5b36-be40-8f9827826987')
+LEFT JOIN location cardiac_loc ON cardiac_loc.location_id = pa_cardiac.value
+LEFT JOIN location primary_loc ON primary_loc.location_id = pa_village.value
 
 WHERE
     pp.voided = 0
