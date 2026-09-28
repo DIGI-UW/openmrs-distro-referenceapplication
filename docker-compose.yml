@@ -71,7 +71,7 @@ services:
       - ./distro/configuration/flagtags:/openmrs/distribution/openmrs_config/flagtags:ro
       - ./distro/configuration/flags:/openmrs/distribution/openmrs_config/flags:ro
       - ./distro/configuration/privileges:/openmrs/distribution/openmrs_config/privileges/rhd:ro
-      - ./distro/configuration/globalproperties:/openmrs/distribution/openmrs_config/globalproperties:ro
+      - ./distro/configuration/globalproperties/rhd:/openmrs/distribution/openmrs_config/globalproperties/rhd:ro
       - ./distro/configuration/liquibase:/openmrs/distribution/openmrs_config/liquibase:ro
 
 
