@@ -1,5 +1,13 @@
 # syntax=docker/dockerfile:1
 
+### RHD Flags Stage
+FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS rhdflags
+ARG RHDFLAGS_REPO=https://github.com/mherman22/openmrs-module-rhd-flags.git
+ARG RHDFLAGS_REF=main
+ADD ${RHDFLAGS_REPO}#${RHDFLAGS_REF} /rhdflags
+WORKDIR /rhdflags
+RUN --mount=type=cache,target=/root/.m2/repository mvn -B -q -DskipTests package
+
 ### Dev Stage
 FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS dev
 WORKDIR /openmrs_distro
@@ -36,5 +44,6 @@ COPY --from=dev /openmrs/distribution/openmrs_core/openmrs.war /openmrs/distribu
 
 COPY --from=dev /openmrs/distribution/openmrs-distro.properties /openmrs/distribution/
 COPY --from=dev /openmrs/distribution/openmrs_modules /openmrs/distribution/openmrs_modules
+COPY --from=rhdflags /rhdflags/omod/target/rhdflags-omod-*.omod /openmrs/distribution/openmrs_modules/
 COPY --from=dev /openmrs/distribution/openmrs_owas /openmrs/distribution/openmrs_owas
 COPY --from=dev  /openmrs/distribution/openmrs_config /openmrs/distribution/openmrs_config
