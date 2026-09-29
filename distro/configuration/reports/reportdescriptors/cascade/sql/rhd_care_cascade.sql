@@ -45,15 +45,12 @@ bpg AS (
     WHERE regimen_uuid IN ('50be4b26-6c5b-5aaa-9254-3bfd313b4522','2f3ee632-dd14-51b0-a4ec-de10e7958019',
                            '91230c88-6a90-5d45-af50-fa6155fe5dd7')
 ),
+-- Adherence as rhdflags' RHD Prophylaxis Adherence Refresh last computed it, so as of its last run rather
+-- than the end date: ACT 2.0's rule, days late against the BPG interval over the days prescribed.
 adherence AS (
-    SELECT o.person_id,
-           SUBSTRING_INDEX(GROUP_CONCAT(o.value_numeric ORDER BY o.obs_datetime DESC, o.obs_id DESC), ',', 1) AS latest
-    FROM obs o
-    JOIN bpg b ON b.person_id = o.person_id
-    WHERE o.voided = 0
-      AND o.concept_id = (SELECT concept_id FROM concept WHERE uuid = '8edff8dc-4af6-5d0f-bf1d-8e349c7a1b15')
-      AND o.obs_datetime <= @endDate
-    GROUP BY o.person_id
+    SELECT b.person_id, a.adherence
+    FROM bpg b
+    JOIN rhdflags_prophylaxis_adherence a ON a.patient_id = b.person_id
 )
 SELECT 1 AS step_order, 'Active' AS step, COUNT(*) AS patients FROM rhd_active
 UNION ALL
@@ -71,5 +68,5 @@ SELECT 5, 'Initiated BPG', COUNT(*) FROM bpg b
                  AND d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '5bcc7d12-b279-5955-815c-090a1f392071')
                  AND d.value_datetime IS NOT NULL AND d.obs_datetime <= @endDate)
 UNION ALL
-SELECT 6, 'Adherent', COUNT(*) FROM adherence WHERE CAST(latest AS DECIMAL(10,2)) >= 80
+SELECT 6, 'Adherent', COUNT(*) FROM adherence WHERE adherence >= 0.8
 ORDER BY step_order
