@@ -6,11 +6,12 @@
 WITH scr_active AS (
     SELECT DISTINCT pp.patient_id
     FROM patient_program pp
-    JOIN patient_state ps ON ps.patient_program_id = pp.patient_program_id
-        AND ps.voided = 0 AND ps.end_date IS NULL
-    JOIN program_workflow_state pws ON pws.program_workflow_state_id = ps.state
-        AND pws.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'de743df6-7404-51d9-97be-0d988a4759a1')
+    -- Enrolled in the RHD Registry on the end date and not completed by then, as the registry report counts
+    -- an enrolment active. O3 records no workflow state on enrolment, and entering a terminal state completes it.
+    JOIN program pr ON pr.program_id = pp.program_id AND pr.uuid = '7d73e143-a550-5a9d-aecd-dd771add098d'
     WHERE pp.voided = 0
+      AND DATE(pp.date_enrolled) <= DATE(@endDate)
+      AND (pp.date_completed IS NULL OR DATE(pp.date_completed) > DATE(@endDate))
 ),
 category_obs AS (
     SELECT o.person_id, o.obs_datetime, o.obs_id, ans.uuid AS cat_uuid
