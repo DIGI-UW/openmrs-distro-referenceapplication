@@ -46,14 +46,17 @@ SELECT
         WHEN (SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.false') THEN 'No'
         ELSE contra_name.name
     END)                                                            AS contraindications,
+    -- From the latest RHD Echocardiogram; blank when that echo did not answer it
     (
         SELECT cn_echo.name
-        FROM obs o_echo
-        JOIN concept_name cn_echo ON cn_echo.concept_id = o_echo.value_coded
+        FROM encounter e_echo
+        JOIN form f_echo ON f_echo.form_id = e_echo.form_id AND f_echo.uuid = '88e54fb0-1243-3f7a-b925-f64648ca6635'
+        LEFT JOIN obs o_echo ON o_echo.encounter_id = e_echo.encounter_id AND o_echo.voided = 0
+            AND o_echo.concept_id = (SELECT concept_id FROM concept WHERE uuid = '8d6e9ea5-aa27-57d6-bf43-198aca63a951')
+        LEFT JOIN concept_name cn_echo ON cn_echo.concept_id = o_echo.value_coded
             AND cn_echo.locale = 'en' AND cn_echo.locale_preferred = 1 AND cn_echo.voided = 0
-        WHERE o_echo.person_id = p.person_id AND o_echo.voided = 0
-          AND o_echo.concept_id = (SELECT concept_id FROM concept WHERE uuid = '8d6e9ea5-aa27-57d6-bf43-198aca63a951')
-        ORDER BY o_echo.obs_datetime DESC, o_echo.obs_id DESC LIMIT 1
+        WHERE e_echo.patient_id = p.person_id AND e_echo.voided = 0
+        ORDER BY e_echo.encounter_datetime DESC, e_echo.encounter_id DESC LIMIT 1
     )                                                               AS suitable_for_repair,
 
     MAX(cardiac_loc.name)                                           AS cardiac_clinic,
