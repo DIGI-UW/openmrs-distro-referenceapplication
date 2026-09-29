@@ -1,21 +1,21 @@
 -- =============================================================================
 -- RHD Patient List
--- One row per patient enrolled in the RHD Registry program.
+-- One row per patient enrolled in the RHD Registry program, from their latest enrollment.
 -- Parameters: @startDate, @endDate  (program enrollment date range)
 -- =============================================================================
 SELECT
     -- Identifiers
-    rhd_id.identifier                                               AS rhd_id,
-    ext_id.identifier                                               AS external_id,
-    nat_id.identifier                                               AS national_id,
+    MAX(rhd_id.identifier)                                          AS rhd_id,
+    MAX(ext_id.identifier)                                          AS external_id,
+    MAX(nat_id.identifier)                                          AS national_id,
 
     -- Demographics
-    CONCAT(pn.given_name, ' ', pn.family_name)                      AS full_name,
+    MAX(CONCAT(pn.given_name, ' ', pn.family_name))                 AS full_name,
     p.gender                                                        AS sex,
     p.birthdate                                                     AS date_of_birth,
     TIMESTAMPDIFF(YEAR, p.birthdate, CURDATE())                     AS age_years,
-    pa_phone.value                                                  AS phone_number,
-    pa_village.value                                                AS village,
+    MAX(pa_phone.value)                                             AS phone_number,
+    MAX(pa_village.value)                                           AS village,
 
     -- Program enrollment
     DATE(pp.date_enrolled)                                          AS date_enrolled,
@@ -109,8 +109,17 @@ SELECT
     )                                                               AS next_consultation_date,
 
     -- Clinics, from the Assigned Cardiac Clinic and Health Center location attributes
-    cardiac_loc.name                                                AS cardiac_clinic,
-    primary_loc.name                                                AS primary_care_clinic,
+    MAX(cardiac_loc.name)                                           AS cardiac_clinic,
+    MAX(primary_loc.name)                                           AS primary_care_clinic,
+
+    -- The flags whose patient lists the patient is on now; rhdflags gives each list its flag's uuid
+    (
+        SELECT GROUP_CONCAT(f.name ORDER BY f.name SEPARATOR '|')
+        FROM cohort_member cm
+        JOIN cohort c ON c.cohort_id = cm.cohort_id AND c.voided = 0
+        JOIN patientflags_flag f ON f.uuid = c.uuid AND f.retired = 0
+        WHERE cm.patient_id = p.person_id AND cm.voided = 0 AND cm.end_date IS NULL
+    )                                                               AS rhd_flags,
 
     p.uuid                                                          AS patient_uuid
 
@@ -159,9 +168,15 @@ LEFT JOIN location primary_loc ON primary_loc.location_id = pa_village.value
 
 WHERE
     pp.voided = 0
+    AND NOT EXISTS (
+        SELECT 1 FROM patient_program later
+        WHERE later.patient_id = pp.patient_id AND later.program_id = pp.program_id AND later.voided = 0
+          AND (later.date_enrolled > pp.date_enrolled
+               OR (later.date_enrolled = pp.date_enrolled AND later.patient_program_id > pp.patient_program_id))
+    )
     AND DATE(pp.date_enrolled) >= @startDate
     AND DATE(pp.date_enrolled) <= @endDate
 
-GROUP BY pp.patient_program_id
+GROUP BY pp.patient_program_id, pp.date_enrolled, pp.date_completed, p.person_id, p.gender, p.birthdate, p.uuid
 
-ORDER BY rhd_id.identifier, pn.family_name, pn.given_name
+ORDER BY rhd_id, full_name
