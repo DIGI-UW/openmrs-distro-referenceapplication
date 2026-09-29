@@ -13,6 +13,8 @@ COPY spa-assemble-config.json .
 COPY spa-build-config.json .
 
 ARG CACHE_BUST
+# Reassembles whenever the ACT module's next tag moves, so a rebuild picks up its latest publish.
+ADD https://registry.npmjs.org/@mherman22/esm-act-app/next /tmp/esm-act-app-next.json
 RUN npx --legacy-peer-deps openmrs@${APP_SHELL_VERSION:-next} assemble --manifest --mode config --config spa-assemble-config.json --target ./spa
 RUN npx --legacy-peer-deps openmrs@${APP_SHELL_VERSION:-next} build --build-config spa-build-config.json --target ./spa
 RUN if [ ! -f ./spa/index.html ]; then echo 'Build failed. Please check the logs above for details. This may have happened because of an update to a library that OpenMRS depends on.'; exit 1; fi
