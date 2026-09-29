@@ -28,7 +28,12 @@ docker compose build --build-arg RHDFLAGS_REF=<commit or branch> backend
 The frontend image assembles the [ACT frontend module](https://github.com/mherman22/openmrs-esm-act-app),
 `@mherman22/esm-act-app`, from npm at its `next` tag, alongside the RefApp's modules. It adds ACT home, the
 registry, and the workspace that lists the data missing behind a critical data flag. `docker compose up
---build` builds the frontend image with it.
+--build` builds the frontend image with it, and rebuilding picks up the module's latest `next` version.
+
+ACT home is the landing page: `defaultDashboardPerRole` in `frontend/config-core_demo.json` sends each of
+the RefApp's organizational roles, and System Developer, to `/home/act-home`. The home app sends a role
+left out of it to Service Queues. ACT home needs View Patient Flags, which clinician roles get through
+`Privilege Level: High`.
 
 To work on the module itself, run it from a checkout of it, with this repository beside it, and open
 http://localhost:8090/openmrs/spa:
