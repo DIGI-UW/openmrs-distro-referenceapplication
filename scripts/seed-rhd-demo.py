@@ -39,8 +39,10 @@ LOC = {
     "district": "f8cf700a-2e5d-594e-86e0-061fedae2c6d",  # Kitgum General Hospital
     "community": "9aacad7c-bbc5-5669-977d-4c20e31aa6e8",  # Akunalaber HCIII
 }
-WINDOW = {"tertiary": 6, "district": 11, "community": 16}  # each clinic its own hours, so same-day visits do not overlap
-FORM = {  # form name -> encounter type uuid
+# Each clinic its own hours, so same-day visits do not overlap.
+WINDOW = {"tertiary": 6, "district": 11, "community": 16}
+# Form name -> encounter type uuid.
+FORM = {
     "RHD Patient Information": "c2503561-c00d-5460-8157-43d594472b4a",
     "RHD Consultation Visit": "c2503561-c00d-5460-8157-43d594472b4a",
     "RHD Anticoagulation": "c2503561-c00d-5460-8157-43d594472b4a",
@@ -206,8 +208,8 @@ PATIENTS = [
     ("Daniel", "Ssempijja", "M", "2004-06-11", "Valve surgery, all outcomes and follow-up recorded", [],
      registered(300, "RHD C", "Q28") + at("community", bpg_history(28, 3, since=300)) +
      [(70, "tertiary", valve_surgery(70, "Discharge to home", 60, follow_up_days=25))]),
-    ("Florence", "Atim", "F", "1999-12-05", "Pregnancy with delivery recorded", [],
-     registered(250, "RHD B", "Q28") + at("community", bpg_history(28, 20, since=250)) +
+    ("Florence", "Atim", "F", "1999-12-05", "Pregnancy with delivery recorded, next injection due in 4 days", [],
+     registered(250, "RHD B", "Q28") + at("community", bpg_history(28, 24, since=250)) +
      [(200, "district", pregnancy(60, delivered=True))]),
     ("Irene", "Kyomuhendo", "F", "2014-02-21", "Newly registered, first injection given", [],
      registered(2, "RHD A", "Q28") + [(2, "district", injection(2))]),
@@ -277,7 +279,8 @@ PATIENTS = [
 # procedure, urgency and Completed answer, each tagged with the form field it came from, so the form
 # can edit it later.
 
-GROUP = "ce93d393-1df5-587f-bf11-c373eac2ccf4"  # Interventional Recommendation(s); its procedure member shares it
+# Interventional Recommendation(s); its procedure member shares the concept.
+GROUP = "ce93d393-1df5-587f-bf11-c373eac2ccf4"
 URGENCY = "7b8eda07-34b6-55f2-ab6c-1b295f41918b"
 COMPLETED = "1632f8dc-195d-5d67-a52e-6c7a057cb536"
 SURGERY, CATHETERIZATION = "aa5fefb0-cf61-5f36-82e6-31dbbdf3f616", "91a4d13f-4bc8-54b0-a107-f4ab84cb7d60"
@@ -498,8 +501,8 @@ def main():
 
     if not args.no_refresh:
         print("\nRunning the flag and adherence refresh tasks, so the patient lists and BPG status fill now.")
+        # taskaction runs both tasks within the request, so they have finished when it returns.
         run_refresh(api)
-        time.sleep(15)
 
     print("\nFlags per patient:")
     wrong = 0
