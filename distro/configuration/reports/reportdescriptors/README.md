@@ -132,6 +132,14 @@ designs:
 
 ---
 
+### `waitinglist/`: Procedural waiting list
+
+| File | UUID | Parameters | Description |
+|---|---|---|---|
+| `procedural_waiting_list.yml` | `5b0f1c2e-...` | none | One row per open interventional recommendation in each living RHD Registry patient's latest RHD Consultation Visit. A recommendation is open unless its Completed answer is true. `recommendation_uuid` identifies each recommendation's obs group. `date_added` is the first consultation that recommended the same procedure since it was last completed. |
+
+---
+
 ### `inr/` — Anticoagulation INR monitoring
 
 | File | UUID | Parameters | Description |
