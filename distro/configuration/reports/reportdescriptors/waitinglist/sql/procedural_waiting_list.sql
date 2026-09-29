@@ -68,7 +68,8 @@ SELECT
 
 FROM encounter e
 JOIN form f ON f.form_id = e.form_id AND f.uuid = '4b063fc7-996f-3001-8500-8940e201be8f'
-JOIN person p ON p.person_id = e.patient_id AND p.voided = 0
+-- A patient who has died is not waiting, although the RHD Registry enrolment stays open
+JOIN person p ON p.person_id = e.patient_id AND p.voided = 0 AND p.dead = 0
 JOIN patient pat ON pat.patient_id = p.person_id AND pat.voided = 0
 
 -- Each recommendation is an obs group of Interventional Recommendation(s); its procedure member has the same concept
