@@ -9,7 +9,7 @@
     },
     "extensionSlots": {
       "homepage-dashboard-slot": {
-        "order": ["act-home-dashboard-link", "act-registry-dashboard-link"]
+        "order": ["act-home-dashboard-link", "act-registry-dashboard-link", "act-waiting-list-dashboard-link"]
       }
     }
   },
