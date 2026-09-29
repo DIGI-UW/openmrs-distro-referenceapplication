@@ -11,7 +11,8 @@
       "homepage-dashboard-slot": {
         "order": [
           "act-home-dashboard-link",
-          "act-registry-dashboard-link"
+          "act-registry-dashboard-link",
+          "act-waiting-list-dashboard-link"
         ],
         "remove": [
           "clinical-appointments-dashboard-link",
