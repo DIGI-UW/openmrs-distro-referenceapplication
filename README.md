@@ -31,10 +31,16 @@ registry, and the workspace that lists the data missing behind a critical data f
 --build` builds the frontend image with it. Docker reuses the assembled modules until `CACHE_BUST` changes, so
 to pick up newer `next` versions, rebuild with `docker compose build --build-arg CACHE_BUST=$(date +%s) frontend`.
 
-ACT home is the landing page: `defaultDashboardPerRole` in `frontend/config-core_demo.json` sends each of
-the RefApp's organizational roles, and System Developer, to `/home/act-home`. The home app sends a role
-left out of it to Service Queues. ACT home needs View Patient Flags, which clinician roles get through
-`Privilege Level: High`.
+ACT home is the landing page. The login app goes to `/home/act-home`, ACT home and Registry come first in
+the home page's left nav, and `defaultDashboardPerRole` in `frontend/config-core_demo.json` sends the
+RefApp's organizational roles and System Developer there too. ACT home needs View Patient Flags, which
+clinician roles get through `Privilege Level: High`.
+
+The frontend leaves out the RefApp apps ACT does not use: Service Queues, Appointments, Billing,
+Laboratory, Wards, Bed Management, Stock Management and Dispensing. They are removed from
+`frontendModules` in `frontend/spa-assemble-config.json`; the CLI's `frontendModuleExcludes` only
+removes modules an earlier config file added, so it has no effect in this single file. Their backend
+modules stay in `distro/distro.properties`, because the RefApp's demo roles grant their privileges.
 
 To work on the module itself, run it from a checkout of it, with this repository beside it, and open
 http://localhost:8090/openmrs/spa:

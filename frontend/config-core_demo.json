@@ -6,26 +6,21 @@
       "Organizational: Registration Clerk": "act-home",
       "Organizational: System Administrator": "act-home",
       "System Developer": "act-home"
+    },
+    "extensionSlots": {
+      "homepage-dashboard-slot": {
+        "order": ["act-home-dashboard-link", "act-registry-dashboard-link"]
+      }
     }
   },
   "@openmrs/esm-patient-chart-app": {
     "restrictByVisitLocationTag": true,
-    "showUpcomingAppointments": true,
+    "showUpcomingAppointments": false,
     "extensionSlots": {
       "action-menu-patient-chart-items-slot": {
         "order": ["order-basket-action-menu"]
       }
     }
-  },
-  "@openmrs/esm-ward-app": {
-    "extensionSlots": {
-      "action-menu-ward-patient-items-slot": {
-        "add": ["order-basket-action-menu"]
-      }
-    }
-  },
-  "@openmrs/esm-laboratory-app": {
-    "labTableColumns": ["name", "patientId", "urgency", "age", "sex", "totalOrders", "action"]
   },
   "@openmrs/esm-styleguide": {
     "Brand color #1": "#005d5d"
@@ -102,6 +97,9 @@
     ]
   },
   "@openmrs/esm-login-app": {
+    "links": {
+      "loginSuccess": "${openmrsSpaBase}/home/act-home"
+    },
     "logo": {
       "src": "${openmrsSpaBase}/act.png",
       "alt": "ACT logo"
