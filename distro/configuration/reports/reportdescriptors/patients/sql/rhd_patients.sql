@@ -108,6 +108,14 @@ SELECT
         ORDER BY e_amt.encounter_datetime DESC, amt.obs_id DESC LIMIT 1
     )                                                               AS next_consultation_date,
 
+    -- ACT 2.0's BPG status chip counted whole days to a due date at midnight, so 7 days out is approaching.
+    CASE WHEN MAX(adh.injection_interval_days) > 0 AND MAX(adh.next_due) IS NOT NULL THEN
+        CASE WHEN DATEDIFF(MAX(adh.next_due), CURDATE()) < 0 THEN 'Not covered'
+             WHEN DATEDIFF(MAX(adh.next_due), CURDATE()) <= 7 THEN 'Deadline approaching'
+             ELSE 'Covered' END
+    END                                                             AS bpg_status,
+    ROUND(MAX(adh.adherence) * 100)                                 AS adherence,
+
     -- Clinics, from the Assigned Cardiac Clinic and Health Center location attributes
     MAX(cardiac_loc.name)                                           AS cardiac_clinic,
     MAX(primary_loc.name)                                           AS primary_care_clinic,
@@ -165,6 +173,7 @@ LEFT JOIN person_attribute pa_cardiac
                                                 WHERE uuid = 'fe261119-2911-5b36-be40-8f9827826987')
 LEFT JOIN location cardiac_loc ON cardiac_loc.location_id = pa_cardiac.value
 LEFT JOIN location primary_loc ON primary_loc.location_id = pa_village.value
+LEFT JOIN rhdflags_prophylaxis_adherence adh ON adh.patient_id = p.person_id
 
 WHERE
     pp.voided = 0
