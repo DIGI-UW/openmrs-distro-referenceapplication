@@ -8,6 +8,16 @@ ADD ${RHDFLAGS_REPO}#${RHDFLAGS_REF} /rhdflags
 WORKDIR /rhdflags
 RUN --mount=type=cache,target=/root/.m2/repository mvn -B -q -DskipTests package
 
+### Report Descriptor Loader Stage
+# Loads the report descriptors after reporting and Initializer have started. The reporting module reads
+# reporting.loadReportsFromConfigurationAtStartup while it starts, before Initializer can set it.
+FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS reportdescriptorloader
+ARG REPORTDESCRIPTORLOADER_REPO=https://github.com/mherman22/openmrs-module-reportdescriptorloader.git
+ARG REPORTDESCRIPTORLOADER_REF=master
+ADD ${REPORTDESCRIPTORLOADER_REPO}#${REPORTDESCRIPTORLOADER_REF} /reportdescriptorloader
+WORKDIR /reportdescriptorloader
+RUN --mount=type=cache,target=/root/.m2/repository mvn -B -q -DskipTests package
+
 ### Dev Stage
 FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS dev
 WORKDIR /openmrs_distro
@@ -45,5 +55,6 @@ COPY --from=dev /openmrs/distribution/openmrs_core/openmrs.war /openmrs/distribu
 COPY --from=dev /openmrs/distribution/openmrs-distro.properties /openmrs/distribution/
 COPY --from=dev /openmrs/distribution/openmrs_modules /openmrs/distribution/openmrs_modules
 COPY --from=rhdflags /rhdflags/omod/target/rhdflags-omod-*.omod /openmrs/distribution/openmrs_modules/
+COPY --from=reportdescriptorloader /reportdescriptorloader/omod/target/reportdescriptorloader-*.omod /openmrs/distribution/openmrs_modules/
 COPY --from=dev /openmrs/distribution/openmrs_owas /openmrs/distribution/openmrs_owas
 COPY --from=dev  /openmrs/distribution/openmrs_config /openmrs/distribution/openmrs_config
