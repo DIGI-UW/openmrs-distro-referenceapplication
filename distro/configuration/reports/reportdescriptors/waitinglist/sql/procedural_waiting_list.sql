@@ -18,8 +18,10 @@ SELECT
         SELECT MIN(e_first.encounter_datetime)
         FROM obs g_first
         JOIN encounter e_first ON e_first.encounter_id = g_first.encounter_id AND e_first.voided = 0
+            AND e_first.patient_id = p.person_id
             AND e_first.form_id = e.form_id AND e_first.encounter_datetime <= e.encounter_datetime
         JOIN obs proc_first ON proc_first.obs_group_id = g_first.obs_id AND proc_first.voided = 0
+            AND proc_first.person_id = p.person_id
             AND proc_first.concept_id = g.concept_id AND proc_first.value_coded = proc.value_coded
         WHERE g_first.person_id = p.person_id AND g_first.voided = 0
           AND g_first.concept_id = g.concept_id AND g_first.obs_group_id IS NULL
@@ -30,7 +32,7 @@ SELECT
                   AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
                   AND done.value_coded = (SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true')
               JOIN encounter e_done ON e_done.encounter_id = proc_done.encounter_id AND e_done.voided = 0
-                  AND e_done.form_id = e.form_id
+                  AND e_done.patient_id = p.person_id AND e_done.form_id = e.form_id
               WHERE proc_done.person_id = p.person_id AND proc_done.voided = 0
                 AND proc_done.concept_id = g.concept_id AND proc_done.obs_group_id IS NOT NULL
                 AND proc_done.value_coded = proc.value_coded
