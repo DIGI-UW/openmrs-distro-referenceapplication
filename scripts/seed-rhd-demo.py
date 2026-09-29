@@ -489,32 +489,42 @@ def main():
     seeded = []
     for given, family, gender, birthdate, story, expected, visits in PATIENTS:
         uuid = existing_patient(api, given, family, birthdate)
-        if uuid:
-            rhd_id = "(existing)"
-        else:
+        created = not uuid
+        if created:
             uuid, rhd_id = create_patient(api, forms, given, family, gender, birthdate, visits)
+        else:
+            rhd_id = "(existing)"
         print(f"{rhd_id:>10}  {given} {family}: {story}")
-        seeded.append((given, family, uuid, sorted(expected)))
+        seeded.append((given, family, uuid, sorted(expected), created))
 
     print("\nInterventional recommendations, for the procedural waiting list:")
-    add_recommendations(api, forms, {(given, family): uuid for given, family, uuid, _ in seeded})
+    add_recommendations(api, forms, {(given, family): uuid for given, family, uuid, _, _ in seeded})
 
     if not args.no_refresh:
         print("\nRunning the flag and adherence refresh tasks, so the patient lists and BPG status fill now.")
         # taskaction runs both tasks within the request, so they have finished when it returns.
         run_refresh(api)
 
+    # A patient seeded on an earlier day has aged since, so their time-based flags may differ; only the
+    # patients created now are held to their scenario.
     print("\nFlags per patient:")
-    wrong = 0
-    for given, family, uuid, expected in seeded:
+    wrong = checked = 0
+    for given, family, uuid, expected, created in seeded:
         actual = flags_of(api, uuid)
+        if not created:
+            print(f"      {given} {family}: {', '.join(actual) or 'no flag'}   (seeded before, not checked)")
+            continue
+        checked += 1
         ok = actual == expected
         wrong += not ok
         print(f"  {'ok ' if ok else 'BAD'} {given} {family}: {', '.join(actual) or 'no flag'}"
               + ("" if ok else f"   (expected: {', '.join(expected) or 'no flag'})"))
     if wrong:
         sys.exit(f"\n{wrong} patient(s) do not carry the flags their scenario should raise.")
-    print(f"\nAll {len(seeded)} patients carry the flags their scenario should raise.")
+    if checked:
+        print(f"\nAll {checked} patients created now carry the flags their scenario should raise.")
+    else:
+        print(f"\nEvery patient was already there, so none was created or checked.")
 
 
 if __name__ == "__main__":

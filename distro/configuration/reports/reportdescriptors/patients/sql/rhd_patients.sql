@@ -108,9 +108,7 @@ SELECT
         ORDER BY e_amt.encounter_datetime DESC, amt.obs_id DESC LIMIT 1
     )                                                               AS next_consultation_date,
 
-    -- BPG coverage and adherence, as rhdflags' RHD Prophylaxis Adherence Refresh last computed them.
-    -- Coverage follows ACT 2.0's BPG status chip: past the due date, due within 7 days, or covered. The chip
-    -- counted whole days to a due date at midnight, so a date 7 days out still read as approaching.
+    -- ACT 2.0's BPG status chip counted whole days to a due date at midnight, so 7 days out is approaching.
     CASE WHEN MAX(adh.injection_interval_days) > 0 AND MAX(adh.next_due) IS NOT NULL THEN
         CASE WHEN DATEDIFF(MAX(adh.next_due), CURDATE()) < 0 THEN 'Not covered'
              WHEN DATEDIFF(MAX(adh.next_due), CURDATE()) <= 7 THEN 'Deadline approaching'

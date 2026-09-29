@@ -45,8 +45,7 @@ bpg AS (
     WHERE regimen_uuid IN ('50be4b26-6c5b-5aaa-9254-3bfd313b4522','2f3ee632-dd14-51b0-a4ec-de10e7958019',
                            '91230c88-6a90-5d45-af50-fa6155fe5dd7')
 ),
--- Adherence as rhdflags' RHD Prophylaxis Adherence Refresh last computed it, so as of its last run rather
--- than the end date: ACT 2.0's rule, days late against the BPG interval over the days prescribed.
+-- rhdflags' adherence as of its last run, not the end date.
 adherence AS (
     SELECT b.person_id, a.adherence
     FROM bpg b
