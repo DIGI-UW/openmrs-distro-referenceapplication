@@ -61,6 +61,7 @@ SELECT
 
     MAX(cardiac_loc.name)                                           AS cardiac_clinic,
     MAX(primary_loc.name)                                           AS primary_care_clinic,
+    g.uuid                                                          AS recommendation_uuid,
     p.uuid                                                          AS patient_uuid,
     e.uuid                                                          AS encounter_uuid,
     f.uuid                                                          AS form_uuid
@@ -131,6 +132,6 @@ WHERE e.voided = 0
           AND done.value_coded = (SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true')
     )
 
-GROUP BY g.obs_id, g.concept_id, proc.value_coded, e.encounter_id, e.uuid, e.form_id, e.encounter_datetime, f.uuid, p.person_id, p.gender, p.birthdate, p.uuid
+GROUP BY g.obs_id, g.uuid, g.concept_id, proc.value_coded, e.encounter_id, e.uuid, e.form_id, e.encounter_datetime, f.uuid, p.person_id, p.gender, p.birthdate, p.uuid
 
 ORDER BY date_added, rhd_id
