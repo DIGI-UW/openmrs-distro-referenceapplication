@@ -123,5 +123,20 @@
       { "priority": "RHD High", "color": "red", "isRiskPriority": true },
       { "priority": "RHD Data Quality" }
     ]
+  },
+  "@mherman22/esm-act-app": {
+    "registry": { "showBpgColumns": true }
+  },
+  "@openmrs/esm-fast-data-entry-app": {
+    "formCategories": [
+      {
+        "name": "Prophylaxis",
+        "forms": [
+          { "formUUID": "0119d2e6-e2e1-391c-9b88-d59a10b0780d", "name": "Enter BPG" },
+          { "formUUID": "ba29e982-ce18-302a-9fc4-d4b2c3983465", "name": "Enter oral prophylaxis" }
+        ]
+      }
+    ],
+    "formCategoriesToShow": ["Prophylaxis"]
   }
 }
