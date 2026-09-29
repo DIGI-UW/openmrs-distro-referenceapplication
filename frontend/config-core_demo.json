@@ -105,7 +105,7 @@
     "allowFlagDeletion": false,
     "tagActions": [
       { "tagName": "RHD", "workspace": "clinical-forms-workspace" },
-      { "tagName": "Critical data", "workspace": "clinical-forms-workspace" }
+      { "tagName": "Critical data", "workspace": "rhd-flag-gaps-workspace" }
     ],
     "priorities": [
       { "priority": "RHD High", "color": "red", "isRiskPriority": true },
