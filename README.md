@@ -26,7 +26,7 @@ docker compose build --build-arg RHDFLAGS_REF=<commit or branch> backend
 ```
 
 The workspace that lists the data missing behind a critical data flag comes from the
-[RHD frontend module](https://github.com/mherman22/openmrs-esm-rhd-app), which is not on npm yet. From
+[ACT frontend module](https://github.com/mherman22/openmrs-esm-act-app), which is not on npm yet. From
 a checkout of it, with this repository beside it, run the following and open
 http://localhost:8090/openmrs/spa:
 
