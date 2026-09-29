@@ -1,22 +1,26 @@
 {
+  "@openmrs/esm-home-app": {
+    "defaultDashboardPerRole": {
+      "Organizational: Doctor": "act-home",
+      "Organizational: Nurse": "act-home",
+      "Organizational: Registration Clerk": "act-home",
+      "Organizational: System Administrator": "act-home",
+      "System Developer": "act-home"
+    },
+    "extensionSlots": {
+      "homepage-dashboard-slot": {
+        "order": ["act-home-dashboard-link", "act-registry-dashboard-link"]
+      }
+    }
+  },
   "@openmrs/esm-patient-chart-app": {
     "restrictByVisitLocationTag": true,
-    "showUpcomingAppointments": true,
+    "showUpcomingAppointments": false,
     "extensionSlots": {
       "action-menu-patient-chart-items-slot": {
         "order": ["order-basket-action-menu"]
       }
     }
-  },
-  "@openmrs/esm-ward-app": {
-    "extensionSlots": {
-      "action-menu-ward-patient-items-slot": {
-        "add": ["order-basket-action-menu"]
-      }
-    }
-  },
-  "@openmrs/esm-laboratory-app": {
-    "labTableColumns": ["name", "patientId", "urgency", "age", "sex", "totalOrders", "action"]
   },
   "@openmrs/esm-styleguide": {
     "Brand color #1": "#005d5d"
@@ -93,9 +97,26 @@
     ]
   },
   "@openmrs/esm-login-app": {
+    "links": {
+      "loginSuccess": "${openmrsSpaBase}/home/act-home"
+    },
     "logo": {
       "src": "${openmrsSpaBase}/act.png",
       "alt": "ACT logo"
     }
+  },
+  "@openmrs/esm-app-shell": {
+    "Enabled feature flags": ["patient-flags"]
+  },
+  "@openmrs/esm-patient-flags-app": {
+    "allowFlagDeletion": false,
+    "tagActions": [
+      { "tagName": "RHD", "workspace": "clinical-forms-workspace" },
+      { "tagName": "Critical data", "workspace": "rhd-flag-gaps-workspace" }
+    ],
+    "priorities": [
+      { "priority": "RHD High", "color": "red", "isRiskPriority": true },
+      { "priority": "RHD Data Quality" }
+    ]
   }
 }

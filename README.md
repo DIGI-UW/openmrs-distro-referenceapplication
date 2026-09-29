@@ -15,6 +15,52 @@ The OpenMRS 3.x UI is accessible at http://localhost/openmrs/spa
 
 OpenMRS Legacy UI is accessible at http://localhost/openmrs
 
+### RHD flags
+
+The backend image builds the [rhdflags](https://github.com/mherman22/openmrs-module-rhd-flags) module
+from source at `RHDFLAGS_REF` (default `main`), so build it locally:
+
+```bash
+docker compose up --build
+docker compose build --build-arg RHDFLAGS_REF=<commit or branch> backend
+```
+
+The frontend image assembles the [ACT frontend module](https://github.com/mherman22/openmrs-esm-act-app),
+`@mherman22/esm-act-app`, from npm at its `next` tag, alongside the RefApp's modules. It adds ACT home, the
+registry, and the workspace that lists the data missing behind a critical data flag. `docker compose up
+--build` builds the frontend image with it. Docker reuses the assembled modules until `CACHE_BUST` changes, so
+to pick up newer `next` versions, rebuild with `docker compose build --build-arg CACHE_BUST=$(date +%s) frontend`.
+
+ACT home is the landing page. The login app goes to `/home/act-home`, ACT home and Registry come first in
+the home page's left nav, and `defaultDashboardPerRole` in `frontend/config-core_demo.json` sends the
+RefApp's organizational roles and System Developer there too. ACT home needs View Patient Flags, which
+clinician roles get through `Privilege Level: High`.
+
+The frontend leaves out the RefApp apps ACT does not use: Service Queues, Appointments, Billing,
+Laboratory, Wards, Bed Management, Stock Management and Dispensing. They are removed from
+`frontendModules` in `frontend/spa-assemble-config.json`; the CLI's `frontendModuleExcludes` only
+removes modules an earlier config file added, so it has no effect in this single file. Their backend
+modules stay in `distro/distro.properties`, because the RefApp's demo roles grant their privileges.
+
+To work on the module itself, run it from a checkout of it, with this repository beside it, and open
+http://localhost:8090/openmrs/spa:
+
+```bash
+npx openmrs develop --backend http://localhost --port 8090 \
+  --config-file ../openmrs-distro-referenceapplication/frontend/config-core_demo.json
+```
+
+Clinician roles get the View Patient Flags privilege from the second start of the backend after it is
+first created.
+
+Each critical data flag's criteria return a row per missing answer: the patient, the encounter, and
+the question. rhdflags lists those rows as the flag's gaps. When a patient has no encounter to point
+at yet, such as no RHD Consultation Visit, the flag still shows and the workspace offers a new form.
+
+Change a flag's criteria in `distro/configuration/flags/rhd_flags.csv` and restart the backend so
+Initializer loads it. Saving criteria through the patientflags REST API stores `<` as `&lt;`, which
+breaks every criterion that compares dates.
+
 ### Production deployment with SSL
 
 For production deployments with HTTPS/SSL certificates, create a `.env` file in the project root:
