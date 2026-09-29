@@ -25,15 +25,17 @@ docker compose up --build
 docker compose build --build-arg RHDFLAGS_REF=<commit or branch> backend
 ```
 
-The workspace that lists the data missing behind a critical data flag comes from the
-[RHD frontend module](https://github.com/mherman22/openmrs-esm-rhd-app), which is not on npm yet. From
-a checkout of it, with this repository beside it, run the following and open
+The frontend image assembles the [ACT frontend module](https://github.com/mherman22/openmrs-esm-act-app),
+`@mherman22/esm-act-app`, from npm at its `next` tag, alongside the RefApp's modules. It adds ACT home, the
+registry, and the workspace that lists the data missing behind a critical data flag. `docker compose up
+--build` builds the frontend image with it.
+
+To work on the module itself, run it from a checkout of it, with this repository beside it, and open
 http://localhost:8090/openmrs/spa:
 
 ```bash
 npx openmrs develop --backend http://localhost --port 8090 \
-  --config-file ../openmrs-distro-referenceapplication/frontend/config-core_demo.json \
-  --config-file ../openmrs-distro-referenceapplication/frontend/config-rhd-develop.json
+  --config-file ../openmrs-distro-referenceapplication/frontend/config-core_demo.json
 ```
 
 Clinician roles get the View Patient Flags privilege from the second start of the backend after it is

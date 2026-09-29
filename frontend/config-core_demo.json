@@ -162,7 +162,7 @@
       },
       {
         "tagName": "Critical data",
-        "workspace": "clinical-forms-workspace"
+        "workspace": "rhd-flag-gaps-workspace"
       }
     ],
     "priorities": [
