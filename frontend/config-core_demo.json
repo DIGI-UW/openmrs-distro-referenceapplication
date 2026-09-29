@@ -6,11 +6,31 @@
       "Organizational: Registration Clerk": "act-home",
       "Organizational: System Administrator": "act-home",
       "System Developer": "act-home"
+    },
+    "extensionSlots": {
+      "homepage-dashboard-slot": {
+        "order": [
+          "act-home-dashboard-link",
+          "act-registry-dashboard-link"
+        ],
+        "remove": [
+          "clinical-appointments-dashboard-link",
+          "service-queues-dashboard-link",
+          "ward-dashboard-link",
+          "billing-dashboard-link",
+          "laboratory-dashboard-link"
+        ]
+      },
+      "homepage-widgets-slot": {
+        "remove": [
+          "home-appointments"
+        ]
+      }
     }
   },
   "@openmrs/esm-patient-chart-app": {
     "restrictByVisitLocationTag": true,
-    "showUpcomingAppointments": true,
+    "showUpcomingAppointments": false,
     "extensionSlots": {
       "patient-chart": {
         "remove": [
@@ -32,26 +52,6 @@
         ]
       }
     }
-  },
-  "@openmrs/esm-ward-app": {
-    "extensionSlots": {
-      "action-menu-ward-patient-items-slot": {
-        "add": [
-          "order-basket-action-menu"
-        ]
-      }
-    }
-  },
-  "@openmrs/esm-laboratory-app": {
-    "labTableColumns": [
-      "name",
-      "patientId",
-      "urgency",
-      "age",
-      "sex",
-      "totalOrders",
-      "action"
-    ]
   },
   "@openmrs/esm-styleguide": {
     "Brand color #1": "#005d5d"
@@ -152,6 +152,9 @@
     ]
   },
   "@openmrs/esm-login-app": {
+    "links": {
+      "loginSuccess": "${openmrsSpaBase}/home/act-home"
+    },
     "logo": {
       "src": "${openmrsSpaBase}/act.png",
       "alt": "ACT logo"
@@ -184,23 +187,5 @@
         "priority": "RHD Data Quality"
       }
     ]
-  },
-  "@openmrs/esm-home-app": {
-    "extensionSlots": {
-      "homepage-dashboard-slot": {
-        "remove": [
-          "clinical-appointments-dashboard-link",
-          "service-queues-dashboard-link",
-          "ward-dashboard-link",
-          "billing-dashboard-link",
-          "laboratory-dashboard-link"
-        ]
-      },
-      "homepage-widgets-slot": {
-        "remove": [
-          "home-appointments"
-        ]
-      }
-    }
   }
 }
