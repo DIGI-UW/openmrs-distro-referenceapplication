@@ -61,6 +61,22 @@ Change a flag's criteria in `distro/configuration/flags/rhd_flags.csv` and resta
 Initializer loads it. Saving criteria through the patientflags REST API stores `<` as `&lt;`, which
 breaks every criterion that compares dates.
 
+rhdflags also computes each patient's prophylaxis adherence and next due date, daily, with ACT 2.0's
+calculation. The registry's BPG status and adherence columns and the care cascade's Adherent step read it.
+
+### Demo data
+
+Once the backend has started and Initializer has loaded the configuration, seed 23 fictional patients:
+
+```bash
+python3 scripts/seed-rhd-demo.py              # http://localhost, admin / Admin123
+```
+
+Their records raise every RHD critical data flag, fill the procedural waiting list and the screen
+positive, pending confirmation list, and give the registry BPG status and adherence. The script runs
+the flag and adherence refresh tasks, checks each patient's flags, and skips patients that already
+exist, so it is safe to run again. It needs only Python 3.
+
 ### Production deployment with SSL
 
 For production deployments with HTTPS/SSL certificates, create a `.env` file in the project root:
