@@ -36,11 +36,28 @@ the home page's left nav, and `defaultDashboardPerRole` in `frontend/config-core
 RefApp's organizational roles and System Developer there too. ACT home needs View Patient Flags, which
 clinician roles get through `Privilege Level: High`.
 
-The frontend leaves out the RefApp apps ACT does not use: Service Queues, Appointments, Billing,
-Laboratory, Wards, Bed Management, Stock Management and Dispensing. They are removed from
-`frontendModules` in `frontend/spa-assemble-config.json`; the CLI's `frontendModuleExcludes` only
-removes modules an earlier config file added, so it has no effect in this single file. Their backend
-modules stay in `distro/distro.properties`, because the RefApp's demo roles grant their privileges.
+The RefApp apps ACT does not use are assembled but switched off in `frontend/config-core_demo.json`:
+Service Queues, Appointments, Billing, Laboratory, Wards, Bed Management, Stock Management and Dispensing,
+and the patient chart's Orders, Results, Programs, Attachments, Immunizations, Procedures, Conditions and
+Medications pages and order basket. Each is hidden by removing its links, widgets and buttons from the slots
+they appear in, with an `extensionSlots` `remove` list under the app that owns the slot. Another
+implementation that wants one back deletes its entries from those lists, with no rebuild:
+
+| App | Entries to delete |
+| --- | --- |
+| Service Queues | `service-queues-dashboard-link` (home), `queue-screen-link` (app menu), `visit-form-queue-fields` (start visit form), `queue-patient-info-queue-entry-status` (patient banner), `admin-service-queues-card-link` (system admin) |
+| Appointments | `clinical-appointments-dashboard-link`, `home-appointments` (home), `patient-appointments-summary-dashboard` (chart), `patient-upcoming-appointment-widget` (start visit form); set `showUpcomingAppointments` back to `true` |
+| Billing | `billing-dashboard-link` (home), `billing-summary-dashboard-link` (chart), `billing-checkin-form` (start visit form), `visit-bills-panel` (visit summary), `patient-banner-billing-tags`, `patient-banner-payment-status-tag` (patient banner), `billable-services-admin-card-link` (system admin) |
+| Laboratory | `laboratory-dashboard-link` (home) |
+| Wards | `ward-dashboard-link` (home) |
+| Bed Management | `bed-management-admin-card-link` (system admin) |
+| Stock Management | `stock-management-admin-card-link` (system admin) |
+| Dispensing | `dispensing-link` (app menu) |
+| Chart pages | the entry for the page in `patient-chart-dashboard-slot`, and `patient-chart-order-basket` for the order basket |
+
+Hiding an app removes its entry points, not its pages: a user who types an app's address still reaches it.
+The backend modules stay in `distro/distro.properties`, because the RefApp's demo roles grant their
+privileges.
 
 To work on the module itself, run it from a checkout of it, with this repository beside it, and open
 http://localhost:8090/openmrs/spa:

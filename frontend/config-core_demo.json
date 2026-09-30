@@ -52,8 +52,55 @@
           "conditions-summary-dashboard",
           "medications-summary-dashboard"
         ]
+      },
+      "patient-banner-tags-slot": {
+        "remove": [
+          "queue-patient-info-queue-entry-status",
+          "patient-banner-billing-tags",
+          "patient-banner-payment-status-tag"
+        ]
+      },
+      "visit-form-top-slot": {
+        "remove": [
+          "patient-upcoming-appointment-widget"
+        ]
+      },
+      "visit-form-bottom-slot": {
+        "remove": [
+          "visit-form-queue-fields"
+        ]
+      },
+      "extra-visit-attribute-slot": {
+        "remove": [
+          "billing-checkin-form"
+        ]
+      },
+      "visit-summary-panels": {
+        "remove": [
+          "visit-bills-panel"
+        ]
       }
     }
+  },
+  "@openmrs/esm-ward-app": {
+    "extensionSlots": {
+      "action-menu-ward-patient-items-slot": {
+        "add": [
+          "order-basket-action-menu"
+        ]
+      }
+    }
+  },
+  "@openmrs/esm-laboratory-app": {
+    "labTableColumns": [
+      "name",
+      "patientId",
+      "urgency",
+      "age",
+      "sex",
+      "totalOrders",
+      "action"
+    ]
   },
   "@openmrs/esm-styleguide": {
     "Brand color #1": "#005d5d"
@@ -66,7 +113,8 @@
     "extensionSlots": {
       "app-menu-slot": {
         "remove": [
-          "dispensing-link"
+          "dispensing-link",
+          "queue-screen-link"
         ]
       }
     }
@@ -191,18 +239,40 @@
     ]
   },
   "@mherman22/esm-act-app": {
-    "registry": { "showBpgColumns": true }
+    "registry": {
+      "showBpgColumns": true
+    }
   },
   "@openmrs/esm-fast-data-entry-app": {
     "formCategories": [
       {
         "name": "Prophylaxis",
         "forms": [
-          { "formUUID": "0119d2e6-e2e1-391c-9b88-d59a10b0780d", "name": "Enter BPG" },
-          { "formUUID": "ba29e982-ce18-302a-9fc4-d4b2c3983465", "name": "Enter oral prophylaxis" }
+          {
+            "formUUID": "0119d2e6-e2e1-391c-9b88-d59a10b0780d",
+            "name": "Enter BPG"
+          },
+          {
+            "formUUID": "ba29e982-ce18-302a-9fc4-d4b2c3983465",
+            "name": "Enter oral prophylaxis"
+          }
         ]
       }
     ],
-    "formCategoriesToShow": ["Prophylaxis"]
+    "formCategoriesToShow": [
+      "Prophylaxis"
+    ]
+  },
+  "@openmrs/esm-system-admin-app": {
+    "extensionSlots": {
+      "system-admin-page-card-link-slot": {
+        "remove": [
+          "admin-service-queues-card-link",
+          "billable-services-admin-card-link",
+          "bed-management-admin-card-link",
+          "stock-management-admin-card-link"
+        ]
+      }
+    }
   }
 }
