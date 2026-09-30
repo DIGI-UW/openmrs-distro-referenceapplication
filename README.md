@@ -29,7 +29,11 @@ ACT Core re-evaluates the flags daily, keeps a list per flag, answers the flag g
 prophylaxis adherence, and loads the report descriptors at startup, which the reporting module skips on a
 fresh database.
 
-The frontend image assembles the [ACT frontend module](https://github.com/mherman22/openmrs-esm-act-app),
+ACT's reports are YAML and SQL files in `distro/configuration/reports/reportdescriptors/`. How they are
+written and loaded, and what each returns, is in ACT Core's
+[docs/report-descriptors.md](https://github.com/DIGI-UW/openmrs-module-actcore/blob/main/docs/report-descriptors.md).
+
+The frontend image assembles the [ACT frontend module](https://github.com/DIGI-UW/openmrs-esm-act-app),
 `@mherman22/esm-act-app`, from npm at its `next` tag, alongside the RefApp's modules. It adds ACT home, the
 registry, and the workspace that lists the data missing behind a critical data flag. `docker compose up
 --build` builds the frontend image with it. Docker reuses the assembled modules until `CACHE_BUST` changes, so
@@ -86,19 +90,6 @@ breaks every criterion that compares dates.
 
 ACT Core also computes each patient's prophylaxis adherence and next due date, daily, with ACT 2.0's
 calculation. The registry's BPG status and adherence columns and the care cascade's Adherent step read it.
-
-### Demo data
-
-Once the backend has started and Initializer has loaded the configuration, seed 23 fictional patients:
-
-```bash
-python3 scripts/seed-rhd-demo.py              # http://localhost, admin / Admin123
-```
-
-Their records raise every RHD critical data flag, fill the procedural waiting list and the screen
-positive, pending confirmation list, and give the registry BPG status and adherence. The script runs
-the flag and adherence refresh tasks, checks each patient's flags, and skips patients that already
-exist, so it is safe to run again. It needs only Python 3.
 
 ### Production deployment with SSL
 
