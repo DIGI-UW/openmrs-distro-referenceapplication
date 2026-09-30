@@ -37,7 +37,8 @@ RefApp's organizational roles and System Developer there too. ACT home needs Vie
 clinician roles get through `Privilege Level: High`.
 
 The RefApp apps ACT does not use are assembled but switched off in `frontend/config-core_demo.json`:
-Service Queues, Appointments, Billing, Laboratory, Wards, Bed Management, Stock Management and Dispensing,
+Service Queues, Appointments, Billing, Laboratory, Wards, Bed Management, Stock Management, Dispensing and
+Patient lists,
 and the patient chart's Orders, Results, Programs, Attachments, Immunizations, Procedures, Conditions and
 Medications pages and order basket. Each is hidden by removing its links, widgets and buttons from the slots
 they appear in, with an `extensionSlots` `remove` list under the app that owns the slot. Another
@@ -53,6 +54,7 @@ implementation that wants one back deletes its entries from those lists, with no
 | Bed Management | `bed-management-admin-card-link` (system admin) |
 | Stock Management | `stock-management-admin-card-link` (system admin) |
 | Dispensing | `dispensing-link` (app menu) |
+| Patient lists | `patient-lists-dashboard-link` (home), `add-patient-to-patient-list-button` (patient chart's Actions menu). rhdflags still keeps a list per flag; ACT home's worklist tiles count them and open the registry narrowed to the flag |
 | Chart pages | the entry for the page in `patient-chart-dashboard-slot`, and `patient-chart-order-basket` for the order basket |
 
 Hiding an app removes its entry points, not its pages: a user who types an app's address still reaches it.

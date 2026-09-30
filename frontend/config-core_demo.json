@@ -20,7 +20,8 @@
           "service-queues-dashboard-link",
           "ward-dashboard-link",
           "billing-dashboard-link",
-          "laboratory-dashboard-link"
+          "laboratory-dashboard-link",
+          "patient-lists-dashboard-link"
         ]
       },
       "homepage-widgets-slot": {
@@ -78,6 +79,11 @@
       "visit-summary-panels": {
         "remove": [
           "visit-bills-panel"
+        ]
+      },
+      "patient-actions-slot": {
+        "remove": [
+          "add-patient-to-patient-list-button"
         ]
       }
     }
