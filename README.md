@@ -15,15 +15,19 @@ The OpenMRS 3.x UI is accessible at http://localhost/openmrs/spa
 
 OpenMRS Legacy UI is accessible at http://localhost/openmrs
 
-### RHD flags
+### ACT Core
 
-The backend image builds the [rhdflags](https://github.com/mherman22/openmrs-module-rhd-flags) module
-from source at `RHDFLAGS_REF` (default `main`), so build it locally:
+The backend image builds the [ACT Core](https://github.com/DIGI-UW/openmrs-module-actcore) module from
+source at `ACTCORE_REF` (default `main`), so build it locally:
 
 ```bash
 docker compose up --build
-docker compose build --build-arg RHDFLAGS_REF=<commit or branch> backend
+docker compose build --build-arg ACTCORE_REF=<commit or branch> backend
 ```
+
+ACT Core re-evaluates the flags daily, keeps a list per flag, answers the flag gap look-up, computes
+prophylaxis adherence, and loads the report descriptors at startup, which the reporting module skips on a
+fresh database.
 
 The frontend image assembles the [ACT frontend module](https://github.com/mherman22/openmrs-esm-act-app),
 `@mherman22/esm-act-app`, from npm at its `next` tag, alongside the RefApp's modules. It adds ACT home, the
@@ -54,7 +58,7 @@ implementation that wants one back deletes its entries from those lists, with no
 | Bed Management | `bed-management-admin-card-link` (system admin) |
 | Stock Management | `stock-management-admin-card-link` (system admin) |
 | Dispensing | `dispensing-link` (app menu) |
-| Patient lists | `patient-lists-dashboard-link` (home), `add-patient-to-patient-list-button` (patient chart's Actions menu). rhdflags still keeps a list per flag; ACT home's worklist tiles count them and open the registry narrowed to the flag |
+| Patient lists | `patient-lists-dashboard-link` (home), `add-patient-to-patient-list-button` (patient chart's Actions menu). ACT Core still keeps a list per flag; ACT home's worklist tiles count them and open the registry narrowed to the flag |
 | Chart pages | the entry for the page in `patient-chart-dashboard-slot`, and `patient-chart-order-basket` for the order basket |
 
 Hiding an app removes its entry points, not its pages: a user who types an app's address still reaches it.
@@ -73,14 +77,14 @@ Clinician roles get the View Patient Flags privilege from the second start of th
 first created.
 
 Each critical data flag's criteria return a row per missing answer: the patient, the encounter, and
-the question. rhdflags lists those rows as the flag's gaps. When a patient has no encounter to point
+the question. ACT Core lists those rows as the flag's gaps. When a patient has no encounter to point
 at yet, such as no RHD Consultation Visit, the flag still shows and the workspace offers a new form.
 
 Change a flag's criteria in `distro/configuration/flags/rhd_flags.csv` and restart the backend so
 Initializer loads it. Saving criteria through the patientflags REST API stores `<` as `&lt;`, which
 breaks every criterion that compares dates.
 
-rhdflags also computes each patient's prophylaxis adherence and next due date, daily, with ACT 2.0's
+ACT Core also computes each patient's prophylaxis adherence and next due date, daily, with ACT 2.0's
 calculation. The registry's BPG status and adherence columns and the care cascade's Adherent step read it.
 
 ### Demo data

@@ -45,11 +45,11 @@ bpg AS (
     WHERE regimen_uuid IN ('50be4b26-6c5b-5aaa-9254-3bfd313b4522','2f3ee632-dd14-51b0-a4ec-de10e7958019',
                            '91230c88-6a90-5d45-af50-fa6155fe5dd7')
 ),
--- rhdflags' adherence as of its last run, not the end date.
+-- ACT Core's adherence as of its last run, not the end date.
 adherence AS (
     SELECT b.person_id, a.adherence
     FROM bpg b
-    JOIN rhdflags_prophylaxis_adherence a ON a.patient_id = b.person_id
+    JOIN actcore_prophylaxis_adherence a ON a.patient_id = b.person_id
 )
 SELECT 1 AS step_order, 'Active' AS step, COUNT(*) AS patients FROM rhd_active
 UNION ALL

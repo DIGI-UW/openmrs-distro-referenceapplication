@@ -120,7 +120,7 @@ SELECT
     MAX(cardiac_loc.name)                                           AS cardiac_clinic,
     MAX(primary_loc.name)                                           AS primary_care_clinic,
 
-    -- The flags whose patient lists the patient is on now; rhdflags gives each list its flag's uuid
+    -- The flags whose patient lists the patient is on now; ACT Core gives each list its flag's uuid
     (
         SELECT GROUP_CONCAT(f.name ORDER BY f.name SEPARATOR '|')
         FROM cohort_member cm
@@ -173,7 +173,7 @@ LEFT JOIN person_attribute pa_cardiac
                                                 WHERE uuid = 'fe261119-2911-5b36-be40-8f9827826987')
 LEFT JOIN location cardiac_loc ON cardiac_loc.location_id = pa_cardiac.value
 LEFT JOIN location primary_loc ON primary_loc.location_id = pa_village.value
-LEFT JOIN rhdflags_prophylaxis_adherence adh ON adh.patient_id = p.person_id
+LEFT JOIN actcore_prophylaxis_adherence adh ON adh.patient_id = p.person_id
 
 WHERE
     pp.voided = 0
