@@ -52,7 +52,10 @@
           "immunization-summary-dashboard",
           "procedures-summary-dashboard",
           "conditions-summary-dashboard",
-          "medications-summary-dashboard"
+          "medications-summary-dashboard",
+          "results-summary-dashboard",
+          "allergies-summary-dashboard",
+          "growth-chart-dashboard-link"
         ]
       },
       "patient-banner-tags-slot": {
@@ -86,8 +89,36 @@
         "remove": [
           "add-patient-to-patient-list-button"
         ]
+      },
+      "patient-chart-summary-dashboard-slot": {
+        "remove": [
+          "vitals-overview-widget",
+          "biometrics-overview-widget"
+        ]
+      },
+      "patient-info-slot": {
+        "remove": [
+          "patient-vitals-info"
+        ]
       }
     }
+  },
+  "@openmrs/esm-patient-forms-app": {
+    "formSections": [
+      {
+        "name": "ACT forms",
+        "forms": [
+          "0119d2e6-e2e1-391c-9b88-d59a10b0780d",
+          "ba29e982-ce18-302a-9fc4-d4b2c3983465",
+          "a6646c51-130d-3b59-a442-959bea93487d",
+          "4b063fc7-996f-3001-8500-8940e201be8f",
+          "88e54fb0-1243-3f7a-b925-f64648ca6635",
+          "3776bb8d-4741-3741-aeef-d5b760443569",
+          "949d365b-95ef-3ec9-bd8a-effcf1e6696c",
+          "bf762810-2bf1-3ca3-bdbe-8bd71fd5d59a"
+        ]
+      }
+    ]
   },
   "@openmrs/esm-ward-app": {
     "extensionSlots": {
