@@ -48,7 +48,7 @@ The RefApp apps ACT does not use are assembled but switched off in `frontend/con
 Service Queues, Appointments, Billing, Laboratory, Wards, Bed Management, Stock Management, Dispensing and
 Patient lists,
 and the patient chart's Orders, Results, Programs, Attachments, Immunizations, Procedures, Conditions,
-Medications, Vitals & Biometrics, Allergies and Growth chart pages, its order basket, the summary's vitals and
+Medications and Growth chart pages, its order basket, the summary's vitals and
 biometrics cards, and the vitals strip under the banner. Each is hidden by removing its links, widgets and
 buttons from the slots they appear in, with an `extensionSlots` `remove` list under the app that owns the
 slot. Clinical forms is limited to ACT's forms by the forms app's `formSections` instead. Another
@@ -65,7 +65,7 @@ implementation that wants one back deletes its entries from those lists, or `for
 | Stock Management | `stock-management-admin-card-link` (system admin) |
 | Dispensing | `dispensing-link` (app menu) |
 | Patient lists | `patient-lists-dashboard-link` (home), `add-patient-to-patient-list-button` (patient chart's Actions menu). ACT Core still keeps a list per flag; ACT home's worklist tiles count them and open the registry narrowed to the flag |
-| Chart pages | the page's entry in `patient-chart-dashboard-slot`: `patient-orders-summary-dashboard` (Orders), `test-results-summary-dashboard` (Results), `programs-summary-dashboard`, `attachments-results-summary-dashboard`, `immunization-summary-dashboard`, `procedures-summary-dashboard`, `conditions-summary-dashboard`, `medications-summary-dashboard`, `results-summary-dashboard` (Vitals & Biometrics), `allergies-summary-dashboard`, `growth-chart-dashboard-link`; and `patient-chart-order-basket` (the order basket, `patient-chart`) |
+| Chart pages | the page's entry in `patient-chart-dashboard-slot`: `patient-orders-summary-dashboard` (Orders), `test-results-summary-dashboard` (Results), `programs-summary-dashboard`, `attachments-results-summary-dashboard`, `immunization-summary-dashboard`, `procedures-summary-dashboard`, `conditions-summary-dashboard`, `medications-summary-dashboard`, `growth-chart-dashboard-link`; and `patient-chart-order-basket` (the order basket, `patient-chart`) |
 | Vitals and biometrics cards and the vitals strip | `vitals-overview-widget`, `biometrics-overview-widget` (patient summary, `patient-chart-summary-dashboard-slot`), `patient-vitals-info` (the strip under the banner, `patient-info-slot`) |
 | Every form in Clinical forms | the `formSections` list under `@openmrs/esm-patient-forms-app`, which shows only the forms it names |
 
