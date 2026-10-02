@@ -29,6 +29,8 @@ services:
   backend:
     build:
       context: ../../
+      secrets:
+        - github_token
     container_name: backend
     depends_on:
       - db
@@ -55,3 +57,6 @@ services:
       MYSQL_PASSWORD: ${OPENMRS_DB_PASSWORD:-openmrs}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-openmrs}
 
+secrets:
+  github_token:
+    environment: GITHUB_TOKEN

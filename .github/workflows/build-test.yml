@@ -24,6 +24,11 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
           cache: 'maven'
+          server-id: github-actcore
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
 
       - name: Build and Test
         run: mvn --batch-mode --update-snapshots --activate-profiles distro,validator clean verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_BOT_TOKEN }}

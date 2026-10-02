@@ -123,6 +123,14 @@
 
   <repositories>
     <repository>
+      <id>github-actcore</id>
+      <name>ACT Core on DIGI-UW's GitHub Packages</name>
+      <url>https://maven.pkg.github.com/digi-uw/openmrs-module-actcore</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
       <id>openmrs-repo</id>
       <name>OpenMRS Nexus Repository</name>
       <url>https://mavenrepo.openmrs.org/public</url>

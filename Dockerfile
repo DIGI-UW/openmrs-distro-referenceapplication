@@ -1,15 +1,5 @@
 # syntax=docker/dockerfile:1
 
-### ACT Core Stage
-# The flags refresh, flag lists, gap look-up and adherence, and loading the report descriptors after
-# reporting and Initializer have started.
-FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS actcore
-ARG ACTCORE_REPO=https://github.com/DIGI-UW/openmrs-module-actcore.git
-ARG ACTCORE_REF=main
-ADD ${ACTCORE_REPO}#${ACTCORE_REF} /actcore
-WORKDIR /actcore
-RUN --mount=type=cache,target=/root/.m2/repository mvn -B -q -DskipTests package
-
 ### Dev Stage
 FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS dev
 WORKDIR /openmrs_distro
@@ -18,14 +8,16 @@ ARG MVN_ARGS="-s /usr/share/maven/ref/settings-docker.xml -U -P distro"
 ARG MVN_COMMAND="install"
 
 # Copy build files
-COPY pom.xml ./
+COPY pom.xml maven-github-settings.xml ./
 COPY distro ./distro/
 
 ARG CACHE_BUST
 # Build the distro, but only deploy from the amd64 build
+# ACT Core comes from DIGI-UW's GitHub Packages, which needs a token with read:packages
 RUN --mount=type=secret,id=m2settings,target=/usr/share/maven/ref/settings-docker.xml \
+    --mount=type=secret,id=github_token,env=GITHUB_TOKEN,required=true \
     if [ "$(arch)" != "x86_64" ]; then MVN_ARGS="$MVN_ARGS -Dmaven.deploy.skip=true"; fi && \
-    mvn $MVN_ARGS $MVN_COMMAND
+    mvn -gs /openmrs_distro/maven-github-settings.xml $MVN_ARGS $MVN_COMMAND
 
 RUN cp /openmrs_distro/distro/target/sdk-distro/web/openmrs_core/openmrs.war /openmrs/distribution/openmrs_core/
 
@@ -46,6 +38,5 @@ COPY --from=dev /openmrs/distribution/openmrs_core/openmrs.war /openmrs/distribu
 
 COPY --from=dev /openmrs/distribution/openmrs-distro.properties /openmrs/distribution/
 COPY --from=dev /openmrs/distribution/openmrs_modules /openmrs/distribution/openmrs_modules
-COPY --from=actcore /actcore/omod/target/actcore-omod-*.omod /openmrs/distribution/openmrs_modules/
 COPY --from=dev /openmrs/distribution/openmrs_owas /openmrs/distribution/openmrs_owas
 COPY --from=dev  /openmrs/distribution/openmrs_config /openmrs/distribution/openmrs_config
