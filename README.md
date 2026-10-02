@@ -23,7 +23,7 @@ serves Maven artifacts only to a token with `read:packages`, so building the bac
 `GITHUB_TOKEN`:
 
 ```bash
-export GITHUB_TOKEN=<a token with read:packages>   # or: export GITHUB_TOKEN=$(gh auth token)
+export GITHUB_TOKEN=<a token with read:packages>   # or, after gh auth refresh -s read:packages: export GITHUB_TOKEN=$(gh auth token)
 docker compose up --build
 ```
 

@@ -16,6 +16,7 @@ ARG CACHE_BUST
 # ACT Core comes from DIGI-UW's GitHub Packages, which needs a token with read:packages
 RUN --mount=type=secret,id=m2settings,target=/usr/share/maven/ref/settings-docker.xml \
     --mount=type=secret,id=github_token,env=GITHUB_TOKEN,required=true \
+    [ -n "$GITHUB_TOKEN" ] || { echo 'GITHUB_TOKEN with read:packages is required to fetch ACT Core' >&2; exit 1; } && \
     if [ "$(arch)" != "x86_64" ]; then MVN_ARGS="$MVN_ARGS -Dmaven.deploy.skip=true"; fi && \
     mvn -gs /openmrs_distro/maven-github-settings.xml $MVN_ARGS $MVN_COMMAND
 
