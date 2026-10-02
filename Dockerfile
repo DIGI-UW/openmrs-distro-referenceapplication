@@ -11,6 +11,9 @@ ARG MVN_COMMAND="install"
 COPY pom.xml maven-github-settings.xml ./
 COPY distro ./distro/
 
+# Not unused: each push to ACT Core's main deploys a new SNAPSHOT, and this ADD makes the mvn layer below refetch it
+ADD https://github.com/DIGI-UW/openmrs-module-actcore.git#main /tmp/actcore-main
+
 ARG CACHE_BUST
 # Build the distro, but only deploy from the amd64 build
 # ACT Core comes from DIGI-UW's GitHub Packages, which needs a token with read:packages
