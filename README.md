@@ -51,8 +51,7 @@ and the patient chart's Orders, Results, Programs, Attachments, Immunizations, P
 Medications and Growth chart pages, its order basket, the summary's vitals and
 biometrics cards, and the vitals strip under the banner. Each is hidden by removing its links, widgets and
 buttons from the slots they appear in, with an `extensionSlots` `remove` list under the app that owns the
-slot. Clinical forms is limited to ACT's forms by the forms app's `formSections` instead. Another
-implementation that wants one back deletes its entries from those lists, or `formSections`, with no rebuild:
+slot. Another implementation that wants one back deletes its entries from those lists, with no rebuild:
 
 | App | Entries to delete |
 | --- | --- |
@@ -67,7 +66,6 @@ implementation that wants one back deletes its entries from those lists, or `for
 | Patient lists | `patient-lists-dashboard-link` (home), `add-patient-to-patient-list-button` (patient chart's Actions menu). ACT Core still keeps a list per flag; ACT home's worklist tiles count them and open the registry narrowed to the flag |
 | Chart pages | the page's entry in `patient-chart-dashboard-slot`: `patient-orders-summary-dashboard` (Orders), `test-results-summary-dashboard` (Results), `programs-summary-dashboard`, `attachments-results-summary-dashboard`, `immunization-summary-dashboard`, `procedures-summary-dashboard`, `conditions-summary-dashboard`, `medications-summary-dashboard`, `growth-chart-dashboard-link`; and `patient-chart-order-basket` (the order basket, `patient-chart`) |
 | Vitals and biometrics cards and the vitals strip | `vitals-overview-widget`, `biometrics-overview-widget` (patient summary, `patient-chart-summary-dashboard-slot`), `patient-vitals-info` (the strip under the banner, `patient-info-slot`) |
-| Every form in Clinical forms | the `formSections` list under `@openmrs/esm-patient-forms-app`, which shows only the forms it names |
 
 Hiding an app removes its entry points, not its pages: a user who types an app's address still reaches it.
 The backend modules stay in `distro/distro.properties`, because the RefApp's demo roles grant their
