@@ -17,12 +17,14 @@ OpenMRS Legacy UI is accessible at http://localhost/openmrs
 
 ### ACT Core
 
-The backend image builds the [ACT Core](https://github.com/DIGI-UW/openmrs-module-actcore) module from
-source at `ACTCORE_REF` (default `main`), so build it locally:
+The backend image takes the [ACT Core](https://github.com/DIGI-UW/openmrs-module-actcore) module from
+DIGI-UW's GitHub Packages, at the version `actcore.version` sets in `distro/pom.xml`. GitHub Packages
+serves Maven artifacts only to a token with `read:packages`, so building the backend image needs one in
+`GITHUB_TOKEN`:
 
 ```bash
+export GITHUB_TOKEN=<a token with read:packages>   # or: export GITHUB_TOKEN=$(gh auth token)
 docker compose up --build
-docker compose build --build-arg ACTCORE_REF=<commit or branch> backend
 ```
 
 ACT Core re-evaluates the flags daily, keeps a list per flag, answers the flag gap look-up, computes
