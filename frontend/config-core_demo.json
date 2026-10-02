@@ -115,7 +115,7 @@
   "@openmrs/esm-primary-navigation-app": {
     "logo": {
       "src": "${openmrsSpaBase}/act-registry-header.svg",
-      "alt": "ACT Registry"
+      "alt": "ACT, Active Community Case Management Tool"
     },
     "extensionSlots": {
       "app-menu-slot": {
@@ -214,7 +214,7 @@
     },
     "logo": {
       "src": "${openmrsSpaBase}/act-registry-login.svg",
-      "alt": "ACT Registry, Powered by OpenMRS 3"
+      "alt": "ACT, Active Community Case Management Tool, Powered by OpenMRS 3"
     }
   },
   "@openmrs/esm-app-shell": {
