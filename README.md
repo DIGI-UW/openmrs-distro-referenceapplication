@@ -47,11 +47,10 @@ clinician roles get through `Privilege Level: High`.
 The RefApp apps ACT does not use are assembled but switched off in `frontend/config-core_demo.json`:
 Service Queues, Appointments, Billing, Laboratory, Wards, Bed Management, Stock Management, Dispensing and
 Patient lists,
-and the patient chart's Orders, Results, Programs, Attachments, Immunizations, Procedures, Conditions,
-Medications and Growth chart pages, its order basket, the summary's vitals and
-biometrics cards, and the vitals strip under the banner. Each is hidden by removing its links, widgets and
-buttons from the slots they appear in, with an `extensionSlots` `remove` list under the app that owns the
-slot. Another implementation that wants one back deletes its entries from those lists, with no rebuild:
+and the patient chart's Orders, Results, Programs, Attachments, Immunizations, Procedures, Conditions and
+Medications pages and order basket. Each is hidden by removing its links, widgets and buttons from the slots
+they appear in, with an `extensionSlots` `remove` list under the app that owns the slot. Another
+implementation that wants one back deletes its entries from those lists, with no rebuild:
 
 | App | Entries to delete |
 | --- | --- |
@@ -64,8 +63,7 @@ slot. Another implementation that wants one back deletes its entries from those 
 | Stock Management | `stock-management-admin-card-link` (system admin) |
 | Dispensing | `dispensing-link` (app menu) |
 | Patient lists | `patient-lists-dashboard-link` (home), `add-patient-to-patient-list-button` (patient chart's Actions menu). ACT Core still keeps a list per flag; ACT home's worklist tiles count them and open the registry narrowed to the flag |
-| Chart pages | the page's entry in `patient-chart-dashboard-slot`: `patient-orders-summary-dashboard` (Orders), `test-results-summary-dashboard` (Results), `programs-summary-dashboard`, `attachments-results-summary-dashboard`, `immunization-summary-dashboard`, `procedures-summary-dashboard`, `conditions-summary-dashboard`, `medications-summary-dashboard`, `growth-chart-dashboard-link`; and `patient-chart-order-basket` (the order basket, `patient-chart`) |
-| Vitals and biometrics cards and the vitals strip | `vitals-overview-widget`, `biometrics-overview-widget` (patient summary, `patient-chart-summary-dashboard-slot`), `patient-vitals-info` (the strip under the banner, `patient-info-slot`) |
+| Chart pages | the entry for the page in `patient-chart-dashboard-slot`, and `patient-chart-order-basket` for the order basket |
 
 Hiding an app removes its entry points, not its pages: a user who types an app's address still reaches it.
 The backend modules stay in `distro/distro.properties`, because the RefApp's demo roles grant their
