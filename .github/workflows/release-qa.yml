@@ -320,7 +320,6 @@ jobs:
       DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
       MAVEN_REPO_USERNAME: ${{ secrets.MAVEN_REPO_USERNAME }}
       MAVEN_REPO_API_KEY: ${{ secrets.MAVEN_REPO_API_KEY }}
-      GH_BOT_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
 
   deploy-test3:
     needs: build

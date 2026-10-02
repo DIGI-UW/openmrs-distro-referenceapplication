@@ -49,8 +49,6 @@ on:
         required: true
       MAVEN_REPO_API_KEY:
         required: true
-      GH_BOT_TOKEN:
-        required: true
 
 env:
   IMAGE: openmrs/openmrs-reference-application-3-backend
@@ -121,8 +119,6 @@ jobs:
             CACHE_BUST=${{ github.run_id }}
           secret-files: |
             m2settings=/tmp/maven-settings.xml
-          secrets: |
-            github_token=${{ secrets.GH_BOT_TOKEN }}
           tags: |
             ${{ env.IMAGE }}:${{ env.DOCKER_IMAGE_TAG }}
             ${{ env.IMAGE }}:${{ env.DOCKER_IMAGE_TAG_VERSION }}
@@ -195,8 +191,6 @@ jobs:
             CACHE_BUST=${{ github.run_id }}
           secret-files: |
             m2settings=/tmp/maven-settings.xml
-          secrets: |
-            github_token=${{ secrets.GH_BOT_TOKEN }}
           tags: |
             ${{ env.IMAGE }}:${{ env.DOCKER_IMAGE_TAG }}-no-demo
             ${{ env.IMAGE }}:${{ env.DOCKER_IMAGE_TAG_VERSION }}-no-demo

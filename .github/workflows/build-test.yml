@@ -26,6 +26,4 @@ jobs:
           cache: 'maven'
 
       - name: Build and Test
-        run: mvn -gs maven-github-settings.xml --batch-mode --update-snapshots --activate-profiles distro,validator clean verify
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+        run: mvn --batch-mode --update-snapshots --activate-profiles distro,validator clean verify
