@@ -4,7 +4,8 @@
 FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS dev
 WORKDIR /openmrs_distro
 
-ARG MVN_ARGS="-s /usr/share/maven/ref/settings-docker.xml -U -P distro"
+# Keep repo.local: a mounted ~/.m2/settings.xml drops the image's pre-filled repository otherwise
+ARG MVN_ARGS="-s /usr/share/maven/ref/settings-docker.xml -Dmaven.repo.local=/usr/share/maven/ref/repository -U -P distro"
 ARG MVN_COMMAND="install"
 
 # Copy build files
