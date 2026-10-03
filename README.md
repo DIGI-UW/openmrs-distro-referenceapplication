@@ -19,12 +19,20 @@ OpenMRS Legacy UI is accessible at http://localhost/openmrs
 
 The backend image takes the [ACT Core](https://github.com/DIGI-UW/openmrs-module-actcore) module from
 DIGI-UW's GitHub Packages, at the version `actcore.version` sets in `distro/pom.xml`. GitHub Packages
-serves Maven artifacts only to a token with `read:packages`, so building the backend image needs one in
-`GITHUB_TOKEN`. After `gh auth refresh -s read:packages`, `export GITHUB_TOKEN=$(gh auth token)` works too:
+serves Maven artifacts only to a token with `read:packages`. The backend build reads your
+`~/.m2/settings.xml`, so give it a server for the `github-actcore` repository with such a token, then
+`docker compose up --build`:
 
-```bash
-export GITHUB_TOKEN=<a token with read:packages>
-docker compose up --build
+```xml
+<settings>
+  <servers>
+    <server>
+      <id>github-actcore</id>
+      <username>your GitHub username</username>
+      <password>a token with read:packages</password>
+    </server>
+  </servers>
+</settings>
 ```
 
 Each push to ACT Core's `main` deploys a new SNAPSHOT, and the backend build checks `main` every time, so it

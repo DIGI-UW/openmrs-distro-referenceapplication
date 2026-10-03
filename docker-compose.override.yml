@@ -13,8 +13,8 @@ services:
     build:
       context: .
       secrets:
-        - github_token
+        - m2settings
 
 secrets:
-  github_token:
-    environment: GITHUB_TOKEN
+  m2settings:
+    file: ~/.m2/settings.xml
