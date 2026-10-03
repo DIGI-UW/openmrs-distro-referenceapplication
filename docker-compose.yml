@@ -54,9 +54,7 @@ services:
       - ./distro/configuration/conceptsources:/openmrs/distribution/openmrs_config/conceptsources:ro
       - ./distro/configuration/ampathforms:/openmrs/distribution/openmrs_config/ampathforms:ro
       - ./distro/configuration/programs:/openmrs/distribution/openmrs_config/programs/rhd:ro
-      # The demo content package's programmes (HIV care, PMTCT, PrEP, diabetes education) are not ACT's.
-      # Its file is overridden with the same rows marked retired, so a new database never offers them
-      # and an existing one retires them.
+      # Retires the demo content package's programmes, which are not ACT's.
       - ./distro/configuration/refapp-overrides/programs:/openmrs/distribution/openmrs_config/programs/referenceapplication-demo:ro
       - ./distro/configuration/programworkflows:/openmrs/distribution/openmrs_config/programworkflows/rhd:ro
       - ./distro/configuration/programworkflowstates:/openmrs/distribution/openmrs_config/programworkflowstates/rhd:ro
