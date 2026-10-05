@@ -28,6 +28,18 @@ RUN cp -R /openmrs_distro/distro/target/sdk-distro/web/openmrs_modules /openmrs/
 RUN cp -R /openmrs_distro/distro/target/sdk-distro/web/openmrs_owas /openmrs/distribution/openmrs_owas/
 RUN cp -R /openmrs_distro/distro/target/sdk-distro/web/openmrs_config /openmrs/distribution/openmrs_config/
 
+# ACT's configuration, laid out as docker-compose.yml mounts it: a domain the mounts replace loses the demo
+# package's files, and a domain mounted under rhd/ keeps them. Keep these lists in step with those mounts.
+RUN set -e; act=/openmrs_distro/distro/configuration; cfg=/openmrs/distribution/openmrs_config; \
+    for d in addresshierarchy conceptsources ampathforms visittypes patientidentifiertypes attributetypes \
+             locations idgen autogenerationoptions flagpriorities flagtags flags globalproperties/rhd liquibase reports; do \
+      rm -rf "$cfg/$d"; mkdir -p "$(dirname "$cfg/$d")"; cp -R "$act/$d" "$cfg/$d"; \
+    done; \
+    for d in programs programworkflows programworkflowstates personattributetypes drugs concepts \
+             locationtags locationtagmaps encountertypes privileges; do \
+      rm -rf "$cfg/$d/rhd"; mkdir -p "$cfg/$d"; cp -R "$act/$d" "$cfg/$d/rhd"; \
+    done
+
 # Clean up after copying needed artifacts
 RUN mvn $MVN_ARGS clean
 
