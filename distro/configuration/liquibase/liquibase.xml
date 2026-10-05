@@ -14,4 +14,100 @@
             SELECT person_id, 'admin', user_id, NOW(), 0, 'ba1e27d3-2c89-49fc-9851-3b509abcce93' FROM users WHERE system_id = 'admin'
         </sql>
     </changeSet>
+
+    <!-- Liquibase runs before Initializer's ROLES domain, so the users' job roles are created here first under the
+         roles CSV's uuids; that CSV then gives them their privileges and inherited roles. -->
+    <changeSet id="act3-job-roles-1" author="act3">
+        <sql>
+            INSERT IGNORE INTO role (role, description, uuid) VALUES ('Organizational: ACT Community Clinician', "Primary care clinician who registers patients and gives prophylaxis", 'b9ab4b76-e7b9-46a7-b4ec-5b7fdd8fa540');
+            INSERT IGNORE INTO role (role, description, uuid) VALUES ('Organizational: ACT Data Clerk', "Health information assistant who registers patients and records forms", '61e9bb28-11df-4df1-965d-11ef928d5239');
+            INSERT IGNORE INTO role (role, description, uuid) VALUES ('Organizational: ACT Clinician', "Cardiology clinician who runs the registry", '60625a0c-3cea-4fe5-b6ca-615c743ad9d4');
+            INSERT IGNORE INTO role (role, description, uuid) VALUES ('Organizational: ACT Site Administrator', "Administers a site's users; reads the registry", 'a1295a20-7273-4339-b5df-2f8a3a841c77');
+        </sql>
+    </changeSet>
+
+    <changeSet id="act3-admin-job-roles-1" author="act3">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">SELECT COUNT(*) FROM users WHERE system_id = 'admin'</sqlCheck>
+        </preConditions>
+        <comment>Give admin every ACT job role, so it lands on and sees what each ACT user does</comment>
+        <sql>
+            INSERT IGNORE INTO user_role (user_id, role) SELECT user_id, 'Organizational: ACT Community Clinician' FROM users WHERE system_id = 'admin';
+            INSERT IGNORE INTO user_role (user_id, role) SELECT user_id, 'Organizational: ACT Data Clerk' FROM users WHERE system_id = 'admin';
+            INSERT IGNORE INTO user_role (user_id, role) SELECT user_id, 'Organizational: ACT Clinician' FROM users WHERE system_id = 'admin';
+            INSERT IGNORE INTO user_role (user_id, role) SELECT user_id, 'Organizational: ACT Site Administrator' FROM users WHERE system_id = 'admin';
+        </sql>
+    </changeSet>
+
+    <changeSet id="act3-user-actcc-1" author="act3">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM users WHERE username = 'actcc' OR system_id = 'actcc'</sqlCheck>
+        </preConditions>
+        <comment>Demo user actcc: Community Clinician, with a provider so they can save forms. Password Act12345.</comment>
+        <sql>
+            INSERT INTO person (gender, dead, creator, date_created, voided, uuid) VALUES ('U', 0, 1, NOW(), 0, '82ac99b3-405a-4d64-a8c5-1593621978b4');
+            INSERT INTO person_name (preferred, person_id, given_name, family_name, creator, date_created, voided, uuid)
+                SELECT 1, person_id, 'Test', 'Community Clinician', 1, NOW(), 0, 'efd06751-288e-4da5-a9b2-031f0bb9d448' FROM person WHERE uuid = '82ac99b3-405a-4d64-a8c5-1593621978b4';
+            INSERT INTO users (system_id, username, salt, password, person_id, creator, date_created, retired, uuid)
+                SELECT 'actcc', 'actcc', SHA2(UUID(), 512), '', person_id, 1, NOW(), 0, 'a3ab4a18-708d-4994-bc58-d59035a48808' FROM person WHERE uuid = '82ac99b3-405a-4d64-a8c5-1593621978b4';
+            UPDATE users SET password = SHA2(CONCAT('Act12345', salt), 512) WHERE uuid = 'a3ab4a18-708d-4994-bc58-d59035a48808';
+            INSERT INTO user_role (user_id, role) SELECT user_id, 'Organizational: ACT Community Clinician' FROM users WHERE uuid = 'a3ab4a18-708d-4994-bc58-d59035a48808';
+            INSERT INTO provider (person_id, identifier, creator, date_created, retired, uuid)
+                SELECT person_id, 'actcc', 1, NOW(), 0, '002d0c13-0fe8-4636-a261-86ecc39a7dfc' FROM person WHERE uuid = '82ac99b3-405a-4d64-a8c5-1593621978b4';
+        </sql>
+    </changeSet>
+
+    <changeSet id="act3-user-actclerk-1" author="act3">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM users WHERE username = 'actclerk' OR system_id = 'actclerk'</sqlCheck>
+        </preConditions>
+        <comment>Demo user actclerk: Data Clerk, with a provider so they can save forms. Password Act12345.</comment>
+        <sql>
+            INSERT INTO person (gender, dead, creator, date_created, voided, uuid) VALUES ('U', 0, 1, NOW(), 0, '65ba665b-8754-452c-8a41-178f9dfa9a27');
+            INSERT INTO person_name (preferred, person_id, given_name, family_name, creator, date_created, voided, uuid)
+                SELECT 1, person_id, 'Test', 'Data Clerk', 1, NOW(), 0, '7c1062b7-a422-42d9-9ad5-22627cd79740' FROM person WHERE uuid = '65ba665b-8754-452c-8a41-178f9dfa9a27';
+            INSERT INTO users (system_id, username, salt, password, person_id, creator, date_created, retired, uuid)
+                SELECT 'actclerk', 'actclerk', SHA2(UUID(), 512), '', person_id, 1, NOW(), 0, '9c236534-16b7-4836-a3ab-e672cf1e0c65' FROM person WHERE uuid = '65ba665b-8754-452c-8a41-178f9dfa9a27';
+            UPDATE users SET password = SHA2(CONCAT('Act12345', salt), 512) WHERE uuid = '9c236534-16b7-4836-a3ab-e672cf1e0c65';
+            INSERT INTO user_role (user_id, role) SELECT user_id, 'Organizational: ACT Data Clerk' FROM users WHERE uuid = '9c236534-16b7-4836-a3ab-e672cf1e0c65';
+            INSERT INTO provider (person_id, identifier, creator, date_created, retired, uuid)
+                SELECT person_id, 'actclerk', 1, NOW(), 0, '4dea7143-56c8-47d0-bf7c-4021b5aac83c' FROM person WHERE uuid = '65ba665b-8754-452c-8a41-178f9dfa9a27';
+        </sql>
+    </changeSet>
+
+    <changeSet id="act3-user-actclin-1" author="act3">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM users WHERE username = 'actclin' OR system_id = 'actclin'</sqlCheck>
+        </preConditions>
+        <comment>Demo user actclin: Clinician, with a provider so they can save forms. Password Act12345.</comment>
+        <sql>
+            INSERT INTO person (gender, dead, creator, date_created, voided, uuid) VALUES ('U', 0, 1, NOW(), 0, 'bb712d89-1efe-4d23-84e4-96187c083c97');
+            INSERT INTO person_name (preferred, person_id, given_name, family_name, creator, date_created, voided, uuid)
+                SELECT 1, person_id, 'Test', 'Clinician', 1, NOW(), 0, '70e4083b-32ce-47d2-afee-e8efcede32c4' FROM person WHERE uuid = 'bb712d89-1efe-4d23-84e4-96187c083c97';
+            INSERT INTO users (system_id, username, salt, password, person_id, creator, date_created, retired, uuid)
+                SELECT 'actclin', 'actclin', SHA2(UUID(), 512), '', person_id, 1, NOW(), 0, 'c33f9c22-1621-4a18-a342-05ea044beb1b' FROM person WHERE uuid = 'bb712d89-1efe-4d23-84e4-96187c083c97';
+            UPDATE users SET password = SHA2(CONCAT('Act12345', salt), 512) WHERE uuid = 'c33f9c22-1621-4a18-a342-05ea044beb1b';
+            INSERT INTO user_role (user_id, role) SELECT user_id, 'Organizational: ACT Clinician' FROM users WHERE uuid = 'c33f9c22-1621-4a18-a342-05ea044beb1b';
+            INSERT INTO provider (person_id, identifier, creator, date_created, retired, uuid)
+                SELECT person_id, 'actclin', 1, NOW(), 0, 'f0cd2d50-e45d-4d3a-89dc-8ac5f2fe7740' FROM person WHERE uuid = 'bb712d89-1efe-4d23-84e4-96187c083c97';
+        </sql>
+    </changeSet>
+
+    <changeSet id="act3-user-actsite-1" author="act3">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM users WHERE username = 'actsite' OR system_id = 'actsite'</sqlCheck>
+        </preConditions>
+        <comment>Demo user actsite: Site Administrator, with a provider so they can save forms. Password Act12345.</comment>
+        <sql>
+            INSERT INTO person (gender, dead, creator, date_created, voided, uuid) VALUES ('U', 0, 1, NOW(), 0, 'dcc4f540-d88e-4e71-aca8-be16329fd299');
+            INSERT INTO person_name (preferred, person_id, given_name, family_name, creator, date_created, voided, uuid)
+                SELECT 1, person_id, 'Test', 'Site Administrator', 1, NOW(), 0, '06829988-b25f-48a3-a0ad-05ed7e3db4c3' FROM person WHERE uuid = 'dcc4f540-d88e-4e71-aca8-be16329fd299';
+            INSERT INTO users (system_id, username, salt, password, person_id, creator, date_created, retired, uuid)
+                SELECT 'actsite', 'actsite', SHA2(UUID(), 512), '', person_id, 1, NOW(), 0, 'cb57aeac-e308-4535-865e-d6813e60a4f5' FROM person WHERE uuid = 'dcc4f540-d88e-4e71-aca8-be16329fd299';
+            UPDATE users SET password = SHA2(CONCAT('Act12345', salt), 512) WHERE uuid = 'cb57aeac-e308-4535-865e-d6813e60a4f5';
+            INSERT INTO user_role (user_id, role) SELECT user_id, 'Organizational: ACT Site Administrator' FROM users WHERE uuid = 'cb57aeac-e308-4535-865e-d6813e60a4f5';
+            INSERT INTO provider (person_id, identifier, creator, date_created, retired, uuid)
+                SELECT person_id, 'actsite', 1, NOW(), 0, 'e51e569f-85c9-4148-96cb-f400192ca151' FROM person WHERE uuid = 'dcc4f540-d88e-4e71-aca8-be16329fd299';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
