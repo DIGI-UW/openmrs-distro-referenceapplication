@@ -39,6 +39,12 @@ Each push to ACT Core's `main` deploys a new SNAPSHOT, and the backend build che
 fetches ACT Core again after a push there. A SNAPSHOT deployed any other way, or one still deploying when you
 last built, needs `docker compose build --build-arg CACHE_BUST=$(date +%s) backend`.
 
+### Time zone
+
+The backend and the database run in the clinics' time zone, so "today" in ACT Core and the reports turns over
+at the clinics' midnight. It is `Africa/Kampala` unless `ACT_TIME_ZONE` in `.env` names another zone
+(an IANA name, for example `ACT_TIME_ZONE=Africa/Nairobi`). Restart both services after changing it.
+
 ### Production deployment with SSL
 
 For production deployments with HTTPS/SSL certificates, create a `.env` file in the project root:
