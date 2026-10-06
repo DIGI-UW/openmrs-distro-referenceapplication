@@ -109,7 +109,6 @@ SELECT
     )                                                               AS next_consultation_date,
 
     -- No prescription also needs the latest consultation to prescribe none in force, as the table is rebuilt nightly.
-    -- A prescription with a Date Stopped, even a future one, is not in force, as ACT Core and ACT 2.0 count it.
     CASE
         WHEN (MAX(adh.injection_interval_days) IS NULL
               OR MAX(adh.regimen_concept_id) = (SELECT concept_id FROM concept WHERE uuid = '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
@@ -126,6 +125,7 @@ SELECT
                           AND o_last.concept_id = (SELECT concept_id FROM concept WHERE uuid = '668e0221-8b41-5669-9ad8-78e193d42494')
                         ORDER BY o_last.obs_datetime DESC, o_last.obs_id DESC LIMIT 1
                       )
+                  -- Any Date Stopped, even a future one, stops the prescription, as ACT Core and ACT 2.0 count it.
                   AND NOT EXISTS (
                         SELECT 1 FROM obs o_stop
                         WHERE o_stop.obs_group_id = o_rx.obs_group_id AND o_stop.voided = 0
