@@ -8,12 +8,8 @@ SELECT
     p.uuid                                                          AS patient_uuid,
     MAX(CONCAT(pn.given_name, ' ', pn.family_name))                 AS full_name,
     MAX(rhd_id.identifier)                                          AS rhd_id,
-    -- The care cascade's BPG and oral regimens; ACT Core takes a prescription without a regimen as oral
-    CASE
-        WHEN regimen.uuid IN ('50be4b26-6c5b-5aaa-9254-3bfd313b4522','2f3ee632-dd14-51b0-a4ec-de10e7958019',
-                              '91230c88-6a90-5d45-af50-fa6155fe5dd7') THEN 'BPG'
-        ELSE 'Oral'
-    END                                                             AS prophylaxis_type,
+    -- Typed as ACT Core's chart types it: an injection interval means BPG
+    CASE WHEN a.injection_interval_days > 0 THEN 'BPG' ELSE 'Oral' END AS prophylaxis_type,
     a.last_given                                                    AS last_given,
     a.next_due                                                      AS next_due,
     CASE WHEN a.next_due = CURDATE() THEN 'due_today' ELSE 'overdue' END AS status,
@@ -48,7 +44,6 @@ WHERE pp.voided = 0
           AND (later.date_enrolled > pp.date_enrolled
                OR (later.date_enrolled = pp.date_enrolled AND later.patient_program_id > pp.patient_program_id))
     )
-    -- A BPG patient never injected has no next_due in the table, so is not listed
     AND a.next_due <= CURDATE()
     -- BPG, oral or no regimen: None, Other and any regimen the cascade does not count are not due
     AND (regimen.uuid IS NULL
@@ -58,6 +53,6 @@ WHERE pp.voided = 0
                              'fb8b6676-689b-5daa-83f7-1456210c587f','f6f25d63-bd1a-51cb-9596-e74a19759429',
                              '1af922b8-acee-56c8-b184-eaef4e58e23a'))
 
-GROUP BY pp.patient_program_id, p.uuid, regimen.uuid, a.last_given, a.next_due
+GROUP BY pp.patient_program_id, p.uuid, a.injection_interval_days, a.last_given, a.next_due
 
 ORDER BY a.next_due, full_name
