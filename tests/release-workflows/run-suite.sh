@@ -196,15 +196,10 @@ out=$(bash "$STEPS/release-prod--check-out-release-branch-and-locate-the-qa-appr
 [ $rc -ne 0 ] && echo "$out" | grep -q "not exact-pinned" && ok "VII refused unpinned hand-finalized commit" || bad "VII: rc=$rc $out"
 
 echo "=== VIII: qa refuses an already-released version ==="
-# A fork does not copy upstream's tags, so a repository with no release tag has no version to re-release.
-if [ -z "$RELEASED" ]; then
-  echo "SKIP: VIII needs a release tag, and this repository has none"
-else
-  clone w8
-  export V="$RELEASED" CORE=10.0.0 BASE_REF=main
-  out=$(bash "$STEPS/release-qa--determine-release-mode-and-rc-number.sh" 2>&1); rc=$?
-  [ $rc -ne 0 ] && echo "$out" | grep -q "already released" && ok "VIII refused re-releasing $RELEASED" || bad "VIII: rc=$rc $out"
-fi
+clone w8
+export V="$RELEASED" CORE=10.0.0 BASE_REF=main
+out=$(bash "$STEPS/release-qa--determine-release-mode-and-rc-number.sh" 2>&1); rc=$?
+[ $rc -ne 0 ] && echo "$out" | grep -q "already released" && ok "VIII refused re-releasing $RELEASED" || bad "VIII: rc=$rc $out"
 
 echo "=== IX: qa fails clearly on a nonexistent base_ref ==="
 export V="$TV3" CORE=10.0.0 BASE_REF=no-such-ref
