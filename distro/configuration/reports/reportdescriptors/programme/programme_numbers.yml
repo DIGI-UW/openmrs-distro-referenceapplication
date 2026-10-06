@@ -1,0 +1,18 @@
+key: programmeNumbers
+uuid: "46390de7-7d64-4c52-bd86-e1560950bb01"
+name: "Programme Numbers"
+description: "Active RHD Registry patients, those due for BPG this week or overdue, and the BPG on-time rate, in all and by primary care clinic"
+parameters:
+  - key: location
+    type: org.openmrs.Location
+    label: "Location"
+    required: false
+datasets:
+  - key: numbers
+    type: sql
+    config: "sql/programme_numbers.sql"
+  - key: byFacility
+    type: sql
+    config: "sql/programme_by_facility.sql"
+designs:
+  - type: csv
