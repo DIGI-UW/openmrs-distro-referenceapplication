@@ -415,6 +415,47 @@
               }
             },
             {
+              "label": "Screening Site",
+              "id": "screening_site",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "36ccfed2-09e2-5224-9963-267ab3f891d2"
+              },
+              "hide": {
+                "hideWhenExpression": "screen_positive !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
+            },
+            {
+              "label": "Follow-up Status",
+              "id": "screen_follow_up_status",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "2d1b8bb8-fbca-5683-87d2-30972811c982",
+                "answers": [
+                  {
+                    "label": "Not contacted",
+                    "concept": "b41f9c6a-b0ba-5ff5-8ab6-b2bfe06701cc",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Echo booked",
+                    "concept": "f8667c87-6311-5b10-9b53-8c464faabf63",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Urgent",
+                    "concept": "aa61d122-672a-52e0-becf-8f96d88ac88a",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "screen_positive !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
+            },
+            {
               "label": "Case Detected By",
               "id": "case_detected_by",
               "type": "obs",

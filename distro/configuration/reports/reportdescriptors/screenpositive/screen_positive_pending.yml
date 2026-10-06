@@ -1,7 +1,7 @@
 key: screenPositivePending
 uuid: "e3b8f7a2-6c41-4d9e-8a57-1f0c2d4b9e63"
 name: "Screen Positive, Pending Confirmation"
-description: "RHD Registry patients whose latest Category at Diagnosis is Screen + pending confirmatory echo"
+description: "RHD Registry patients who screened positive and have no Category at Diagnosis since, with where they were screened and their follow-up status"
 datasets:
   - key: screenPositivePendingData
     type: sql
