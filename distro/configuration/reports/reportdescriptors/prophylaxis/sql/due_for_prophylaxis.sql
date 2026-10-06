@@ -23,8 +23,38 @@ FROM patient_program pp
 JOIN program pw ON pw.program_id = pp.program_id AND pw.retired = 0
     AND pw.uuid = '7d73e143-a550-5a9d-aecd-dd771add098d'
 JOIN patient pat ON pat.patient_id = pp.patient_id AND pat.voided = 0
-JOIN person p    ON p.person_id    = pp.patient_id  AND p.voided = 0
-JOIN actcore_prophylaxis_adherence a ON a.patient_id = p.person_id
+JOIN person p    ON p.person_id    = pp.patient_id  AND p.voided = 0 AND p.dead = 0
+JOIN (
+    SELECT a.patient_id, a.regimen_concept_id, a.last_given,
+           -- ACT Core's prophylaxis summary dues a first injection one interval after the prescription starts
+           COALESCE(a.next_due, CASE WHEN a.injection_interval_days > 0
+                                     THEN rx.started + INTERVAL a.injection_interval_days DAY END) AS next_due
+    FROM actcore_prophylaxis_adherence a
+    -- The latest unstopped start in the first consultation of the patient's latest day, as AdherenceReplay takes it
+    LEFT JOIN (
+        SELECT person_id, MAX(started) AS started
+        FROM (
+            SELECT g.person_id, DATE(s.value_datetime) AS started, x.value_datetime AS stopped,
+                   DENSE_RANK() OVER (PARTITION BY g.person_id
+                                      ORDER BY DATE(COALESCE(cd.value_datetime, e.encounter_datetime)) DESC,
+                                               COALESCE(cd.value_datetime, e.encounter_datetime), e.encounter_id) AS consultation
+            -- The concepts the actcore.adherence.* global properties name, which AdherenceRefresh reads
+            FROM obs g
+            JOIN encounter e ON e.encounter_id = g.encounter_id AND e.voided = 0
+            LEFT JOIN obs cd ON cd.encounter_id = g.encounter_id AND cd.voided = 0
+                AND cd.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'c3edefd2-5777-5084-b01e-fd4ca0e40162')
+            LEFT JOIN obs s ON s.obs_group_id = g.obs_id AND s.voided = 0
+                AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = '5bcc7d12-b279-5955-815c-090a1f392071')
+            LEFT JOIN obs x ON x.obs_group_id = g.obs_id AND x.voided = 0
+                AND x.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'd75edc42-3213-5a06-9228-4e5735b9594b')
+            WHERE g.voided = 0 AND g.obs_group_id IS NULL
+              AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = '668e0221-8b41-5669-9ad8-78e193d42494')
+              AND DATE(COALESCE(cd.value_datetime, e.encounter_datetime)) <= CURDATE()
+        ) course
+        WHERE consultation = 1 AND stopped IS NULL AND started <= CURDATE()
+        GROUP BY person_id
+    ) rx ON rx.person_id = a.patient_id
+) a ON a.patient_id = p.person_id
 LEFT JOIN concept regimen ON regimen.concept_id = a.regimen_concept_id
 
 LEFT JOIN person_name pn ON pn.person_id = p.person_id AND pn.voided = 0 AND pn.preferred = 1
