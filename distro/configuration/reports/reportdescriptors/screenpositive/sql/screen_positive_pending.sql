@@ -18,15 +18,28 @@ SELECT
           AND d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '96d6d328-87ba-5a2e-bb71-2d1cd73b3e90')
     ), scr.obs_datetime))                                           AS screen_date,
     p.uuid                                                          AS patient_uuid,
-    -- The encounter and form that recorded the Screen +, where its Diagnosis Details go, as ACT 2.0's row opened
-    -- the patient form
+    -- The form to record the diagnosis in, as ACT 2.0's row opened the patient form
     enc.uuid                                                        AS encounter_uuid,
     frm.uuid                                                        AS form_uuid
 
 FROM obs scr
 JOIN person p ON p.person_id = scr.person_id AND p.voided = 0 AND p.dead = 0
 JOIN patient pat ON pat.patient_id = p.person_id AND pat.voided = 0
-JOIN encounter enc ON enc.encounter_id = scr.encounter_id
+-- The encounter holding the active primary diagnosis, else the one that recorded the Screen +
+JOIN encounter enc ON enc.encounter_id = COALESCE((
+        SELECT dg.encounter_id FROM obs dg
+        WHERE dg.person_id = scr.person_id AND dg.voided = 0
+          AND dg.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
+          AND NOT EXISTS (
+              SELECT 1 FROM obs x
+              WHERE x.obs_group_id = dg.obs_id AND x.voided = 0
+                AND ((x.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'b1b5d279-8013-5ae4-83a7-0f2bd9bc8457')
+                      AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '488b58ff-64f5-4f8a-8979-fa79940b1594'))
+                  OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
+                      AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
+        ORDER BY dg.obs_datetime DESC, dg.obs_id DESC
+        LIMIT 1
+    ), scr.encounter_id)
 LEFT JOIN form frm ON frm.form_id = enc.form_id
 
 LEFT JOIN person_name pn ON pn.person_id = p.person_id AND pn.voided = 0 AND pn.preferred = 1
@@ -55,24 +68,29 @@ WHERE scr.voided = 0
           AND (later.obs_datetime > scr.obs_datetime
                OR (later.obs_datetime = scr.obs_datetime AND later.obs_id > scr.obs_id))
     )
-    -- No Diagnosis Details on a Diagnosis not answered inactive or secondary (as ACT 2.0 read the active primary
-    -- diagnosis; unanswered counts, as those questions did not load before 2026-10-07)
+    -- No Diagnosis Details on the latest Diagnosis not answered inactive or secondary, the one the registry reads
+    -- (as ACT 2.0 read the active primary diagnosis; unanswered counts, as those questions did not load before 2026-10-07)
     AND NOT EXISTS (
-        SELECT 1 FROM obs g
-        JOIN obs det ON det.obs_group_id = g.obs_id AND det.voided = 0 AND det.value_coded IS NOT NULL
-         AND det.concept_id IN ((SELECT concept_id FROM concept WHERE uuid = 'cfe17bb5-4a76-5f3a-9e1c-7b1e9b84a8e3'),
-                                (SELECT concept_id FROM concept WHERE uuid = 'd3f6e1a2-9c5b-5e84-8f2d-1a6c7b9e0d4f'),
-                                (SELECT concept_id FROM concept WHERE uuid = 'b7a2c4d8-5e91-5f3a-8c6d-2b9e4f7a1c0d'),
-                                (SELECT concept_id FROM concept WHERE uuid = 'e9f3a5c7-6b82-5d4e-9f1a-3c7d8e2b5f4a'))
-        WHERE g.person_id = scr.person_id AND g.voided = 0
-          AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
-          AND NOT EXISTS (
-              SELECT 1 FROM obs x
-              WHERE x.obs_group_id = g.obs_id AND x.voided = 0
-                AND ((x.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'b1b5d279-8013-5ae4-83a7-0f2bd9bc8457')
-                      AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '488b58ff-64f5-4f8a-8979-fa79940b1594'))
-                  OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
-                      AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
+        SELECT 1 FROM obs det
+        WHERE det.obs_group_id = (
+            SELECT dg.obs_id FROM obs dg
+            WHERE dg.person_id = scr.person_id AND dg.voided = 0
+              AND dg.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
+              AND NOT EXISTS (
+                  SELECT 1 FROM obs x
+                  WHERE x.obs_group_id = dg.obs_id AND x.voided = 0
+                    AND ((x.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'b1b5d279-8013-5ae4-83a7-0f2bd9bc8457')
+                          AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '488b58ff-64f5-4f8a-8979-fa79940b1594'))
+                      OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
+                          AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
+            ORDER BY dg.obs_datetime DESC, dg.obs_id DESC
+            LIMIT 1
+        )
+          AND det.voided = 0 AND det.value_coded IS NOT NULL
+          AND det.concept_id IN ((SELECT concept_id FROM concept WHERE uuid = 'cfe17bb5-4a76-5f3a-9e1c-7b1e9b84a8e3'),
+                                 (SELECT concept_id FROM concept WHERE uuid = 'd3f6e1a2-9c5b-5e84-8f2d-1a6c7b9e0d4f'),
+                                 (SELECT concept_id FROM concept WHERE uuid = 'b7a2c4d8-5e91-5f3a-8c6d-2b9e4f7a1c0d'),
+                                 (SELECT concept_id FROM concept WHERE uuid = 'e9f3a5c7-6b82-5d4e-9f1a-3c7d8e2b5f4a'))
     )
     -- Enrolled in the RHD Registry now
     AND EXISTS (
