@@ -17,11 +17,17 @@ SELECT
         WHERE d.encounter_id = scr.encounter_id AND d.voided = 0
           AND d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '96d6d328-87ba-5a2e-bb71-2d1cd73b3e90')
     ), scr.obs_datetime))                                           AS screen_date,
-    p.uuid                                                          AS patient_uuid
+    p.uuid                                                          AS patient_uuid,
+    -- The encounter and form that recorded the Screen +, where its Diagnosis Details go, as ACT 2.0's row opened
+    -- the patient form
+    enc.uuid                                                        AS encounter_uuid,
+    frm.uuid                                                        AS form_uuid
 
 FROM obs scr
 JOIN person p ON p.person_id = scr.person_id AND p.voided = 0 AND p.dead = 0
 JOIN patient pat ON pat.patient_id = p.person_id AND pat.voided = 0
+JOIN encounter enc ON enc.encounter_id = scr.encounter_id
+LEFT JOIN form frm ON frm.form_id = enc.form_id
 
 LEFT JOIN person_name pn ON pn.person_id = p.person_id AND pn.voided = 0 AND pn.preferred = 1
 LEFT JOIN patient_identifier rhd_id
@@ -75,6 +81,6 @@ WHERE scr.voided = 0
         WHERE pp.patient_id = p.person_id AND pp.voided = 0 AND pp.date_completed IS NULL
     )
 
-GROUP BY scr.obs_id, scr.encounter_id, scr.obs_datetime, p.person_id, p.birthdate, p.gender, p.uuid
+GROUP BY scr.obs_id, scr.encounter_id, scr.obs_datetime, p.person_id, p.birthdate, p.gender, p.uuid, enc.uuid, frm.uuid
 
 ORDER BY screen_date, rhd_id
