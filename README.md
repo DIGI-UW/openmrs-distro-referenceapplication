@@ -37,7 +37,12 @@ serves Maven artifacts only to a token with `read:packages`. The backend build r
 
 Each push to ACT Core's `main` deploys a new SNAPSHOT, and the backend build checks `main` every time, so it
 fetches ACT Core again after a push there. A SNAPSHOT deployed any other way, or one still deploying when you
-last built, needs `docker compose build --build-arg CACHE_BUST=$(date +%s) backend`.
+last built, needs `CACHE_BUST=$(date +%s) docker compose up -d --build`.
+
+The frontend build likewise checks the ACT app's `next` tag on npm every time, so `docker compose up -d --build`
+fetches a newly published ACT app and otherwise reuses the cache. The other apps are fetched again only with
+`CACHE_BUST=$(date +%s) docker compose up -d --build`, which rebuilds both images from the download step on. If the
+browser still shows the old app, reload without its cache: the app shell's service worker keeps the bundles.
 
 ### Production deployment with SSL
 

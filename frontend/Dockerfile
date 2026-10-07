@@ -12,6 +12,9 @@ WORKDIR /app
 COPY spa-assemble-config.json .
 COPY spa-build-config.json .
 
+# Keep: a new act app on npm's next tag changes this manifest, so the assemble step fetches it again
+ADD https://registry.npmjs.org/@mherman22/esm-act-app/next /tmp/esm-act-app-next.json
+
 ARG CACHE_BUST
 RUN npx --legacy-peer-deps openmrs@${APP_SHELL_VERSION:-next} assemble --manifest --mode config --config spa-assemble-config.json --target ./spa
 RUN npx --legacy-peer-deps openmrs@${APP_SHELL_VERSION:-next} build --build-config spa-build-config.json --target ./spa

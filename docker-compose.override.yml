@@ -8,10 +8,14 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        CACHE_BUST: ${CACHE_BUST:-}
 
   backend:
     build:
       context: .
+      args:
+        CACHE_BUST: ${CACHE_BUST:-}
       secrets:
         - m2settings
 
