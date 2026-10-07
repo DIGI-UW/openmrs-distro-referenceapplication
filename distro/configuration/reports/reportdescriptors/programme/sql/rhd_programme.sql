@@ -6,7 +6,8 @@
 -- Active: living patients whose latest RHD Registry enrolment is open, as the due list counts them.
 -- Scope: an optional cardiac clinic and an optional primary care clinic, each a location uuid, as ACT 2.0's
 -- dashboard filtered on each; both blank means every clinic.
--- Due this week: next due date from today to 7 days ahead, the registry's "Deadline approaching" window.
+-- Due this week: next due date from today to 7 days ahead, the window of the registry's "Deadline approaching",
+-- over the due list's patients, so an oral regimen counts as it does in Overdue; the registry's chip is BPG only.
 -- Overdue: next due date before today. Both with the due list's regimens, from ACT Core's adherence table.
 -- BPG on time and timed: injections from startDate to endDate, timed by ACT Core as the chart times them, of
 -- every patient in scope whatever their status now, so a past period's rate does not change as patients leave.
