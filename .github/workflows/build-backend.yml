@@ -51,7 +51,7 @@ on:
         required: true
 
 env:
-  IMAGE: openmrs/openmrs-reference-application-3-backend
+  IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/openmrs-reference-application-3-backend
   DOCKER_IMAGE_TAG: ${{ inputs.docker_image_tag || 'nightly' }}
   DOCKER_IMAGE_TAG_VERSION: ${{ inputs.docker_image_tag_version || '3.7.x' }}
   DOCKER_IMAGE_TAG_ENV: ${{ inputs.docker_image_tag_env || 'dev3' }}
@@ -64,7 +64,7 @@ concurrency:
 jobs:
   build-and-publish:
     name: Build and Publish the Backend Image
-    if: github.repository == 'openmrs/openmrs-distro-referenceapplication'
+    if: github.repository == 'DIGI-UW/openmrs-distro-referenceapplication'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -77,7 +77,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: Set up Docker Buildx
@@ -136,7 +136,7 @@ jobs:
     name: Build and Publish the Backend Image Without Demo Content
     # Skip for release-candidate builds: nothing consumes an rc-no-demo
     # image, and this job repeats the full multi-arch distro build.
-    if: github.repository == 'openmrs/openmrs-distro-referenceapplication' && !contains(inputs.docker_image_tag || 'nightly', '-rc.')
+    if: github.repository == 'DIGI-UW/openmrs-distro-referenceapplication' && !contains(inputs.docker_image_tag || 'nightly', '-rc.')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -149,7 +149,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: Set up Docker Buildx
@@ -206,7 +206,7 @@ jobs:
   build-nightly-with-data:
     name: Build and Publish Nightly With Data Images
     needs: build-and-publish
-    if: github.repository == 'openmrs/openmrs-distro-referenceapplication' && (inputs.docker_image_tag || 'nightly') == 'nightly'
+    if: github.repository == 'DIGI-UW/openmrs-distro-referenceapplication' && (inputs.docker_image_tag || 'nightly') == 'nightly'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -220,36 +220,46 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: Pull nightly images
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
         run: docker compose -f docker-compose-no-volumes.yml pull
 
       - name: Start backend and database
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
         run: docker compose -f docker-compose-no-volumes.yml up -d
 
       - name: Wait for OpenMRS to be ready
         run: while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/openmrs/login.htm)" != "200" ]]; do sleep 10; done
 
       - name: Commit containers
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
         run: |
-          backend_container_id=$(docker ps --filter ancestor=openmrs/openmrs-reference-application-3-backend:nightly --format '{{.ID}}')
+          backend_container_id=$(docker ps --filter ancestor=${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-backend:nightly --format '{{.ID}}')
           db_container_id=$(docker ps --filter ancestor=mariadb:10.8.2 --format '{{.ID}}')
-          docker commit $backend_container_id openmrs/openmrs-reference-application-3-backend:nightly-with-data
-          docker commit $db_container_id openmrs/openmrs-reference-application-3-db:nightly-with-data
+          docker commit $backend_container_id ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-backend:nightly-with-data
+          docker commit $db_container_id ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-db:nightly-with-data
 
       - name: Push images
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
         run: |
-          docker push openmrs/openmrs-reference-application-3-backend:nightly-with-data
-          docker push openmrs/openmrs-reference-application-3-db:nightly-with-data
+          docker push ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-backend:nightly-with-data
+          docker push ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-db:nightly-with-data
 
       - name: Install cosign
         uses: sigstore/cosign-installer@d58896d6a1865668819e1d91763c7751a165e159 # v3.9.2
 
       - name: Sign the images (keyless)
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
         run: |
-          backend_digest=$(docker inspect --format='{{index .RepoDigests 0}}' openmrs/openmrs-reference-application-3-backend:nightly-with-data)
-          db_digest=$(docker inspect --format='{{index .RepoDigests 0}}' openmrs/openmrs-reference-application-3-db:nightly-with-data)
+          backend_digest=$(docker inspect --format='{{index .RepoDigests 0}}' ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-backend:nightly-with-data)
+          db_digest=$(docker inspect --format='{{index .RepoDigests 0}}' ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-db:nightly-with-data)
           cosign sign --yes "$backend_digest"
           cosign sign --yes "$db_digest"

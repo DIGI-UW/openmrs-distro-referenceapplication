@@ -53,7 +53,7 @@ on:
     - cron: '0 1,7,13,19 * * *'
 
 env:
-  IMAGE: openmrs/openmrs-reference-application-3-frontend
+  IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/openmrs-reference-application-3-frontend
   DOCKER_IMAGE_TAG: ${{ inputs.docker_image_tag || 'nightly' }}
   DOCKER_IMAGE_TAG_VERSION: ${{ inputs.docker_image_tag_version || '3.7.x' }}
   DOCKER_IMAGE_TAG_ENV: ${{ inputs.docker_image_tag_env || 'dev3' }}
@@ -66,7 +66,7 @@ concurrency:
 jobs:
   build-and-publish:
     name: Build and Publish the Frontend Image
-    if: github.repository == 'openmrs/openmrs-distro-referenceapplication'
+    if: github.repository == 'DIGI-UW/openmrs-distro-referenceapplication'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -79,7 +79,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: Set up Docker Buildx
