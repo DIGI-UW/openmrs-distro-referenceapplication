@@ -189,11 +189,11 @@
         "id": "rhd-registration",
         "name": "RHD Registration",
         "fields": [
+          "consentStatement",
+          "consentGiven",
+          "consentDate",
           "assignedCardiacClinic",
           "primaryCareClinic",
-          "consentGiven",
-          "consentPerson",
-          "consentDate",
           "textItSettings",
           "primaryPhone",
           "phoneOwnerName",
@@ -205,25 +205,30 @@
     ],
     "fieldDefinitions": [
       {
+        "id": "consentStatement",
+        "type": "text",
+        "label": "I told the patient the following about the use of their health information: Their personal health information will go into a computer program that helps manage their heart care. The information will be kept on special computers in the United States that store their data. The data may be used for other purposes, such as researching ways to improve treatment for people with heart conditions around the world. No information that directly identifies them, such as their name or account numbers, will be shared with anyone else. Their treatment does not depend on giving this permission and they can change their mind anytime so that new health information will not be used or shared. The patient told me that they understood the risks related to this information, and the patient freely agreed to share their data."
+      },
+      {
         "id": "assignedCardiacClinic",
         "type": "person attribute",
         "uuid": "fe261119-2911-5b36-be40-8f9827826987",
         "label": "Assigned Cardiac Clinic",
-        "showHeading": true
+        "showHeading": false
       },
       {
         "id": "primaryCareClinic",
         "type": "person attribute",
         "uuid": "695f2990-236f-5d7c-b8aa-ddbdb22400f4",
         "label": "Primary Care Clinic",
-        "showHeading": true
+        "showHeading": false
       },
       {
         "id": "consentGiven",
         "type": "person attribute",
         "uuid": "e15bf9b7-249e-5d75-907d-937b8d9b0c46",
         "label": "Consent Obtained",
-        "showHeading": true,
+        "showHeading": false,
         "customConceptAnswers": [
           {
             "uuid": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
@@ -247,14 +252,15 @@
         "type": "person attribute",
         "uuid": "b29617e3-c49e-5893-8dc7-e06b125a0264",
         "label": "Date of Consent",
-        "showHeading": true
+        "showHeading": false,
+        "allowFutureDates": false
       },
       {
         "id": "textItSettings",
         "type": "person attribute",
         "uuid": "68b50c5e-250e-5dab-bd34-fb007756a7ed",
         "label": "Text-It Settings",
-        "showHeading": true,
+        "showHeading": false,
         "customConceptAnswers": [
           {
             "uuid": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
@@ -271,28 +277,28 @@
         "type": "person attribute",
         "uuid": "542c6fd2-05ca-53e3-a4f5-cd23bc1abd8f",
         "label": "Primary Phone",
-        "showHeading": true
+        "showHeading": false
       },
       {
         "id": "phoneOwnerName",
         "type": "person attribute",
         "uuid": "ea3cb7ae-ffbe-5aee-8343-44977898f675",
         "label": "Phone Owner Name",
-        "showHeading": true
+        "showHeading": false
       },
       {
         "id": "phoneOwnerRelationship",
         "type": "person attribute",
         "uuid": "b36b2e80-c1ad-5417-84fc-89075904a089",
         "label": "Phone Owner Relationship",
-        "showHeading": true
+        "showHeading": false
       },
       {
         "id": "whatsappAvailable",
         "type": "person attribute",
         "uuid": "9b054d06-b812-5d57-b057-2e1b0338a888",
         "label": "WhatsApp Available",
-        "showHeading": true,
+        "showHeading": false,
         "customConceptAnswers": [
           {
             "uuid": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
@@ -309,7 +315,7 @@
         "type": "person attribute",
         "uuid": "d6764a78-a775-501e-b2ce-8b8bd431fd74",
         "label": "Telegram Available",
-        "showHeading": true,
+        "showHeading": false,
         "customConceptAnswers": [
           {
             "uuid": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
