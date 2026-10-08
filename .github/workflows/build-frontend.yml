@@ -38,15 +38,6 @@ on:
         required: false
         type: string
         default: ''
-    secrets:
-      DOCKER_HUB_USERNAME:
-        required: true
-      DOCKER_HUB_TOKEN:
-        required: true
-      MAVEN_REPO_USERNAME:
-        required: true
-      MAVEN_REPO_API_KEY:
-        required: true
   repository_dispatch:
     types: [frontend-prerelease]
   schedule:

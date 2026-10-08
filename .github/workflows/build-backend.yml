@@ -40,15 +40,6 @@ on:
         required: false
         type: string
         default: ''
-    secrets:
-      DOCKER_HUB_USERNAME:
-        required: true
-      DOCKER_HUB_TOKEN:
-        required: true
-      MAVEN_REPO_USERNAME:
-        required: true
-      MAVEN_REPO_API_KEY:
-        required: true
 
 env:
   IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/openmrs-reference-application-3-backend
@@ -68,6 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: read
       id-token: write   # required for cosign keyless signing via OIDC
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -100,12 +92,18 @@ jobs:
                 <username>${MAVEN_REPO_USERNAME}</username>
                 <password>${MAVEN_REPO_API_KEY}</password>
               </server>
+              <server>
+                <id>github-actcore</id>
+                <username>${GITHUB_ACTOR}</username>
+                <password>${GITHUB_TOKEN}</password>
+              </server>
             </servers>
           </settings>
           EOF
         env:
           MAVEN_REPO_USERNAME: ${{ secrets.MAVEN_REPO_USERNAME }}
           MAVEN_REPO_API_KEY: ${{ secrets.MAVEN_REPO_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
         id: build
@@ -139,6 +137,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: read
       id-token: write   # required for cosign keyless signing via OIDC
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -171,12 +170,18 @@ jobs:
                 <username>${MAVEN_REPO_USERNAME}</username>
                 <password>${MAVEN_REPO_API_KEY}</password>
               </server>
+              <server>
+                <id>github-actcore</id>
+                <username>${GITHUB_ACTOR}</username>
+                <password>${GITHUB_TOKEN}</password>
+              </server>
             </servers>
           </settings>
           EOF
         env:
           MAVEN_REPO_USERNAME: ${{ secrets.MAVEN_REPO_USERNAME }}
           MAVEN_REPO_API_KEY: ${{ secrets.MAVEN_REPO_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image (no demo content)
         id: build
@@ -239,17 +244,17 @@ jobs:
         env:
           DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
         run: |
-          backend_container_id=$(docker ps --filter ancestor=${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-backend:nightly --format '{{.ID}}')
+          backend_container_id=$(docker ps --filter ancestor=${DOCKERHUB_USERNAME:-itechuw}/openmrs-reference-application-3-backend:nightly --format '{{.ID}}')
           db_container_id=$(docker ps --filter ancestor=mariadb:10.8.2 --format '{{.ID}}')
-          docker commit $backend_container_id ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-backend:nightly-with-data
-          docker commit $db_container_id ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-db:nightly-with-data
+          docker commit $backend_container_id ${DOCKERHUB_USERNAME:-itechuw}/openmrs-reference-application-3-backend:nightly-with-data
+          docker commit $db_container_id ${DOCKERHUB_USERNAME:-itechuw}/openmrs-reference-application-3-db:nightly-with-data
 
       - name: Push images
         env:
           DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
         run: |
-          docker push ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-backend:nightly-with-data
-          docker push ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-db:nightly-with-data
+          docker push ${DOCKERHUB_USERNAME:-itechuw}/openmrs-reference-application-3-backend:nightly-with-data
+          docker push ${DOCKERHUB_USERNAME:-itechuw}/openmrs-reference-application-3-db:nightly-with-data
 
       - name: Install cosign
         uses: sigstore/cosign-installer@d58896d6a1865668819e1d91763c7751a165e159 # v3.9.2
@@ -258,7 +263,7 @@ jobs:
         env:
           DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
         run: |
-          backend_digest=$(docker inspect --format='{{index .RepoDigests 0}}' ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-backend:nightly-with-data)
-          db_digest=$(docker inspect --format='{{index .RepoDigests 0}}' ${DOCKERHUB_USERNAME:-openmrs}/openmrs-reference-application-3-db:nightly-with-data)
+          backend_digest=$(docker inspect --format='{{index .RepoDigests 0}}' ${DOCKERHUB_USERNAME:-itechuw}/openmrs-reference-application-3-backend:nightly-with-data)
+          db_digest=$(docker inspect --format='{{index .RepoDigests 0}}' ${DOCKERHUB_USERNAME:-itechuw}/openmrs-reference-application-3-db:nightly-with-data)
           cosign sign --yes "$backend_digest"
           cosign sign --yes "$db_digest"
