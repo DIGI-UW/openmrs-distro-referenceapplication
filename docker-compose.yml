@@ -9,7 +9,7 @@ services:
       - "80:80"
 
   frontend:
-    image: openmrs/openmrs-reference-application-3-frontend:${TAG:-qa}
+    image: ${ACT_IMAGE_NAMESPACE:-itechuw}/openmrs-reference-application-3-frontend:${TAG:-nightly}
     restart: "unless-stopped"
     environment:
       SPA_PATH: /openmrs/spa
@@ -27,7 +27,7 @@ services:
       - backend
 
   backend:
-    image: openmrs/openmrs-reference-application-3-backend:${TAG:-qa}
+    image: ${ACT_IMAGE_NAMESPACE:-itechuw}/openmrs-reference-application-3-backend:${TAG:-nightly}
     restart: "unless-stopped"
     depends_on:
       - db
