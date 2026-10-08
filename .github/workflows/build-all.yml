@@ -19,6 +19,7 @@ on:
         required: false
         type: string
         default: 'dev3'
+    # backend and frontend read DOCKERHUB_TOKEN and backend needs packages: read, neither of which this chain or its callers provide; migrate both before running it in DIGI-UW
     secrets:
       DOCKER_HUB_USERNAME:
         required: true
@@ -61,11 +62,7 @@ jobs:
       docker_image_tag: ${{ inputs.docker_image_tag }}
       docker_image_tag_version: ${{ inputs.docker_image_tag_version }}
       docker_image_tag_env: ${{ inputs.docker_image_tag_env }}
-    secrets:
-      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-      DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
-      MAVEN_REPO_USERNAME: ${{ secrets.MAVEN_REPO_USERNAME }}
-      MAVEN_REPO_API_KEY: ${{ secrets.MAVEN_REPO_API_KEY }}
+    secrets: inherit
 
   frontend:
     needs: validate
@@ -75,11 +72,7 @@ jobs:
       docker_image_tag: ${{ inputs.docker_image_tag }}
       docker_image_tag_version: ${{ inputs.docker_image_tag_version }}
       docker_image_tag_env: ${{ inputs.docker_image_tag_env }}
-    secrets:
-      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-      DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
-      MAVEN_REPO_USERNAME: ${{ secrets.MAVEN_REPO_USERNAME }}
-      MAVEN_REPO_API_KEY: ${{ secrets.MAVEN_REPO_API_KEY }}
+    secrets: inherit
 
   gateway:
     needs: validate
