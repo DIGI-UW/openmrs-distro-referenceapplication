@@ -83,16 +83,6 @@ jobs:
             xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
             <servers>
               <server>
-                <id>openmrs-repo-releases</id>
-                <username>${MAVEN_REPO_USERNAME}</username>
-                <password>${MAVEN_REPO_API_KEY}</password>
-              </server>
-              <server>
-                <id>openmrs-repo-snapshots</id>
-                <username>${MAVEN_REPO_USERNAME}</username>
-                <password>${MAVEN_REPO_API_KEY}</password>
-              </server>
-              <server>
                 <id>github-actcore</id>
                 <username>${GITHUB_ACTOR}</username>
                 <password>${GITHUB_TOKEN}</password>
@@ -101,8 +91,6 @@ jobs:
           </settings>
           EOF
         env:
-          MAVEN_REPO_USERNAME: ${{ secrets.MAVEN_REPO_USERNAME }}
-          MAVEN_REPO_API_KEY: ${{ secrets.MAVEN_REPO_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
@@ -161,16 +149,6 @@ jobs:
             xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
             <servers>
               <server>
-                <id>openmrs-repo-releases</id>
-                <username>${MAVEN_REPO_USERNAME}</username>
-                <password>${MAVEN_REPO_API_KEY}</password>
-              </server>
-              <server>
-                <id>openmrs-repo-snapshots</id>
-                <username>${MAVEN_REPO_USERNAME}</username>
-                <password>${MAVEN_REPO_API_KEY}</password>
-              </server>
-              <server>
                 <id>github-actcore</id>
                 <username>${GITHUB_ACTOR}</username>
                 <password>${GITHUB_TOKEN}</password>
@@ -179,8 +157,6 @@ jobs:
           </settings>
           EOF
         env:
-          MAVEN_REPO_USERNAME: ${{ secrets.MAVEN_REPO_USERNAME }}
-          MAVEN_REPO_API_KEY: ${{ secrets.MAVEN_REPO_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image (no demo content)

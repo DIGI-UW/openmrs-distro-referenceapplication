@@ -15,7 +15,8 @@ This pulls ACT's backend and frontend images, `itechuw/openmrs-reference-applica
 `itechuw/openmrs-reference-application-3-frontend` tagged `nightly`. CI rebuilds the backend when a push to
 `main` changes `distro/`, `pom.xml` or the `Dockerfile`, and the frontend when one changes `frontend/` and every
 six hours, which picks up new ACT app releases. To run your checkout instead, such as a branch under review,
-build it with `docker compose up --build` (see ACT Core below).
+build it with `docker compose up --build` (see ACT Core below). `docker compose up` reuses images you already
+have, so run `docker compose pull` to get the latest nightly, also after a `--build`.
 
 The OpenMRS 3.x UI is accessible at http://localhost/openmrs/spa
 

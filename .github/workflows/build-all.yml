@@ -19,6 +19,7 @@ on:
         required: false
         type: string
         default: 'dev3'
+    # backend and frontend read DOCKERHUB_TOKEN, which no caller passes; migrate that before running this chain in DIGI-UW
     secrets:
       DOCKER_HUB_USERNAME:
         required: true
