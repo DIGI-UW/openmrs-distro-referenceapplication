@@ -11,3 +11,4 @@ d34a1940-3069-4187-9990-e4b25f5a0b95,,App: act.communityHome,"Open Home, the com
 0ce25633-05ed-4b31-bb9b-f63d1dd91644,,App: act.reports,"Open Reports: programme numbers and the same by facility"
 7a99c7db-df54-43e7-b3b5-1fca4c86aa91,,Task: act.lists.export,"Download an ACT list as CSV"
 b013ab1f-925e-4e4e-96b0-3d6808e14bce,,Task: act.enterClinicalForms,"Record echocardiograms, electrocardiograms, interventions and pregnancies: the edit privilege of their encounter types"
+081b8ebc-8d24-42fa-b891-33b6427f7257,,Task: act.refreshFlags,"Refresh every patient's critical data flags and prophylaxis adherence now, from the Admin section"
