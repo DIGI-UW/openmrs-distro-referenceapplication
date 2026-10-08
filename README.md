@@ -11,6 +11,12 @@ https://dev3.openmrs.org and https://o3.openmrs.org.
 docker compose up
 ```
 
+This pulls ACT's backend and frontend images, `itechuw/openmrs-reference-application-3-backend` and
+`itechuw/openmrs-reference-application-3-frontend` tagged `nightly`. CI rebuilds the backend when a push to
+`main` changes `distro/`, `pom.xml` or the `Dockerfile`, and the frontend when one changes `frontend/` and every
+six hours, which picks up new ACT app releases. To run your checkout instead, such as a branch under review,
+build it with `docker compose up --build` (see ACT Core below).
+
 The OpenMRS 3.x UI is accessible at http://localhost/openmrs/spa
 
 OpenMRS Legacy UI is accessible at http://localhost/openmrs
@@ -268,6 +274,8 @@ If you would like to use grafana in your distro, you just need to copy over `doc
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `DOCKERHUB_USERNAME` | `itechuw` | Docker Hub namespace of the backend and frontend images |
+| `TAG` | `nightly` (backend, frontend), `qa` (gateway, certbot, monitoring-init) | Image tag for every service. The gateway, certbot and monitoring-init images are upstream OpenMRS's |
 | `SSL_MODE` | `dev` | `dev` for self-signed certificates, `prod` for Let's Encrypt |
 | `SSL_STAGING` | `false` | Use Let's Encrypt staging environment (set to `true` for testing) |
 | `CERT_WEB_DOMAINS` | `localhost,127.0.0.1` | Comma-separated list of domain names or IP addresses |
