@@ -342,7 +342,7 @@
     "tagActions": [
       {
         "tagName": "RHD",
-        "workspace": "clinical-forms-workspace"
+        "workspace": "rhd-flag-gaps-workspace"
       },
       {
         "tagName": "Critical data",
@@ -400,6 +400,21 @@
           "flag": "b1f7a2c0-0013-4a00-9000-000000000013",
           "form": "a4f9103b-8396-3087-8cf4-e91610ec7c2d",
           "concept": "2c13856b-5622-500f-b986-f1509c424056"
+        },
+        {
+          "flag": "b1f7a2c0-0002-4a00-9000-000000000002",
+          "form": "0119d2e6-e2e1-391c-9b88-d59a10b0780d",
+          "concept": "183fb30e-b861-5b7c-806f-7118a40f2b51"
+        },
+        {
+          "flag": "b1f7a2c0-0004-4a00-9000-000000000004",
+          "form": "4b063fc7-996f-3001-8500-8940e201be8f",
+          "concept": "c3edefd2-5777-5084-b01e-fd4ca0e40162"
+        },
+        {
+          "flag": "b1f7a2c0-0015-4a00-9000-000000000015",
+          "form": "4b063fc7-996f-3001-8500-8940e201be8f",
+          "concept": "c3edefd2-5777-5084-b01e-fd4ca0e40162"
         }
       ]
     }
