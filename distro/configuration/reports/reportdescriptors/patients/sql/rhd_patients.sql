@@ -176,6 +176,9 @@ SELECT
                  WHEN DATEDIFF(MAX(adh.next_due), CURDATE()) <= 7 THEN 'Deadline approaching'
                  ELSE 'Covered' END
     END                                                             AS bpg_status,
+    -- Typed as ACT Core's chart types it: an injection interval means BPG
+    CASE WHEN MAX(adh.injection_interval_days) > 0 THEN 'BPG'
+         WHEN MAX(adh.regimen_concept_id) IS NOT NULL THEN 'Oral' END   AS prophylaxis_type,
     DATE(MAX(adh.last_given))                                       AS last_injection_date,
     DATE(MAX(adh.next_due))                                         AS next_due_date,
     DATEDIFF(MAX(adh.next_due), CURDATE())                          AS days_until_due,
