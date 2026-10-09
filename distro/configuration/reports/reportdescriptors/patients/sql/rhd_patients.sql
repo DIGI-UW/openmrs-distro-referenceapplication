@@ -146,6 +146,17 @@ SELECT
         ORDER BY e_amt.encounter_datetime DESC, amt.obs_id DESC LIMIT 1
     )                                                               AS next_consultation_date,
 
+    -- Next INR test: the Next INR Date on the latest RHD INR Monitoring, none when that one leaves it blank
+    (
+        SELECT DATE(nx.value_datetime)
+        FROM encounter e_inr
+        LEFT JOIN obs nx ON nx.encounter_id = e_inr.encounter_id AND nx.voided = 0
+            AND nx.concept_id = (SELECT concept_id FROM concept WHERE uuid = '5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+        WHERE e_inr.patient_id = p.person_id AND e_inr.voided = 0
+          AND e_inr.encounter_type = (SELECT encounter_type_id FROM encounter_type WHERE uuid = 'b4bb88a3-9a04-5142-85bd-bb63c270f632')
+        ORDER BY e_inr.encounter_datetime DESC, e_inr.encounter_id DESC LIMIT 1
+    )                                                               AS next_inr_date,
+
     -- No prescription also needs the latest consultation to prescribe none in force, as the table is rebuilt nightly.
     CASE
         WHEN (MAX(adh.injection_interval_days) IS NULL
@@ -176,6 +187,10 @@ SELECT
                  WHEN DATEDIFF(MAX(adh.next_due), CURDATE()) <= 7 THEN 'Deadline approaching'
                  ELSE 'Covered' END
     END                                                             AS bpg_status,
+    -- Typed as ACT Core's chart types it: an injection interval means BPG
+    CASE WHEN MAX(adh.injection_interval_days) > 0 THEN 'BPG'
+         WHEN MAX(adh.regimen_concept_id) IS NOT NULL THEN 'Oral' END   AS prophylaxis_type,
+    MAX(adh.injection_interval_days)                                AS injection_interval_days,
     DATE(MAX(adh.last_given))                                       AS last_injection_date,
     DATE(MAX(adh.next_due))                                         AS next_due_date,
     DATEDIFF(MAX(adh.next_due), CURDATE())                          AS days_until_due,

@@ -143,6 +143,15 @@
                   }
                 }
               ]
+            },
+            {
+              "label": "Next INR Date",
+              "id": "next_inr_date",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
             }
           ]
         }
