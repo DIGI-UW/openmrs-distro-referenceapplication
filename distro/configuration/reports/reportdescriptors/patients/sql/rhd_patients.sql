@@ -21,6 +21,8 @@ SELECT
     DATE(pp.date_enrolled)                                          AS date_enrolled,
     DATE(pp.date_completed)                                         AS date_completed,
     CASE WHEN pp.date_completed IS NULL THEN 'Active' ELSE 'Completed' END AS enrollment_status,
+    -- Whether the patient has died, for lists of patients to act on, which leave them out
+    p.dead                                                          AS deceased,
 
     -- Current workflow state (program stage)
     (
@@ -286,6 +288,6 @@ WHERE
     AND DATE(pp.date_enrolled) >= @startDate
     AND DATE(pp.date_enrolled) <= @endDate
 
-GROUP BY pp.patient_program_id, pp.date_enrolled, pp.date_completed, p.person_id, p.gender, p.birthdate, p.uuid
+GROUP BY pp.patient_program_id, pp.date_enrolled, pp.date_completed, p.person_id, p.gender, p.birthdate, p.dead, p.uuid
 
 ORDER BY rhd_id, full_name
