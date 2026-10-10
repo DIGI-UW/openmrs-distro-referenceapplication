@@ -341,7 +341,7 @@ The chart shows ACT's pages only: Patient summary, Prophylaxis, Visits and Cardi
 `order` of `patient-chart-dashboard-slot` in `frontend/config-core_demo.json`). The patient summary has no vitals or
 biometrics cards, and the chart header has no vitals strip. To bring a page, card or the strip back, delete its name
 from the `remove` list of its slot there, and for a page add it to that slot's `order`. The table lists every removed
-page, card and strip; the same file also removes the order basket and some banner and visit form items.
+page, card and strip; the same file also removes the order basket, the visit bills panel, Add to patient list, and some banner and visit form items. The Conditions card's See all goes to the removed Conditions page, which sends the user back to the patient summary.
 
 | Removed | Slot | Name to delete from `remove` |
 | --- | --- | --- |
