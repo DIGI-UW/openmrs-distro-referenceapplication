@@ -57,6 +57,8 @@ JOIN encounter e ON e.visit_id = v.visit_id AND e.voided = 0
 JOIN encounter_type et ON et.encounter_type_id = e.encounter_type AND et.retired = 0
     AND et.uuid IN (
         'c2503561-c00d-5460-8157-43d594472b4a',  -- RHD Consultation Visit
+        'ffdc883f-f99f-496a-83f9-2c3c581e1af0',  -- RHD Patient Information
+        'f064aaf0-bd36-43c5-9f35-00077457a569',  -- RHD Research Participation
         '04cf03db-3b8e-5020-84b0-50b06338767a',  -- RHD BPG Delivery
         '730f5ec2-7102-55d0-8602-2d792844f245',  -- RHD Echocardiogram
         '64c3f35f-a3ec-59d6-8178-0ca9f068cda8',  -- RHD Electrocardiogram

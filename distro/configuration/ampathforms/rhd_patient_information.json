@@ -4,7 +4,7 @@
   "version": "1",
   "published": true,
   "retired": false,
-  "encounter": "RHD Consultation Visit",
+  "encounter": "RHD Patient Information",
   "processor": "EncounterFormProcessor",
   "referencedForms": [],
   "pages": [

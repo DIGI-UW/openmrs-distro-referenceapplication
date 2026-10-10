@@ -8,3 +8,5 @@ ce6b111e-9beb-5a91-91ad-ec5043976fd5,RHD Pregnancy,Pregnancy maternal and fetal 
 55271793-ef37-58da-9d86-1d9092a5a809,RHD Oral Adherence,Oral prophylaxis adherence assessment,false,
 c9b87090-8768-50be-987e-8ca0a8983429,RHD Interventions and Outcomes,Surgical or catheter intervention and follow-up outcomes,false,Task: act.enterClinicalForms
 b4bb88a3-9a04-5142-85bd-bb63c270f632,RHD INR Monitoring,Anticoagulation INR monitoring for patients on Warfarin,false,Task: act.enterClinicalForms
+ffdc883f-f99f-496a-83f9-2c3c581e1af0,RHD Patient Information,"Diagnosis, screening and how the case was detected, on its own type so the form can carry its own edit privilege",false,
+f064aaf0-bd36-43c5-9f35-00077457a569,RHD Research Participation,"Consent and enrolment in research studies, on its own type so the form can carry its own edit privilege",false,
