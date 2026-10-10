@@ -12,7 +12,7 @@
       "label": "RHD Echocardiogram",
       "sections": [
         {
-          "label": "Echocardiogram",
+          "label": "Key fields",
           "isExpanded": "true",
           "questions": [
             {
@@ -221,6 +221,32 @@
               }
             },
             {
+              "label": "Left Ventricular Ejection Fraction (%)",
+              "id": "left_ventricular_ejection_fraction",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "ed630fda-8451-53c0-929e-40eafd9bca9b"
+              }
+            }
+          ]
+        },
+        {
+          "label": "More details (9 optional fields)",
+          "isExpanded": "false",
+          "questions": [
+            {
+              "id": "more_details_note",
+              "label": "About these fields",
+              "type": "markdown",
+              "questionOptions": {
+                "rendering": "markdown"
+              },
+              "value": [
+                "Optional fields for specialist review."
+              ]
+            },
+            {
               "label": "Tricuspid Regurgitation",
               "id": "tricuspid_regurgitation",
               "type": "obs",
@@ -280,15 +306,6 @@
                     "conceptMappings": []
                   }
                 ]
-              }
-            },
-            {
-              "label": "Left Ventricular Ejection Fraction (%)",
-              "id": "left_ventricular_ejection_fraction",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "ed630fda-8451-53c0-929e-40eafd9bca9b"
               }
             },
             {

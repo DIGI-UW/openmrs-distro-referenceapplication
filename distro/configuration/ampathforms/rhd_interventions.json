@@ -12,7 +12,7 @@
       "label": "Procedures and Outcomes",
       "sections": [
         {
-          "label": "Procedure details",
+          "label": "Key fields",
           "isExpanded": "true",
           "questions": [
             {
@@ -32,126 +32,6 @@
               "required": true,
               "questionOptions": {
                 "rendering": "ui-select-extended"
-              }
-            },
-            {
-              "label": "Primary Surgeon/Cardiologist",
-              "id": "primary_surgeon_or_cardiologist",
-              "type": "encounterProvider",
-              "questionOptions": {
-                "rendering": "ui-select-extended"
-              }
-            },
-            {
-              "label": "With Visiting Team",
-              "id": "with_visiting_team",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "select",
-                "concept": "1eb39d33-bbea-53f6-83ad-bb499d4dcbcc",
-                "answers": [
-                  {
-                    "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
-                    "conceptMappings": []
-                  }
-                ]
-              }
-            },
-            {
-              "label": "Height",
-              "id": "height",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-              }
-            },
-            {
-              "label": "Weight",
-              "id": "weight",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-              }
-            },
-            {
-              "label": "BSA",
-              "id": "bsa",
-              "type": "obs",
-              "readonly": true,
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "98775f75-0e36-58dd-9d83-1bbadc24d40c",
-                "calculate": {
-                  "calculateExpression": "isEmpty(height) || isEmpty(weight) ? 0 : Number((0.024265 * Math.pow(height, 0.3964) * Math.pow(weight, 0.5378)).toFixed(3))"
-                }
-              }
-            },
-            {
-              "label": "Oxygen Saturation",
-              "id": "oxygen_saturation",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "5092AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-              }
-            },
-            {
-              "label": "Blood Group",
-              "id": "blood_group",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "select",
-                "concept": "67fb01b3-8b06-51b4-a9fc-a7fef0410b1c",
-                "answers": [
-                  {
-                    "label": "A+",
-                    "concept": "b64ac407-b3ce-5134-a7e7-20d2be1189dc",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "A-",
-                    "concept": "11dbc823-40e2-5ee7-aa16-52a17bcf396b",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "B+",
-                    "concept": "fe6c2f16-2762-5e3f-8907-c3afe9bc8f84",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "B-",
-                    "concept": "623a2ca4-4388-50c8-a94d-28342caaf998",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "AB+",
-                    "concept": "0c794883-e4a2-5a5e-8321-062255bc121d",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "AB-",
-                    "concept": "8b96b336-8917-5966-8007-6245e4bccff3",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "O+",
-                    "concept": "4037ad7c-4811-5464-a842-c44babdca843",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "O-",
-                    "concept": "bd4e617c-37cc-5843-905b-ef4660603f6b",
-                    "conceptMappings": []
-                  }
-                ]
               }
             },
             {
@@ -187,55 +67,6 @@
                   }
                 }
               ]
-            },
-            {
-              "label": "RACHs Score",
-              "id": "rachs_score",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "select",
-                "concept": "c23c29e7-70b2-5096-b294-e4df1728dcda",
-                "answers": [
-                  {
-                    "label": "1",
-                    "concept": "57eab69e-f125-573c-b0cb-9531295e9b08",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "2",
-                    "concept": "d6c57238-716c-5334-b145-891f663ca2a3",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "3",
-                    "concept": "b3fdf658-cd2b-5a25-b3e9-77e3fdccc1b7",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "4",
-                    "concept": "cec8b2cc-d6c4-5202-9512-7c70edb5ce3d",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "5",
-                    "concept": "3daca705-4f6b-53e0-bcc4-1a0ce8796b8e",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "6",
-                    "concept": "01400697-c20a-5150-9528-5bddfbda2b4a",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "n/a",
-                    "concept": "1600a5b7-465e-501a-88b3-7b038e5b8c73",
-                    "conceptMappings": []
-                  }
-                ]
-              },
-              "hide": {
-                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-              }
             },
             {
               "label": "Surgery Type",
@@ -374,103 +205,6 @@
               ]
             },
             {
-              "label": "Pre-Surgical Diagnosis",
-              "id": "presurgical_diagnosis",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "08c2c1d4-1de4-5be7-b811-6e0eea6208de"
-              },
-              "hide": {
-                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-              }
-            },
-            {
-              "label": "Key Findings/Surgical Notes",
-              "id": "key_findings_surgical_notes",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "textarea",
-                "concept": "f95ce45d-6b93-555a-8ee8-3f0d96b20184"
-              },
-              "hide": {
-                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-              }
-            },
-            {
-              "label": "Post-Surgical Diagnosis",
-              "id": "post_surgical_diagnosis",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "39ab4186-74ff-5715-9d5c-a212acba2801"
-              },
-              "hide": {
-                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-              }
-            },
-            {
-              "label": "Cardiopulmonary Bypass Time",
-              "id": "cardiopulmonary_bypass_time",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "6acafff7-7a23-50e6-8bca-24d8fc77c87d",
-                "placeholder": "Minutes"
-              },
-              "hide": {
-                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-              }
-            },
-            {
-              "label": "Reoperation Required",
-              "id": "reoperation_required",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "select",
-                "concept": "2261ce30-1c1e-51d8-95c7-7752e4e9cfb4",
-                "answers": [
-                  {
-                    "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
-                    "conceptMappings": []
-                  }
-                ]
-              },
-              "hide": {
-                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
-              }
-            },
-            {
-              "label": "Describe Reason for Reoperation",
-              "id": "describe_reason_for_reoperation",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "checkbox",
-                "concept": "c9a8f53f-03ea-5425-97aa-f335a97e4e0f",
-                "answers": [
-                  {
-                    "label": "Bleeding",
-                    "concept": "147241AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Residual defect",
-                    "concept": "345d08e3-3e7e-50b3-8deb-17f44715bedf",
-                    "conceptMappings": []
-                  }
-                ]
-              },
-              "hide": {
-                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616' || reoperation_required !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
-              }
-            },
-            {
               "label": "Catheterization Type",
               "id": "catheterization_type_s_group",
               "type": "obsGroup",
@@ -585,6 +319,373 @@
                   }
                 }
               ]
+            },
+            {
+              "label": "Procedural Outcome",
+              "id": "surgery_outcome",
+              "type": "obs",
+              "required": true,
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "7a54d2d6-0d34-5e5d-b8e7-84a3cf7e9dca",
+                "answers": [
+                  {
+                    "label": "Discharge to home",
+                    "concept": "98ea6c57-5f77-549b-97ca-32604c5b9220",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Transfer to another facility",
+                    "concept": "8a4f573d-ebc2-5073-b396-39ebe01fe56d",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "In-hospital death",
+                    "concept": "2567da9f-864e-5408-b5ae-6686f80d0a99",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Date of Hospital Discharge",
+              "id": "date_of_hospital_discharge",
+              "type": "obs",
+              "required": true,
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "d4317b82-5d37-5b59-ac32-4922f18cd65b"
+              },
+              "hide": {
+                "hideWhenExpression": "surgery_outcome !== '98ea6c57-5f77-549b-97ca-32604c5b9220'"
+              }
+            },
+            {
+              "label": "Date of Death",
+              "id": "date_of_death",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "07534416-c1c2-5772-83d8-76a429986ec0"
+              },
+              "hide": {
+                "hideWhenExpression": "surgery_outcome !== '2567da9f-864e-5408-b5ae-6686f80d0a99'"
+              }
+            },
+            {
+              "label": "Please Describe Events Around Patient's Death",
+              "id": "describe_events_around_patient_death",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "d0546da8-7871-517e-8444-cdb19ffbae97"
+              },
+              "hide": {
+                "hideWhenExpression": "surgery_outcome !== '2567da9f-864e-5408-b5ae-6686f80d0a99'"
+              }
+            },
+            {
+              "label": "Primary Surgeon/Cardiologist",
+              "id": "primary_surgeon_or_cardiologist",
+              "type": "encounterProvider",
+              "questionOptions": {
+                "rendering": "ui-select-extended"
+              }
+            },
+            {
+              "label": "Date of Patient Follow-Up",
+              "id": "date_of_patient_follow_up_contact",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "49f9238d-2ca4-5efd-a5cb-f00a0b44828d"
+              }
+            }
+          ]
+        },
+        {
+          "label": "More details (45 optional fields)",
+          "isExpanded": "false",
+          "questions": [
+            {
+              "id": "more_details_note",
+              "label": "About these fields",
+              "type": "markdown",
+              "questionOptions": {
+                "rendering": "markdown"
+              },
+              "value": [
+                "Optional fields for specialist review."
+              ]
+            },
+            {
+              "id": "heading_procedure_details",
+              "label": "Procedure details",
+              "type": "markdown",
+              "questionOptions": {
+                "rendering": "markdown"
+              },
+              "value": [
+                "**Procedure details**"
+              ]
+            },
+            {
+              "label": "With Visiting Team",
+              "id": "with_visiting_team",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "1eb39d33-bbea-53f6-83ad-bb499d4dcbcc",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Height",
+              "id": "height",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
+              "label": "Weight",
+              "id": "weight",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
+              "label": "BSA",
+              "id": "bsa",
+              "type": "obs",
+              "readonly": true,
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "98775f75-0e36-58dd-9d83-1bbadc24d40c",
+                "calculate": {
+                  "calculateExpression": "isEmpty(height) || isEmpty(weight) ? 0 : Number((0.024265 * Math.pow(height, 0.3964) * Math.pow(weight, 0.5378)).toFixed(3))"
+                }
+              }
+            },
+            {
+              "label": "Oxygen Saturation",
+              "id": "oxygen_saturation",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "5092AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
+              "label": "Blood Group",
+              "id": "blood_group",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "67fb01b3-8b06-51b4-a9fc-a7fef0410b1c",
+                "answers": [
+                  {
+                    "label": "A+",
+                    "concept": "b64ac407-b3ce-5134-a7e7-20d2be1189dc",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "A-",
+                    "concept": "11dbc823-40e2-5ee7-aa16-52a17bcf396b",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "B+",
+                    "concept": "fe6c2f16-2762-5e3f-8907-c3afe9bc8f84",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "B-",
+                    "concept": "623a2ca4-4388-50c8-a94d-28342caaf998",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "AB+",
+                    "concept": "0c794883-e4a2-5a5e-8321-062255bc121d",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "AB-",
+                    "concept": "8b96b336-8917-5966-8007-6245e4bccff3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "O+",
+                    "concept": "4037ad7c-4811-5464-a842-c44babdca843",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "O-",
+                    "concept": "bd4e617c-37cc-5843-905b-ef4660603f6b",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "RACHs Score",
+              "id": "rachs_score",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "c23c29e7-70b2-5096-b294-e4df1728dcda",
+                "answers": [
+                  {
+                    "label": "1",
+                    "concept": "57eab69e-f125-573c-b0cb-9531295e9b08",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "2",
+                    "concept": "d6c57238-716c-5334-b145-891f663ca2a3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "3",
+                    "concept": "b3fdf658-cd2b-5a25-b3e9-77e3fdccc1b7",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "4",
+                    "concept": "cec8b2cc-d6c4-5202-9512-7c70edb5ce3d",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "5",
+                    "concept": "3daca705-4f6b-53e0-bcc4-1a0ce8796b8e",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "6",
+                    "concept": "01400697-c20a-5150-9528-5bddfbda2b4a",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "n/a",
+                    "concept": "1600a5b7-465e-501a-88b3-7b038e5b8c73",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
+            },
+            {
+              "label": "Pre-Surgical Diagnosis",
+              "id": "presurgical_diagnosis",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "08c2c1d4-1de4-5be7-b811-6e0eea6208de"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
+            },
+            {
+              "label": "Key Findings/Surgical Notes",
+              "id": "key_findings_surgical_notes",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "f95ce45d-6b93-555a-8ee8-3f0d96b20184"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
+            },
+            {
+              "label": "Post-Surgical Diagnosis",
+              "id": "post_surgical_diagnosis",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "39ab4186-74ff-5715-9d5c-a212acba2801"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
+            },
+            {
+              "label": "Cardiopulmonary Bypass Time",
+              "id": "cardiopulmonary_bypass_time",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "6acafff7-7a23-50e6-8bca-24d8fc77c87d",
+                "placeholder": "Minutes"
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
+            },
+            {
+              "label": "Reoperation Required",
+              "id": "reoperation_required",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "2261ce30-1c1e-51d8-95c7-7752e4e9cfb4",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+              }
+            },
+            {
+              "label": "Describe Reason for Reoperation",
+              "id": "describe_reason_for_reoperation",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "c9a8f53f-03ea-5425-97aa-f335a97e4e0f",
+                "answers": [
+                  {
+                    "label": "Bleeding",
+                    "concept": "147241AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Residual defect",
+                    "concept": "345d08e3-3e7e-50b3-8deb-17f44715bedf",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616' || reoperation_required !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
             },
             {
               "label": "Pre-Catheterization Diagnosis",
@@ -789,75 +890,16 @@
               }
             },
             {
-              "label": "Procedural Outcome",
-              "id": "surgery_outcome",
-              "type": "obs",
-              "required": true,
+              "id": "heading_hospitalization_outcomes_complete_after_discharge",
+              "label": "Hospitalization Outcomes (Complete After Discharge)",
+              "type": "markdown",
               "questionOptions": {
-                "rendering": "select",
-                "concept": "7a54d2d6-0d34-5e5d-b8e7-84a3cf7e9dca",
-                "answers": [
-                  {
-                    "label": "Discharge to home",
-                    "concept": "98ea6c57-5f77-549b-97ca-32604c5b9220",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Transfer to another facility",
-                    "concept": "8a4f573d-ebc2-5073-b396-39ebe01fe56d",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "In-hospital death",
-                    "concept": "2567da9f-864e-5408-b5ae-6686f80d0a99",
-                    "conceptMappings": []
-                  }
-                ]
-              }
-            },
-            {
-              "label": "Date of Hospital Discharge",
-              "id": "date_of_hospital_discharge",
-              "type": "obs",
-              "required": true,
-              "questionOptions": {
-                "rendering": "date",
-                "concept": "d4317b82-5d37-5b59-ac32-4922f18cd65b"
+                "rendering": "markdown"
               },
-              "hide": {
-                "hideWhenExpression": "surgery_outcome !== '98ea6c57-5f77-549b-97ca-32604c5b9220'"
-              }
+              "value": [
+                "**Hospitalization Outcomes (Complete After Discharge)**"
+              ]
             },
-            {
-              "label": "Date of Death",
-              "id": "date_of_death",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "date",
-                "concept": "07534416-c1c2-5772-83d8-76a429986ec0"
-              },
-              "hide": {
-                "hideWhenExpression": "surgery_outcome !== '2567da9f-864e-5408-b5ae-6686f80d0a99'"
-              }
-            },
-            {
-              "label": "Please Describe Events Around Patient's Death",
-              "id": "describe_events_around_patient_death",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "textarea",
-                "concept": "d0546da8-7871-517e-8444-cdb19ffbae97"
-              },
-              "hide": {
-                "hideWhenExpression": "surgery_outcome !== '2567da9f-864e-5408-b5ae-6686f80d0a99'"
-              }
-            }
-          ]
-        },
-        {
-          "label": "Hospitalization Outcomes (Complete After Discharge)",
-          "isExpanded": "true",
-          "questions": [
             {
               "label": "ICU Stay",
               "id": "icu_stay",
@@ -985,21 +1027,17 @@
                 "rendering": "textarea",
                 "concept": "a79a6ac1-619a-5c55-9129-bd0e46e05cb8"
               }
-            }
-          ]
-        },
-        {
-          "label": "30-day follow-up",
-          "isExpanded": "true",
-          "questions": [
+            },
             {
-              "label": "Date of Patient Follow-Up",
-              "id": "date_of_patient_follow_up_contact",
-              "type": "obs",
+              "id": "heading_30-day_follow-up",
+              "label": "30-day follow-up",
+              "type": "markdown",
               "questionOptions": {
-                "rendering": "date",
-                "concept": "49f9238d-2ca4-5efd-a5cb-f00a0b44828d"
-              }
+                "rendering": "markdown"
+              },
+              "value": [
+                "**30-day follow-up**"
+              ]
             },
             {
               "label": "How was the patient contacted?",

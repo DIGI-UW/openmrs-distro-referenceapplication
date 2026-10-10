@@ -12,7 +12,7 @@
       "label": "RHD Patient Information",
       "sections": [
         {
-          "label": "Diagnosis",
+          "label": "Key fields",
           "isExpanded": "true",
           "questions": [
             {
@@ -476,46 +476,7 @@
               "hide": {
                 "hideWhenExpression": "case_detected_by !== '5b7d5eb4-4c6a-52cb-95f3-ac5033708fc9'"
               }
-            }
-          ]
-        },
-        {
-          "label": "Contact and location",
-          "isExpanded": "true",
-          "questions": [
-            {
-              "label": "Home Address",
-              "id": "home_address",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "1af5b942-8747-5dfb-aa40-805b5575f2e3"
-              }
             },
-            {
-              "label": "Village/Area of Residence",
-              "id": "village_area_of_residence",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "c5641213-1ec1-5378-b6de-9135ca25a56d"
-              }
-            },
-            {
-              "label": "Additional information to help locate patient",
-              "id": "additional_information_to_help_locate_patient",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "2cebe220-2a9d-5c53-be68-f2257a4bfc9e"
-              }
-            }
-          ]
-        },
-        {
-          "label": "Status",
-          "isExpanded": "true",
-          "questions": [
             {
               "label": "Status",
               "id": "status_patient_registry",
@@ -693,6 +654,61 @@
               },
               "hide": {
                 "hideWhenExpression": "reason_inactive !== '159AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            }
+          ]
+        },
+        {
+          "label": "More details (3 optional fields)",
+          "isExpanded": "false",
+          "questions": [
+            {
+              "id": "more_details_note",
+              "label": "About these fields",
+              "type": "markdown",
+              "questionOptions": {
+                "rendering": "markdown"
+              },
+              "value": [
+                "Optional fields for specialist review."
+              ]
+            },
+            {
+              "id": "heading_contact_and_location",
+              "label": "Contact and location",
+              "type": "markdown",
+              "questionOptions": {
+                "rendering": "markdown"
+              },
+              "value": [
+                "**Contact and location**"
+              ]
+            },
+            {
+              "label": "Home Address",
+              "id": "home_address",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "1af5b942-8747-5dfb-aa40-805b5575f2e3"
+              }
+            },
+            {
+              "label": "Village/Area of Residence",
+              "id": "village_area_of_residence",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "c5641213-1ec1-5378-b6de-9135ca25a56d"
+              }
+            },
+            {
+              "label": "Additional information to help locate patient",
+              "id": "additional_information_to_help_locate_patient",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "2cebe220-2a9d-5c53-be68-f2257a4bfc9e"
               }
             }
           ]
