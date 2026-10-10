@@ -13,3 +13,4 @@ d34a1940-3069-4187-9990-e4b25f5a0b95,,App: act.communityHome,"Open Home, the com
 b013ab1f-925e-4e4e-96b0-3d6808e14bce,,Task: act.enterClinicalForms,"Record the clinician's forms (consultations, hospital admissions, echocardiograms, electrocardiograms, procedures, pregnancies, INR monitoring and research participation); the edit privilege of their encounter types"
 081b8ebc-8d24-42fa-b891-33b6427f7257,,Task: act.refreshFlags,"Refresh every patient's critical data flags and prophylaxis adherence now, from the Admin section"
 bba8c1e6-2c61-4b59-b7ae-e5a92cd4ac1c,,Task: act.enterPatientInformation,"Record Patient Information: the edit privilege of its encounter type"
+b844bfa2-b62e-4d0a-afc7-4c9b9b6a044e,,Task: act.enterProphylaxis,"Record BPG Delivery and Oral Adherence: the edit privilege of their encounter types"

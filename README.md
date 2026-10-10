@@ -315,11 +315,12 @@ Thanks!
 ### Forms per role
 
 Who may record a form is set by its encounter type's edit privilege (`encountertypes/`), held through the
-roles in `roles/`. A form whose type has no edit privilege is open to every role that records visits.
+roles in `roles/`. A form whose type has no edit privilege is open to every role that holds Add Encounters, so
+every RHD encounter type has one.
 
 | Form | Community clinician | Data clerk | Clinician, site and instance administrator | Global administrator |
 | --- | --- | --- | --- | --- |
-| BPG Delivery, Oral Adherence | yes | yes | yes | |
+| BPG Delivery, Oral Adherence (`Task: act.enterProphylaxis`) | yes | yes | yes | |
 | Patient Information (`Task: act.enterPatientInformation`) | | yes | yes | |
 | Consultation Visit, Hospital Admission, Echocardiogram, Electrocardiogram, Procedures and Outcomes, INR Monitoring, Pregnancy, Research Participation (`Task: act.enterClinicalForms`) | | | yes | |
 
