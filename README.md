@@ -334,3 +334,33 @@ as the reference shown to the ACT team, with these departures:
 
 ACT 2.0 also let community clinicians record Patient Information, Consultation Visit, Hospital Admission,
 Echocardiogram and Electrocardiogram. ACT 3.0 follows v2.
+
+### Patient chart pages
+
+The chart shows ACT's pages only: Patient summary, Prophylaxis, Visits and Cardiac tests, in that order (the
+`order` of `patient-chart-dashboard-slot` in `frontend/config-core_demo.json`). The patient summary has no vitals or
+biometrics cards, and the chart header has no vitals strip. To bring a page, card or the strip back, delete its name
+from the `remove` list of its slot there, and for a page add it to that slot's `order`. The table lists every removed
+page, card and strip; the same file also removes the order basket, the visit bills panel, Add to patient list, and some banner and visit form items. The Conditions card's See all goes to the removed Conditions page, which sends the user back to the patient summary.
+
+| Removed | Slot | Name to delete from `remove` |
+| --- | --- | --- |
+| Orders page | `patient-chart-dashboard-slot` | `patient-orders-summary-dashboard` |
+| Results page | `patient-chart-dashboard-slot` | `test-results-summary-dashboard` |
+| Billing history page | `patient-chart-dashboard-slot` | `billing-summary-dashboard-link` |
+| Appointments page | `patient-chart-dashboard-slot` | `patient-appointments-summary-dashboard` |
+| Attachments page | `patient-chart-dashboard-slot` | `attachments-results-summary-dashboard` |
+| Immunizations page | `patient-chart-dashboard-slot` | `immunization-summary-dashboard` |
+| Procedures page | `patient-chart-dashboard-slot` | `procedures-summary-dashboard` |
+| Conditions page | `patient-chart-dashboard-slot` | `conditions-summary-dashboard` |
+| Medications page | `patient-chart-dashboard-slot` | `medications-summary-dashboard` |
+| Vitals & Biometrics page | `patient-chart-dashboard-slot` | `results-summary-dashboard` |
+| Allergies page | `patient-chart-dashboard-slot` | `allergies-summary-dashboard` |
+| Programs page | `patient-chart-dashboard-slot` | `programs-summary-dashboard` |
+| Growth chart page | `patient-chart-dashboard-slot` | `growth-chart-dashboard-link` |
+| Vitals card | `patient-chart-summary-dashboard-slot` | `vitals-overview-widget` |
+| Biometrics card | `patient-chart-summary-dashboard-slot` | `biometrics-overview-widget` |
+| Vitals strip in the chart header | `patient-info-slot` | `patient-vitals-info` |
+
+Clinical forms lists the published RHD forms, by name, as the forms app orders them. Choosing another order there
+needs a change to the forms app.
