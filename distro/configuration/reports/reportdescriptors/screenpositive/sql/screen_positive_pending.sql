@@ -19,13 +19,15 @@ SELECT
     ), scr.obs_datetime))                                           AS screen_date,
     -- Recorded with the Screen + answer; a school screening's School Name stands in for a site left blank
     COALESCE((
-        SELECT MAX(s.value_text) FROM obs s
+        SELECT s.value_text FROM obs s
         WHERE s.encounter_id = scr.encounter_id AND s.voided = 0
           AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'a5be20e6-88c0-42b0-9557-54771e06e644')
+        ORDER BY s.obs_id DESC LIMIT 1
     ), (
-        SELECT MAX(s.value_text) FROM obs s
+        SELECT s.value_text FROM obs s
         WHERE s.encounter_id = scr.encounter_id AND s.voided = 0
           AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'cfd8f77a-a2b5-5836-96c1-d3e5fdd48e02')
+        ORDER BY s.obs_id DESC LIMIT 1
     ))                                                              AS screening_site,
     (
         SELECT CASE c.uuid WHEN '1035a94f-d8c1-4f0c-b376-5f6c5976b737' THEN 'Not contacted'

@@ -56,14 +56,7 @@
                         "conceptMappings": []
                       }
                     ]
-                  },
-                  "validators": [
-                    {
-                      "type": "js_expression",
-                      "failsWhenExpression": "isEmpty(myValue) && (!isEmpty(diagnosis_priority) || !isEmpty(diagnosis_active) || !isEmpty(diagnosis_started) || !isEmpty(diagnosis_ended))",
-                      "message": "Required"
-                    }
-                  ]
+                  }
                 },
                 {
                   "label": "Diagnosis Details",
@@ -344,7 +337,14 @@
                         "conceptMappings": []
                       }
                     ]
-                  }
+                  },
+                  "validators": [
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
+                      "message": "Choose a Category first"
+                    }
+                  ]
                 },
                 {
                   "label": "Active",
@@ -365,7 +365,14 @@
                         "conceptMappings": []
                       }
                     ]
-                  }
+                  },
+                  "validators": [
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
+                      "message": "Choose a Category first"
+                    }
+                  ]
                 },
                 {
                   "label": "Started",
@@ -374,7 +381,14 @@
                   "questionOptions": {
                     "rendering": "date",
                     "concept": "62321320-695e-5319-a306-40dfd6ad94b7"
-                  }
+                  },
+                  "validators": [
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
+                      "message": "Choose a Category first"
+                    }
+                  ]
                 },
                 {
                   "label": "Ended",
@@ -383,7 +397,14 @@
                   "questionOptions": {
                     "rendering": "date",
                     "concept": "e9f2fceb-05be-577f-bf76-dde0647f01db"
-                  }
+                  },
+                  "validators": [
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
+                      "message": "Choose a Category first"
+                    }
+                  ]
                 }
               ]
             },
