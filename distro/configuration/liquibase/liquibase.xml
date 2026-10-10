@@ -17,11 +17,8 @@
 
     <changeSet id="act3-patient-information-research-encounter-types-1" author="act3">
         <comment>
-            RHD Patient Information and RHD Research Participation get their own encounter types (DIGI-UW/openmrs-module-actcore#59),
-            so each form can carry its own edit privilege. Liquibase runs before Initializer loads encountertypes/, so the two types
-            are created here with the uuids rhd_encountertypes.csv gives them, which Initializer then finds and updates in place.
-            Their existing encounters, saved under RHD Consultation Visit, move to them by the form that saved them. Initializer
-            re-points the forms themselves when it loads ampathforms/.
+            Moves RHD Patient Information and RHD Research Participation encounters to their own types (DIGI-UW/openmrs-module-actcore#59).
+            Keep the INSERTs: Liquibase runs before Initializer loads encountertypes/, which then updates these uuids in place.
         </comment>
         <sql>
             INSERT INTO encounter_type (name, description, creator, date_created, retired, uuid)
