@@ -210,10 +210,11 @@
         "id": "rhd-registration",
         "name": "RHD Registration",
         "fields": [
-          "assignedCardiacClinic",
-          "primaryCareClinic",
+          "consentStatement",
           "consentGiven",
           "consentDate",
+          "assignedCardiacClinic",
+          "primaryCareClinic",
           "textItSettings",
           "primaryPhone",
           "phoneOwnerName",
@@ -224,6 +225,11 @@
       }
     ],
     "fieldDefinitions": [
+      {
+        "id": "consentStatement",
+        "type": "text",
+        "label": "I told the patient the following about the use of their health information: Their personal health information will go into a computer program that helps manage their heart care. The information will be kept on special computers in the United States that store their data. The data may be used for other purposes, such as researching ways to improve treatment for people with heart conditions around the world. No information that directly identifies them, such as their name or account numbers, will be shared with anyone else. Their treatment does not depend on giving this permission and they can change their mind anytime so that new health information will not be used or shared. The patient told me that they understood the risks related to this information, and the patient freely agreed to share their data."
+      },
       {
         "id": "assignedCardiacClinic",
         "type": "person attribute",
