@@ -267,7 +267,8 @@
         "type": "person attribute",
         "uuid": "b29617e3-c49e-5893-8dc7-e06b125a0264",
         "label": "Date of Consent",
-        "showHeading": true
+        "showHeading": true,
+        "allowFutureDates": false
       },
       {
         "id": "textItSettings",
