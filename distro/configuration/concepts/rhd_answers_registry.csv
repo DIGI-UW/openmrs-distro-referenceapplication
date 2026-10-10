@@ -24,3 +24,5 @@ e50b612b-5460-5b0c-b919-90a3dbe1919f,,ACT-RHD:rhd_stroke,RHD-Stroke,,"renamed to
 5b7d5eb4-4c6a-52cb-95f3-ac5033708fc9,,ACT-RHD:school_health_screening,School health screening,,,Misc,N/A,,,
 6a5113cc-1ecc-5f83-bddd-6a74a79daf5a,,ACT-RHD:voluntary_inactivity,Voluntary inactivity,,,Misc,N/A,,,
 7dc37c9e-1725-11ed-861d-0242ac120002,,ACT-RHD:lost_to_follow_up,Lost to follow-up,,,Misc,N/A,,,
+dec7f177-1b23-4c2e-82a7-0f6650b34382,,ACT-RHD:caregiver_report,Caregiver report,,"Oral adherence based on the caregiver's report",Misc,N/A,,,
+3031eb6c-f513-4cd7-b411-b9d3a90bfe7a,,ACT-RHD:transport,Transport,,"Oral adherence below 80% because of transport",Misc,N/A,,,
