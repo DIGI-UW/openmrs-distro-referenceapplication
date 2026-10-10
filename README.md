@@ -311,3 +311,26 @@ those that should be part of the core package. For example, a form named `test_f
 Frontend configuration can be found in `frontend/config-core_demo.json`.
 
 Thanks!
+
+### Forms per role
+
+Who may record a form is set by its encounter type's edit privilege (`encountertypes/`), held through the
+roles in `roles/`. The chart offers a form whose type has no edit privilege to every user, even one who cannot save it,
+so every RHD encounter type has one.
+
+| Form | Community clinician | Data clerk | Clinician, site and instance administrator | Global administrator |
+| --- | --- | --- | --- | --- |
+| BPG Delivery, Oral Adherence (`Task: act.enterProphylaxis`) | yes | yes | yes | |
+| Patient Information (`Task: act.enterPatientInformation`) | | yes | yes | |
+| Consultation Visit, Hospital Admission, Echocardiogram, Electrocardiogram, Procedures and Outcomes, INR Monitoring, Pregnancy, Research Participation (`Task: act.enterClinicalForms`) | | | yes | |
+
+The table follows the ACT O3 prototype v2 (9 October 2026), which the product owner chose on 10 October 2026
+as the reference shown to the ACT team, with these departures:
+
+- **Pregnancy** is not in v2. Clinicians keep it, because recording it is how they work the pregnancy outcome due worklist.
+- **Site and instance administrators** record only Patient Information in v2. They hold the clinician's forms
+  here because OpenMRS lets a user give out only roles whose privileges they hold, and a site administrator
+  creates clinicians.
+
+ACT 2.0 also let community clinicians record Patient Information, Consultation Visit, Hospital Admission,
+Echocardiogram and Electrocardiogram. ACT 3.0 follows v2.
