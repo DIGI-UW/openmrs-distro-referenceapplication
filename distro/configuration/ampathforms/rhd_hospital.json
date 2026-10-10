@@ -12,7 +12,7 @@
       "label": "RHD Hospital Admission",
       "sections": [
         {
-          "label": "Key fields",
+          "label": "Hospital admission",
           "isExpanded": "true",
           "questions": [
             {
@@ -88,6 +88,15 @@
               }
             },
             {
+              "label": "Details",
+              "id": "details_hospital_admission",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "29c468c3-9ee7-580f-8bfc-87123ef1d37e"
+              }
+            },
+            {
               "label": "Outcome",
               "id": "outcome",
               "type": "obs",
@@ -140,32 +149,6 @@
               },
               "hide": {
                 "hideWhenExpression": "outcome !== '98ea6c57-5f77-549b-97ca-32604c5b9220'"
-              }
-            }
-          ]
-        },
-        {
-          "label": "More details (1 optional field)",
-          "isExpanded": "false",
-          "questions": [
-            {
-              "id": "more_details_note",
-              "label": "About these fields",
-              "type": "markdown",
-              "questionOptions": {
-                "rendering": "markdown"
-              },
-              "value": [
-                "Optional fields for specialist review."
-              ]
-            },
-            {
-              "label": "Details",
-              "id": "details_hospital_admission",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "textarea",
-                "concept": "29c468c3-9ee7-580f-8bfc-87123ef1d37e"
               }
             }
           ]
