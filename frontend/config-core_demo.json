@@ -84,6 +84,11 @@
           "biometrics-overview-widget"
         ]
       },
+      "patient-info-slot": {
+        "remove": [
+          "patient-vitals-info"
+        ]
+      },
       "patient-banner-tags-slot": {
         "remove": [
           "queue-patient-info-queue-entry-status",
