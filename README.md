@@ -334,3 +334,22 @@ as the reference shown to the ACT team, with these departures:
 
 ACT 2.0 also let community clinicians record Patient Information, Consultation Visit, Hospital Admission,
 Echocardiogram and Electrocardiogram. ACT 3.0 follows v2.
+
+### Patient chart pages
+
+The chart shows ACT's pages only: Patient summary, Prophylaxis, Visits and Cardiac tests, in that order (the
+`order` of `patient-chart-dashboard-slot` in `frontend/config-core_demo.json`). The patient summary has no vitals or
+biometrics cards. To bring a page or card back, delete its name from the `remove` list of its slot there, and for a
+page add it to that slot's `order`.
+
+| Removed | Slot | Name to delete from `remove` |
+| --- | --- | --- |
+| Vitals & Biometrics page | `patient-chart-dashboard-slot` | `results-summary-dashboard` |
+| Allergies page | `patient-chart-dashboard-slot` | `allergies-summary-dashboard` |
+| Programs page | `patient-chart-dashboard-slot` | `programs-summary-dashboard` |
+| Growth chart page | `patient-chart-dashboard-slot` | `growth-chart-dashboard-link` |
+| Vitals card | `patient-chart-summary-dashboard-slot` | `vitals-overview-widget` |
+| Biometrics card | `patient-chart-summary-dashboard-slot` | `biometrics-overview-widget` |
+
+Clinical forms lists the published RHD forms, by name, as the forms app orders them. Choosing another order there
+needs a change to the forms app.
