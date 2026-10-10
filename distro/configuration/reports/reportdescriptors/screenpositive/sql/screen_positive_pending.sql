@@ -51,6 +51,8 @@ JOIN encounter enc ON enc.encounter_id = COALESCE((
         SELECT dg.encounter_id FROM obs dg
         WHERE dg.person_id = scr.person_id AND dg.voided = 0
           AND dg.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
+          AND EXISTS (SELECT 1 FROM obs has_cat WHERE has_cat.obs_group_id = dg.obs_id AND has_cat.voided = 0
+                      AND has_cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22'))
           AND NOT EXISTS (
               SELECT 1 FROM obs x
               WHERE x.obs_group_id = dg.obs_id AND x.voided = 0
@@ -89,7 +91,7 @@ WHERE scr.voided = 0
           AND (later.obs_datetime > scr.obs_datetime
                OR (later.obs_datetime = scr.obs_datetime AND later.obs_id > scr.obs_id))
     )
-    -- No Diagnosis Details on the latest Diagnosis not answered inactive or secondary, the one the registry reads
+    -- No Diagnosis Details on the latest Diagnosis with a Category and not answered inactive or secondary, the one the registry reads
     -- (as ACT 2.0 read the active primary diagnosis; unanswered counts, as those questions did not load before 2026-10-07)
     AND NOT EXISTS (
         SELECT 1 FROM obs det
@@ -97,6 +99,8 @@ WHERE scr.voided = 0
             SELECT dg.obs_id FROM obs dg
             WHERE dg.person_id = scr.person_id AND dg.voided = 0
               AND dg.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
+              AND EXISTS (SELECT 1 FROM obs has_cat WHERE has_cat.obs_group_id = dg.obs_id AND has_cat.voided = 0
+                          AND has_cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22'))
               AND NOT EXISTS (
                   SELECT 1 FROM obs x
                   WHERE x.obs_group_id = dg.obs_id AND x.voided = 0
