@@ -23,7 +23,35 @@
                 "rendering": "date",
                 "concept": "183fb30e-b861-5b7c-806f-7118a40f2b51"
               },
-              "required": true
+              "required": true,
+              "hide": {
+                "hideWhenExpression": "includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') && bpg_given_today === '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            },
+            {
+              "label": "Dose given",
+              "id": "dose_given",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "6a52b6aa-2427-4fa2-93cb-18956f50c16a",
+                "answers": [
+                  {
+                    "label": "1.2 MU (1,200,000 units)",
+                    "concept": "0cd38c13-17ac-48da-a946-1b21789e5027",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "0.6 MU (600,000 units)",
+                    "concept": "183d4077-ade1-4abb-b241-89a0fbd9f638",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "required": true,
+              "hide": {
+                "hideWhenExpression": "includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') && bpg_given_today === '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
             },
             {
               "label": "Any adverse reactions to last injection?",
@@ -327,6 +355,45 @@
               },
               "hide": {
                 "hideWhenExpression": "!includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
+              }
+            },
+            {
+              "label": "Was BPG given today?",
+              "id": "bpg_given_today",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "b3aad474-e04e-407c-9fbd-28e25a394f27",
+                "answers": [
+                  {
+                    "label": "Yes, given today",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No, withheld until a clinician reviews",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "required": true,
+              "hide": {
+                "hideWhenExpression": "!includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
+              }
+            },
+            {
+              "id": "bpg_withheld_note",
+              "label": "BPG withheld",
+              "type": "markdown",
+              "questionOptions": {
+                "rendering": "markdown"
+              },
+              "value": [
+                "No injection is recorded for this visit, so the patient stays due until a clinician has reviewed them and BPG is given."
+              ],
+              "hide": {
+                "hideWhenExpression": "!includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') || bpg_given_today !== '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
               }
             }
           ]
