@@ -10,6 +10,6 @@ d34a1940-3069-4187-9990-e4b25f5a0b95,,App: act.communityHome,"Open Home, the com
 1d6bc9cd-b604-4532-8cbd-e42af19e14e8,,App: act.dataClerk,"Open Facility reports, the Reports page for the session's clinic, and its quick action on Home"
 0ce25633-05ed-4b31-bb9b-f63d1dd91644,,App: act.reports,"Open Reports: programme numbers and the same by facility"
 7a99c7db-df54-43e7-b3b5-1fca4c86aa91,,Task: act.lists.export,"Download an ACT list as CSV"
-b013ab1f-925e-4e4e-96b0-3d6808e14bce,,Task: act.enterClinicalForms,"Record the clinician's forms: consultations, hospital admissions, echocardiograms, electrocardiograms, procedures, pregnancies, INR monitoring and research participation. The edit privilege of their encounter types"
+b013ab1f-925e-4e4e-96b0-3d6808e14bce,,Task: act.enterClinicalForms,"Record the clinician's forms: consultations, hospital admissions, echocardiograms, electrocardiograms, procedures, pregnancies, INR monitoring and research participation: the edit privilege of their encounter types"
 081b8ebc-8d24-42fa-b891-33b6427f7257,,Task: act.refreshFlags,"Refresh every patient's critical data flags and prophylaxis adherence now, from the Admin section"
 bba8c1e6-2c61-4b59-b7ae-e5a92cd4ac1c,,Task: act.enterPatientInformation,"Record Patient Information: the edit privilege of its encounter type"

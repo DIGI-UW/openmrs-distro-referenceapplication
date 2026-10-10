@@ -66,7 +66,8 @@ as the reference shown to the ACT team, with these departures:
   here because OpenMRS lets a user give out only roles whose privileges they hold, and a site administrator
   creates clinicians.
 
-ACT 2.0 also let community clinicians record echocardiograms and electrocardiograms. ACT 3.0 follows v2.
+ACT 2.0 also let community clinicians record Patient Information, Consultation Visit, Hospital Admission,
+Echocardiogram and Electrocardiogram. ACT 3.0 follows v2.
 
 ### Production deployment with SSL
 
