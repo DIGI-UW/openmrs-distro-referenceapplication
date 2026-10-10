@@ -48,10 +48,16 @@
                   }
                 ]
               },
-              "required": true,
               "hide": {
                 "hideWhenExpression": "includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') && bpg_given_today === '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
-              }
+              },
+              "validators": [
+                {
+                  "type": "js_expression",
+                  "failsWhenExpression": "mode === 'enter' && isEmpty(myValue)",
+                  "message": "Required"
+                }
+              ]
             },
             {
               "label": "Any adverse reactions to last injection?",
@@ -115,7 +121,7 @@
               "id": "if_injection_is_late_why",
               "type": "obs",
               "questionOptions": {
-                "rendering": "checkbox",
+                "rendering": "select",
                 "concept": "f7cbfcdc-58bb-5e85-86ab-ffce26a08615",
                 "answers": [
                   {
@@ -358,7 +364,7 @@
               }
             },
             {
-              "label": "Was BPG given today?",
+              "label": "Was BPG given at this visit?",
               "id": "bpg_given_today",
               "type": "obs",
               "questionOptions": {
@@ -366,7 +372,7 @@
                 "concept": "b3aad474-e04e-407c-9fbd-28e25a394f27",
                 "answers": [
                   {
-                    "label": "Yes, given today",
+                    "label": "Yes, given",
                     "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
