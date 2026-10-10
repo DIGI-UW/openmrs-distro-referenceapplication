@@ -315,8 +315,8 @@ Thanks!
 ### Forms per role
 
 Who may record a form is set by its encounter type's edit privilege (`encountertypes/`), held through the
-roles in `roles/`. A form whose type has no edit privilege is open to every role that holds Add Encounters, so
-every RHD encounter type has one.
+roles in `roles/`. The chart offers a form whose type has no edit privilege to every user, even one who cannot save it,
+so every RHD encounter type has one.
 
 | Form | Community clinician | Data clerk | Clinician, site and instance administrator | Global administrator |
 | --- | --- | --- | --- | --- |
