@@ -1,0 +1,8 @@
+<config>
+	<globalProperties>
+		<globalProperty>
+			<property>actcore.adherence.prescriptionDurations</property>
+			<value>87bdee8a-aaf8-56e7-9e34-2b668873787d:30,100fdd04-23d7-4b98-a02a-32eae162d4d5:60,30f01ae8-2fc0-5ac2-be59-a573b38d73d5:90,35d3bb08-35fb-5377-8d8f-3edd73c1178b:180,63726df8-d924-54fe-b88b-b8bc9749632b:365</value>
+		</globalProperty>
+	</globalProperties>
+</config>

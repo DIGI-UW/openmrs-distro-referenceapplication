@@ -1,7 +1,7 @@
 -- =============================================================================
 -- Due for Prophylaxis
 -- One row per living patient enrolled in the RHD Registry now whose next dose, in ACT Core's
--- actcore_prophylaxis_adherence, is due today or overdue. That table is rebuilt by ACT Core's daily
+-- actcore_prophylaxis_adherence, is due in the next two days, due today or overdue. That table is rebuilt by ACT Core's daily
 -- adherence refresh, so a dose recorded today shows after the next run.
 -- =============================================================================
 SELECT
@@ -10,9 +10,14 @@ SELECT
     MAX(rhd_id.identifier)                                          AS rhd_id,
     -- Typed as ACT Core's chart types it: an injection interval means BPG
     CASE WHEN a.injection_interval_days > 0 THEN 'BPG' ELSE 'Oral' END AS prophylaxis_type,
+    a.injection_interval_days                                       AS injection_interval_days,
+    MAX(regimen_name.name)                                          AS regimen,
     a.last_given                                                    AS last_given,
     a.next_due                                                      AS next_due,
-    CASE WHEN a.next_due = CURDATE() THEN 'due_today' ELSE 'overdue' END AS status,
+    CASE WHEN a.next_due < CURDATE() THEN 'overdue'
+         WHEN a.next_due = CURDATE() THEN 'due_today'
+         ELSE 'due_soon' END                                        AS status,
+    ROUND(a.adherence * 100)                                        AS adherence,
     MAX(primary_loc.name)                                           AS primary_care_clinic
 
 FROM patient_program pp
@@ -22,6 +27,8 @@ JOIN patient pat ON pat.patient_id = pp.patient_id AND pat.voided = 0
 JOIN person p    ON p.person_id    = pp.patient_id  AND p.voided = 0 AND p.dead = 0
 JOIN actcore_prophylaxis_adherence a ON a.patient_id = p.person_id
 LEFT JOIN concept regimen ON regimen.concept_id = a.regimen_concept_id
+LEFT JOIN concept_name regimen_name ON regimen_name.concept_id = regimen.concept_id
+    AND regimen_name.locale = 'en' AND regimen_name.locale_preferred = 1 AND regimen_name.voided = 0
 
 LEFT JOIN person_name pn ON pn.person_id = p.person_id AND pn.voided = 0 AND pn.preferred = 1
 LEFT JOIN patient_identifier rhd_id
@@ -44,7 +51,7 @@ WHERE pp.voided = 0
           AND (later.date_enrolled > pp.date_enrolled
                OR (later.date_enrolled = pp.date_enrolled AND later.patient_program_id > pp.patient_program_id))
     )
-    AND a.next_due <= CURDATE()
+    AND a.next_due <= DATE_ADD(CURDATE(), INTERVAL 2 DAY)
     -- BPG, oral or no regimen: None, Other and any regimen the cascade does not count are not due
     AND (regimen.uuid IS NULL
          OR regimen.uuid IN ('50be4b26-6c5b-5aaa-9254-3bfd313b4522','2f3ee632-dd14-51b0-a4ec-de10e7958019',
@@ -53,6 +60,6 @@ WHERE pp.voided = 0
                              'fb8b6676-689b-5daa-83f7-1456210c587f','f6f25d63-bd1a-51cb-9596-e74a19759429',
                              '1af922b8-acee-56c8-b184-eaef4e58e23a'))
 
-GROUP BY pp.patient_program_id, p.uuid, a.injection_interval_days, a.last_given, a.next_due
+GROUP BY pp.patient_program_id, p.uuid, a.injection_interval_days, a.last_given, a.next_due, a.adherence
 
 ORDER BY a.next_due, full_name
