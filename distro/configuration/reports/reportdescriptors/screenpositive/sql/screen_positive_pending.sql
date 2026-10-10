@@ -17,6 +17,25 @@ SELECT
         WHERE d.encounter_id = scr.encounter_id AND d.voided = 0
           AND d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '96d6d328-87ba-5a2e-bb71-2d1cd73b3e90')
     ), scr.obs_datetime))                                           AS screen_date,
+    -- Recorded with the Screen + answer; a school screening's School Name stands in for a site left blank
+    COALESCE((
+        SELECT MAX(s.value_text) FROM obs s
+        WHERE s.encounter_id = scr.encounter_id AND s.voided = 0
+          AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'a5be20e6-88c0-42b0-9557-54771e06e644')
+    ), (
+        SELECT MAX(s.value_text) FROM obs s
+        WHERE s.encounter_id = scr.encounter_id AND s.voided = 0
+          AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'cfd8f77a-a2b5-5836-96c1-d3e5fdd48e02')
+    ))                                                              AS screening_site,
+    (
+        SELECT CASE c.uuid WHEN '1035a94f-d8c1-4f0c-b376-5f6c5976b737' THEN 'Not contacted'
+                           WHEN '6bcba113-f828-4635-9c47-bcf14b605532' THEN 'Echo booked'
+                           WHEN '437bd172-c32b-430f-a9d1-acf20e398022' THEN 'Urgent' END
+        FROM obs st JOIN concept c ON c.concept_id = st.value_coded
+        WHERE st.encounter_id = scr.encounter_id AND st.voided = 0
+          AND st.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'c25c84d9-1f23-4426-8d43-ad1e3829cbb7')
+        ORDER BY st.obs_id DESC LIMIT 1
+    )                                                               AS follow_up_status,
     p.uuid                                                          AS patient_uuid,
     -- The form to record the diagnosis in, as ACT 2.0's row opened the patient form
     enc.uuid                                                        AS encounter_uuid,

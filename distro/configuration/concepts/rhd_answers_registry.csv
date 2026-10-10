@@ -26,3 +26,6 @@ e50b612b-5460-5b0c-b919-90a3dbe1919f,,ACT-RHD:rhd_stroke,RHD-Stroke,,"renamed to
 7dc37c9e-1725-11ed-861d-0242ac120002,,ACT-RHD:lost_to_follow_up,Lost to follow-up,,,Misc,N/A,,,
 dec7f177-1b23-4c2e-82a7-0f6650b34382,,ACT-RHD:caregiver_report,Caregiver report,,"Oral adherence based on the caregiver's report",Misc,N/A,,,
 3031eb6c-f513-4cd7-b411-b9d3a90bfe7a,,ACT-RHD:transport,Transport,,"Oral adherence below 80% because of transport",Misc,N/A,,,
+1035a94f-d8c1-4f0c-b376-5f6c5976b737,,ACT-RHD:not_contacted,Not contacted,,"Screen positive follow-up status",Misc,N/A,,,
+6bcba113-f828-4635-9c47-bcf14b605532,,ACT-RHD:echo_booked,Echo booked,,"Screen positive follow-up status",Misc,N/A,,,
+437bd172-c32b-430f-a9d1-acf20e398022,,ACT-RHD:urgent_follow_up,Urgent follow-up,,"Screen positive follow-up status",Misc,N/A,,,
