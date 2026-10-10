@@ -120,8 +120,8 @@ SELECT
         WHERE e_last.patient_id = p.person_id AND e_last.voided = 0
     )                                                               AS last_consultation_date,
 
-    -- The regimen the latest consultation leaves in force: its answers without a Date Stopped, the latest start not
-    -- after today first and, for one start date, the first saved, as ACT Core keeps them
+    -- The latest consultation's answers without a Date Stopped: the latest start not after today, then undated, then
+    -- future, the first saved for one start. ACT Core skips the last two; the No prescription case counts them.
     (
         SELECT cn_sap.name
         FROM obs o_sap
