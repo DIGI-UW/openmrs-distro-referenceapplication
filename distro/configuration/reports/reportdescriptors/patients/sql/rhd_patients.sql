@@ -72,6 +72,8 @@ SELECT
             SELECT dg2.obs_id FROM obs dg2
             WHERE dg2.person_id = p.person_id AND dg2.voided = 0
               AND dg2.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
+              AND EXISTS (SELECT 1 FROM obs has_cat WHERE has_cat.obs_group_id = dg2.obs_id AND has_cat.voided = 0
+                          AND has_cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22'))
               AND NOT EXISTS (
                 SELECT 1 FROM obs x
                 WHERE x.obs_group_id = dg2.obs_id AND x.voided = 0

@@ -14,13 +14,15 @@ WITH scr_active AS (
       AND DATE(pp.date_enrolled) <= DATE(@endDate)
       AND (pp.date_completed IS NULL OR DATE(pp.date_completed) > DATE(@endDate))
 ),
--- Each patient's latest Diagnosis group by the end date that is not answered inactive or secondary, as ACT 2.0
+-- Each patient's latest Diagnosis group by the end date with a Category and not answered inactive or secondary, as ACT 2.0
 -- took the active primary diagnosis (unanswered counts, as those questions did not load before 2026-10-07).
 diagnosis AS (
     SELECT g.person_id, g.obs_id, g.obs_datetime
     FROM obs g
     WHERE g.voided = 0 AND g.obs_datetime <= @endDate
       AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
+      AND EXISTS (SELECT 1 FROM obs has_cat WHERE has_cat.obs_group_id = g.obs_id AND has_cat.voided = 0
+                  AND has_cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22'))
       AND NOT EXISTS (
           SELECT 1 FROM obs x
           WHERE x.obs_group_id = g.obs_id AND x.voided = 0

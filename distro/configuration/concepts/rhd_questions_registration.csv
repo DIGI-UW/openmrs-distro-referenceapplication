@@ -27,3 +27,5 @@ b1b5d279-8013-5ae4-83a7-0f2bd9bc8457,,ACT-RHD:q_diagnosis_active,Diagnosis Activ
 e9f2fceb-05be-577f-bf76-dde0647f01db,,ACT-RHD:q_diagnosis_ended,Ended,,"added 2026-10-05 to match live ACT registry's Diagnosis grid exactly -- date this diagnosis ended, left blank while still active",Question,Date,,,
 deba7fd3-1780-5b23-b702-76140a161169,,ACT-RHD:primary,Primary Diagnosis,Primary,"added 2026-10-05 as a Primary/Secondary answer option, matching live ACT registry exactly",Misc,N/A,,,
 af45fb2a-ed18-5beb-935e-8e4d92df2dac,,ACT-RHD:secondary,Secondary Diagnosis,Secondary,"added 2026-10-05 as a Primary/Secondary answer option, matching live ACT registry exactly",Misc,N/A,,,
+a5be20e6-88c0-42b0-9557-54771e06e644,,ACT-RHD:q_screening_site,Screening site,,"Where a screen-positive patient was screened: a school, community site or clinic",Question,Text,,,
+c25c84d9-1f23-4426-8d43-ad1e3829cbb7,,ACT-RHD:q_screen_positive_follow_up_status,Screen positive follow-up status,Follow-up status,"Where a screen-positive patient's confirmatory echo stands",Question,Coded,1035a94f-d8c1-4f0c-b376-5f6c5976b737; 6bcba113-f828-4635-9c47-bcf14b605532; 437bd172-c32b-430f-a9d1-acf20e398022,,
