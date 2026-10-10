@@ -17,6 +17,27 @@ SELECT
         WHERE d.encounter_id = scr.encounter_id AND d.voided = 0
           AND d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '96d6d328-87ba-5a2e-bb71-2d1cd73b3e90')
     ), scr.obs_datetime))                                           AS screen_date,
+    -- Recorded with the Screen + answer; a school screening's School Name stands in for a site left blank
+    COALESCE((
+        SELECT s.value_text FROM obs s
+        WHERE s.encounter_id = scr.encounter_id AND s.voided = 0
+          AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'a5be20e6-88c0-42b0-9557-54771e06e644')
+        ORDER BY s.obs_id DESC LIMIT 1
+    ), (
+        SELECT s.value_text FROM obs s
+        WHERE s.encounter_id = scr.encounter_id AND s.voided = 0
+          AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'cfd8f77a-a2b5-5836-96c1-d3e5fdd48e02')
+        ORDER BY s.obs_id DESC LIMIT 1
+    ))                                                              AS screening_site,
+    (
+        SELECT CASE c.uuid WHEN '1035a94f-d8c1-4f0c-b376-5f6c5976b737' THEN 'Not contacted'
+                           WHEN '6bcba113-f828-4635-9c47-bcf14b605532' THEN 'Echo booked'
+                           WHEN '437bd172-c32b-430f-a9d1-acf20e398022' THEN 'Urgent' END
+        FROM obs st JOIN concept c ON c.concept_id = st.value_coded
+        WHERE st.encounter_id = scr.encounter_id AND st.voided = 0
+          AND st.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'c25c84d9-1f23-4426-8d43-ad1e3829cbb7')
+        ORDER BY st.obs_id DESC LIMIT 1
+    )                                                               AS follow_up_status,
     p.uuid                                                          AS patient_uuid,
     -- The form to record the diagnosis in, as ACT 2.0's row opened the patient form
     enc.uuid                                                        AS encounter_uuid,
@@ -30,6 +51,8 @@ JOIN encounter enc ON enc.encounter_id = COALESCE((
         SELECT dg.encounter_id FROM obs dg
         WHERE dg.person_id = scr.person_id AND dg.voided = 0
           AND dg.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
+          AND EXISTS (SELECT 1 FROM obs has_cat WHERE has_cat.obs_group_id = dg.obs_id AND has_cat.voided = 0
+                      AND has_cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22'))
           AND NOT EXISTS (
               SELECT 1 FROM obs x
               WHERE x.obs_group_id = dg.obs_id AND x.voided = 0
@@ -68,7 +91,7 @@ WHERE scr.voided = 0
           AND (later.obs_datetime > scr.obs_datetime
                OR (later.obs_datetime = scr.obs_datetime AND later.obs_id > scr.obs_id))
     )
-    -- No Diagnosis Details on the latest Diagnosis not answered inactive or secondary, the one the registry reads
+    -- No Diagnosis Details on the latest Diagnosis with a Category and not answered inactive or secondary, the one the registry reads
     -- (as ACT 2.0 read the active primary diagnosis; unanswered counts, as those questions did not load before 2026-10-07)
     AND NOT EXISTS (
         SELECT 1 FROM obs det
@@ -76,6 +99,8 @@ WHERE scr.voided = 0
             SELECT dg.obs_id FROM obs dg
             WHERE dg.person_id = scr.person_id AND dg.voided = 0
               AND dg.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
+              AND EXISTS (SELECT 1 FROM obs has_cat WHERE has_cat.obs_group_id = dg.obs_id AND has_cat.voided = 0
+                          AND has_cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22'))
               AND NOT EXISTS (
                   SELECT 1 FROM obs x
                   WHERE x.obs_group_id = dg.obs_id AND x.voided = 0
