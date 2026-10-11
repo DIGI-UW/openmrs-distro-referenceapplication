@@ -4,7 +4,7 @@
   "version": "1",
   "published": true,
   "retired": false,
-  "encounter": "RHD Consultation Visit",
+  "encounter": "RHD Patient Information",
   "processor": "EncounterFormProcessor",
   "referencedForms": [],
   "pages": [
@@ -56,8 +56,7 @@
                         "conceptMappings": []
                       }
                     ]
-                  },
-                  "required": true
+                  }
                 },
                 {
                   "label": "Diagnosis Details",
@@ -338,7 +337,14 @@
                         "conceptMappings": []
                       }
                     ]
-                  }
+                  },
+                  "validators": [
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
+                      "message": "Choose a Category first"
+                    }
+                  ]
                 },
                 {
                   "label": "Active",
@@ -359,7 +365,14 @@
                         "conceptMappings": []
                       }
                     ]
-                  }
+                  },
+                  "validators": [
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
+                      "message": "Choose a Category first"
+                    }
+                  ]
                 },
                 {
                   "label": "Started",
@@ -368,7 +381,14 @@
                   "questionOptions": {
                     "rendering": "date",
                     "concept": "62321320-695e-5319-a306-40dfd6ad94b7"
-                  }
+                  },
+                  "validators": [
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
+                      "message": "Choose a Category first"
+                    }
+                  ]
                 },
                 {
                   "label": "Ended",
@@ -377,7 +397,14 @@
                   "questionOptions": {
                     "rendering": "date",
                     "concept": "e9f2fceb-05be-577f-bf76-dde0647f01db"
-                  }
+                  },
+                  "validators": [
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
+                      "message": "Choose a Category first"
+                    }
+                  ]
                 }
               ]
             },
@@ -409,6 +436,47 @@
               "questionOptions": {
                 "rendering": "date",
                 "concept": "96d6d328-87ba-5a2e-bb71-2d1cd73b3e90"
+              },
+              "hide": {
+                "hideWhenExpression": "screen_positive !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
+            },
+            {
+              "label": "Screening site",
+              "id": "screening_site",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "a5be20e6-88c0-42b0-9557-54771e06e644"
+              },
+              "hide": {
+                "hideWhenExpression": "screen_positive !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+              }
+            },
+            {
+              "label": "Follow-up status",
+              "id": "screen_positive_follow_up_status",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "c25c84d9-1f23-4426-8d43-ad1e3829cbb7",
+                "answers": [
+                  {
+                    "label": "Not contacted",
+                    "concept": "1035a94f-d8c1-4f0c-b376-5f6c5976b737",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Echo booked",
+                    "concept": "6bcba113-f828-4635-9c47-bcf14b605532",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Urgent",
+                    "concept": "437bd172-c32b-430f-a9d1-acf20e398022",
+                    "conceptMappings": []
+                  }
+                ]
               },
               "hide": {
                 "hideWhenExpression": "screen_positive !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"

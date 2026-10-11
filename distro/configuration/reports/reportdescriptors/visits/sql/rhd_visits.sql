@@ -27,13 +27,19 @@ SELECT
        AND o.concept_id = (SELECT concept_id FROM concept WHERE uuid = '2f51b894-383c-53bb-9997-583e9761d132')
      ORDER BY o.obs_datetime DESC LIMIT 1)                              AS nyha_class,
 
+    -- The visit's latest prescription without a Date Stopped, ordered as the patients report orders them
     (SELECT cn2.name FROM obs o2
      JOIN concept_name cn2 ON cn2.concept_id = o2.value_coded
          AND cn2.locale = 'en' AND cn2.locale_preferred = 1 AND cn2.voided = 0
+     LEFT JOIN obs start2 ON start2.obs_group_id = o2.obs_group_id AND start2.voided = 0
+         AND start2.concept_id = (SELECT concept_id FROM concept WHERE uuid = '5bcc7d12-b279-5955-815c-090a1f392071')
      WHERE o2.voided = 0 AND o2.encounter_id IN (
          SELECT encounter_id FROM encounter WHERE visit_id = v.visit_id AND voided = 0)
        AND o2.concept_id = (SELECT concept_id FROM concept WHERE uuid = '668e0221-8b41-5669-9ad8-78e193d42494')
-     ORDER BY o2.obs_datetime DESC LIMIT 1)                             AS prophylaxis_regimen,
+       AND NOT EXISTS (SELECT 1 FROM obs stop2 WHERE stop2.obs_group_id = o2.obs_group_id AND stop2.voided = 0
+           AND stop2.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'd75edc42-3213-5a06-9228-4e5735b9594b'))
+     ORDER BY o2.obs_datetime DESC, COALESCE(start2.value_datetime > CURDATE(), 0), start2.value_datetime DESC, o2.obs_id
+     LIMIT 1)                                                           AS prophylaxis_regimen,
 
     v.uuid                                                              AS visit_uuid
 
@@ -57,6 +63,8 @@ JOIN encounter e ON e.visit_id = v.visit_id AND e.voided = 0
 JOIN encounter_type et ON et.encounter_type_id = e.encounter_type AND et.retired = 0
     AND et.uuid IN (
         'c2503561-c00d-5460-8157-43d594472b4a',  -- RHD Consultation Visit
+        'ffdc883f-f99f-496a-83f9-2c3c581e1af0',  -- RHD Patient Information
+        'f064aaf0-bd36-43c5-9f35-00077457a569',  -- RHD Research Participation
         '04cf03db-3b8e-5020-84b0-50b06338767a',  -- RHD BPG Delivery
         '730f5ec2-7102-55d0-8602-2d792844f245',  -- RHD Echocardiogram
         '64c3f35f-a3ec-59d6-8178-0ca9f068cda8',  -- RHD Electrocardiogram

@@ -14,4 +14,30 @@
             SELECT person_id, 'admin', user_id, NOW(), 0, 'ba1e27d3-2c89-49fc-9851-3b509abcce93' FROM users WHERE system_id = 'admin'
         </sql>
     </changeSet>
+
+    <changeSet id="act3-patient-information-research-encounter-types-1" author="act3">
+        <comment>
+            Moves RHD Patient Information and RHD Research Participation encounters to their own types (DIGI-UW/openmrs-module-actcore#59).
+            Keep the INSERTs: Liquibase runs before Initializer loads encountertypes/, which then updates these uuids in place.
+        </comment>
+        <sql>
+            INSERT INTO encounter_type (name, description, creator, date_created, retired, uuid)
+            SELECT 'RHD Patient Information', 'Diagnosis, screening and how the case was detected', 1, NOW(), 0, 'ffdc883f-f99f-496a-83f9-2c3c581e1af0'
+            FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM encounter_type WHERE uuid = 'ffdc883f-f99f-496a-83f9-2c3c581e1af0');
+
+            INSERT INTO encounter_type (name, description, creator, date_created, retired, uuid)
+            SELECT 'RHD Research Participation', 'Consent and enrolment in research studies', 1, NOW(), 0, 'f064aaf0-bd36-43c5-9f35-00077457a569'
+            FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM encounter_type WHERE uuid = 'f064aaf0-bd36-43c5-9f35-00077457a569');
+
+            UPDATE encounter e
+            JOIN form f ON f.form_id = e.form_id AND f.uuid = 'a6646c51-130d-3b59-a442-959bea93487d'
+            SET e.encounter_type = (SELECT encounter_type_id FROM encounter_type WHERE uuid = 'ffdc883f-f99f-496a-83f9-2c3c581e1af0'),
+                e.changed_by = 1, e.date_changed = NOW();
+
+            UPDATE encounter e
+            JOIN form f ON f.form_id = e.form_id AND f.uuid = '7807da80-ee71-3900-bbce-a026e4a8d54d'
+            SET e.encounter_type = (SELECT encounter_type_id FROM encounter_type WHERE uuid = 'f064aaf0-bd36-43c5-9f35-00077457a569'),
+                e.changed_by = 1, e.date_changed = NOW();
+        </sql>
+    </changeSet>
 </databaseChangeLog>

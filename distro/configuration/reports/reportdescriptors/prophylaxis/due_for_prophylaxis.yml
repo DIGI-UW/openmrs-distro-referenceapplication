@@ -1,7 +1,7 @@
 key: dueForProphylaxis
 uuid: "f3d8b672-a8a3-47a3-8a0b-dff01de6e3a8"
 name: "Due for Prophylaxis"
-description: "Living RHD Registry patients whose next BPG injection or oral prophylaxis is due today or overdue, as ACT Core last computed it"
+description: "Living RHD Registry patients whose next BPG injection or oral prophylaxis is due in the next two days, due today or overdue, as ACT Core last computed it, with the regimen and adherence"
 datasets:
   - key: dueForProphylaxisData
     type: sql
