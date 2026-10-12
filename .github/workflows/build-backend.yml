@@ -40,6 +40,8 @@ on:
         required: false
         type: string
         default: ''
+  schedule:
+    - cron: '0 1,7,13,19 * * *'
 
 env:
   IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/openmrs-reference-application-3-backend
