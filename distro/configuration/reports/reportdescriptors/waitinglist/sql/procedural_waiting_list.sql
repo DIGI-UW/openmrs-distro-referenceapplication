@@ -104,13 +104,17 @@ LEFT JOIN person_address addr ON addr.person_id = p.person_id AND addr.voided = 
 LEFT JOIN person_attribute pa_primary
     ON pa_primary.person_id = p.person_id AND pa_primary.voided = 0
     AND pa_primary.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
-                                                WHERE name = 'Health Center' LIMIT 1)
+                                                WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')
+LEFT JOIN person_attribute pa_health_center
+    ON pa_health_center.person_id = p.person_id AND pa_health_center.voided = 0
+    AND pa_health_center.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
+                                                      WHERE name = 'Health Center' LIMIT 1)
+LEFT JOIN location primary_loc ON primary_loc.location_id = COALESCE(pa_primary.value, pa_health_center.value)
 LEFT JOIN person_attribute pa_cardiac
     ON pa_cardiac.person_id = p.person_id AND pa_cardiac.voided = 0
     AND pa_cardiac.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
                                                 WHERE uuid = 'fe261119-2911-5b36-be40-8f9827826987')
 LEFT JOIN location cardiac_loc ON cardiac_loc.location_id = pa_cardiac.value
-LEFT JOIN location primary_loc ON primary_loc.location_id = pa_primary.value
 
 WHERE e.voided = 0
     -- The patient's latest RHD Consultation Visit

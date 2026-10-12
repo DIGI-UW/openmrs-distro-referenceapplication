@@ -287,7 +287,12 @@ LEFT JOIN person_attribute pa_cardiac
     AND pa_cardiac.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
                                                 WHERE uuid = 'fe261119-2911-5b36-be40-8f9827826987')
 LEFT JOIN location cardiac_loc ON cardiac_loc.location_id = pa_cardiac.value
-LEFT JOIN location primary_loc ON primary_loc.location_id = pa_village.value
+-- The Primary Care Clinic registration records, else the Health Center patients seeded before it carry
+LEFT JOIN person_attribute pa_health_center
+    ON pa_health_center.person_id = p.person_id AND pa_health_center.voided = 0
+    AND pa_health_center.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
+                                                      WHERE name = 'Health Center' LIMIT 1)
+LEFT JOIN location primary_loc ON primary_loc.location_id = COALESCE(pa_village.value, pa_health_center.value)
 LEFT JOIN person_attribute pa_consent
     ON pa_consent.person_id = p.person_id AND pa_consent.voided = 0
     AND pa_consent.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type

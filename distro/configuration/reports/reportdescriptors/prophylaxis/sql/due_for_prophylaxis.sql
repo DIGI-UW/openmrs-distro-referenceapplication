@@ -35,12 +35,17 @@ LEFT JOIN patient_identifier rhd_id
     ON rhd_id.patient_id = p.person_id AND rhd_id.voided = 0
     AND rhd_id.identifier_type = (SELECT patient_identifier_type_id FROM patient_identifier_type
                                    WHERE uuid = '240f85fa-46e1-540e-9234-2796c623f7ea')
--- The primary care clinic as the registry report reads it, from the Health Center location attribute
+-- The primary care clinic as the registry report reads it: the Primary Care Clinic registration records, else the
+-- Health Center patients seeded before it carry
 LEFT JOIN person_attribute pa_primary
     ON pa_primary.person_id = p.person_id AND pa_primary.voided = 0
     AND pa_primary.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
-                                                WHERE name = 'Health Center' LIMIT 1)
-LEFT JOIN location primary_loc ON primary_loc.location_id = pa_primary.value
+                                                WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')
+LEFT JOIN person_attribute pa_health_center
+    ON pa_health_center.person_id = p.person_id AND pa_health_center.voided = 0
+    AND pa_health_center.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
+                                                      WHERE name = 'Health Center' LIMIT 1)
+LEFT JOIN location primary_loc ON primary_loc.location_id = COALESCE(pa_primary.value, pa_health_center.value)
 
 WHERE pp.voided = 0
     AND pp.date_completed IS NULL
