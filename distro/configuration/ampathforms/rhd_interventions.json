@@ -89,8 +89,9 @@
               "questionOptions": {
                 "rendering": "number",
                 "concept": "98775f75-0e36-58dd-9d83-1bbadc24d40c",
+                "isTransient": true,
                 "calculate": {
-                  "calculateExpression": "isEmpty(height) || isEmpty(weight) ? 0 : Number((0.024265 * Math.pow(height, 0.3964) * Math.pow(weight, 0.5378)).toFixed(3))"
+                  "calculateExpression": "isEmpty(height) || isEmpty(weight) ? '' : Number((0.024265 * Math.pow(height, 0.3964) * Math.pow(weight, 0.5378)).toFixed(3))"
                 }
               }
             },
