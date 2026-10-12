@@ -81,16 +81,9 @@ WITH active AS (
               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
                                                   WHERE uuid = 'fe261119-2911-5b36-be40-8f9827826987')
         ))
-        AND (@primaryCareClinic IS NULL OR @primaryCareClinic = '' OR (
-            SELECT l.uuid FROM location l WHERE l.location_id = COALESCE(
-            (SELECT MAX(pa.value) FROM person_attribute pa
-             WHERE pa.person_id = p.person_id AND pa.voided = 0
-               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
-                                                   WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')),
-            (SELECT MAX(pa.value) FROM person_attribute pa
-             WHERE pa.person_id = p.person_id AND pa.voided = 0
-               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE name = 'Health Center' LIMIT 1)))
-        ) = @primaryCareClinic)
+    -- HAVING, not WHERE, so the primary care clinic filter reads the facility_id computed above
+    HAVING @primaryCareClinic IS NULL OR @primaryCareClinic = ''
+        OR facility_id = (SELECT location_id FROM location WHERE uuid = @primaryCareClinic)
 ),
 -- Injections in the period of any patient in scope, by the clinic recorded for them now
 timed AS (
@@ -116,17 +109,9 @@ timed AS (
               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
                                                   WHERE uuid = 'fe261119-2911-5b36-be40-8f9827826987')
         ))
-        AND (@primaryCareClinic IS NULL OR @primaryCareClinic = '' OR (
-            SELECT l.uuid FROM location l WHERE l.location_id = COALESCE(
-            (SELECT MAX(pa.value) FROM person_attribute pa
-             WHERE pa.person_id = t.patient_id AND pa.voided = 0
-               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
-                                                   WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')),
-            (SELECT MAX(pa.value) FROM person_attribute pa
-             WHERE pa.person_id = t.patient_id AND pa.voided = 0
-               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE name = 'Health Center' LIMIT 1)))
-        ) = @primaryCareClinic)
     GROUP BY facility_id
+    HAVING @primaryCareClinic IS NULL OR @primaryCareClinic = ''
+        OR facility_id = (SELECT location_id FROM location WHERE uuid = @primaryCareClinic)
 ),
 facilities AS (
     SELECT facility_id FROM active
