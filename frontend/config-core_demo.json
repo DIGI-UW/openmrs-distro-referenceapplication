@@ -131,27 +131,20 @@
         ]
       },
       "patient-chart-summary-dashboard-slot": {
+        "remove": [
+          "conditions-overview-widget"
+        ],
         "order": [
           "patient-flags-list",
           "act-next-steps-card",
           "act-prophylaxis-card",
-          "act-consultation-card",
           "act-inr-card",
-          "conditions-overview-widget",
           "vitals-overview-widget",
           "biometrics-overview-widget",
           "active-medications-widget",
           "future-medications-widget",
-          "past-medications-widget",
-          "act-contact-card"
-        ],
-        "configure": {
-          "conditions-overview-widget": {
-            "Display conditions": {
-              "expression": "!session.user.roles.some((role) => role.display === 'Organizational: ACT Community Clinician')"
-            }
-          }
-        }
+          "past-medications-widget"
+        ]
       }
     }
   },
