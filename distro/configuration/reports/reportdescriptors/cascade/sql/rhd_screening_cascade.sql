@@ -27,7 +27,7 @@ diagnosis AS (
           SELECT 1 FROM obs x
           WHERE x.obs_group_id = g.obs_id AND x.voided = 0
             AND ((x.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'b1b5d279-8013-5ae4-83a7-0f2bd9bc8457')
-                  AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '488b58ff-64f5-4f8a-8979-fa79940b1594'))
+                  AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
               OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
                   AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
 ),
@@ -47,7 +47,7 @@ screened_positive AS (
     FROM scr_active a
     JOIN obs s ON s.person_id = a.patient_id AND s.voided = 0 AND s.obs_datetime <= @endDate
      AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = '82a5fbb5-038d-57b8-82d1-3fd0ac95673d')
-     AND s.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3')
+     AND s.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
     WHERE NOT EXISTS (SELECT 1 FROM obs later
                       WHERE later.person_id = s.person_id AND later.concept_id = s.concept_id AND later.voided = 0
                         AND later.obs_datetime <= @endDate

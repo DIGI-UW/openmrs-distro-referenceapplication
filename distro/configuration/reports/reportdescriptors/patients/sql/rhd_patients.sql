@@ -50,7 +50,7 @@ SELECT
                 SELECT 1 FROM obs x
                 WHERE x.obs_group_id = dg.obs_id AND x.voided = 0
                   AND ((x.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'b1b5d279-8013-5ae4-83a7-0f2bd9bc8457')
-                        AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '488b58ff-64f5-4f8a-8979-fa79940b1594'))
+                        AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
                     OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
                         AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
         ORDER BY dg.obs_datetime DESC, dg.obs_id DESC
@@ -78,7 +78,7 @@ SELECT
                 SELECT 1 FROM obs x
                 WHERE x.obs_group_id = dg2.obs_id AND x.voided = 0
                   AND ((x.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'b1b5d279-8013-5ae4-83a7-0f2bd9bc8457')
-                        AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '488b58ff-64f5-4f8a-8979-fa79940b1594'))
+                        AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
                     OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
                         AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
             ORDER BY dg2.obs_datetime DESC, dg2.obs_id DESC
@@ -240,8 +240,8 @@ SELECT
 
     -- Registry consent, from the Consent Given person attribute; empty when it was never recorded
     CASE MAX(consent_answer.uuid)
-        WHEN 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3' THEN 'Yes'
-        WHEN '488b58ff-64f5-4f8a-8979-fa79940b1594' THEN 'No'
+        WHEN '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' THEN 'Yes'
+        WHEN '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' THEN 'No'
     END                                                             AS consent_given,
 
     p.uuid                                                          AS patient_uuid
