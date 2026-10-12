@@ -75,7 +75,8 @@
           "immunization-summary-dashboard",
           "procedures-summary-dashboard",
           "conditions-summary-dashboard",
-          "medications-summary-dashboard"
+          "medications-summary-dashboard",
+          "growth-chart-dashboard-link"
         ],
         "order": [
           "charts-summary-dashboard",
@@ -87,7 +88,6 @@
           "results-summary-dashboard",
           "allergies-summary-dashboard",
           "programs-summary-dashboard",
-          "growth-chart-dashboard-link",
           "act-clinical-dashboards-note"
         ],
         "configure": {
@@ -132,7 +132,10 @@
       },
       "patient-chart-summary-dashboard-slot": {
         "remove": [
-          "conditions-overview-widget"
+          "conditions-overview-widget",
+          "active-medications-widget",
+          "future-medications-widget",
+          "past-medications-widget"
         ],
         "order": [
           "patient-flags-list",
@@ -140,10 +143,7 @@
           "act-prophylaxis-card",
           "act-inr-card",
           "vitals-overview-widget",
-          "biometrics-overview-widget",
-          "active-medications-widget",
-          "future-medications-widget",
-          "past-medications-widget"
+          "biometrics-overview-widget"
         ]
       }
     }
