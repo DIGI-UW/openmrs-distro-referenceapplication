@@ -52,12 +52,12 @@
                 "answers": [
                   {
                     "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
                     "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
@@ -432,12 +432,12 @@
                 "answers": [
                   {
                     "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
                     "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
@@ -467,7 +467,7 @@
                 ]
               },
               "hide": {
-                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616' || reoperation_required !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616' || reoperation_required !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
               }
             },
             {
@@ -774,12 +774,12 @@
                 "answers": [
                   {
                     "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
                     "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
@@ -888,12 +888,12 @@
                 "answers": [
                   {
                     "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
                     "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
@@ -918,12 +918,12 @@
                 "answers": [
                   {
                     "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
                     "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
@@ -948,12 +948,12 @@
                 "answers": [
                   {
                     "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
                     "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
@@ -1020,12 +1020,12 @@
                 "answers": [
                   {
                     "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
                     "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
@@ -1041,18 +1041,18 @@
                 "answers": [
                   {
                     "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
                     "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
               },
               "hide": {
-                "hideWhenExpression": "rehospitalized_within_30_days !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+                "hideWhenExpression": "rehospitalized_within_30_days !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
               }
             },
             {
@@ -1064,7 +1064,7 @@
                 "concept": "c76b304e-746e-5b70-8ba3-1c4fac127eac"
               },
               "hide": {
-                "hideWhenExpression": "rehospitalized_within_30_days !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+                "hideWhenExpression": "rehospitalized_within_30_days !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
               }
             },
             {
@@ -1076,7 +1076,7 @@
                 "concept": "f61ec9e8-4f6d-554f-aa58-915e0715f11f"
               },
               "hide": {
-                "hideWhenExpression": "rehospitalized_within_30_days !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+                "hideWhenExpression": "rehospitalized_within_30_days !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
               }
             },
             {
@@ -1089,12 +1089,12 @@
                 "answers": [
                   {
                     "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
                     "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
@@ -1109,7 +1109,7 @@
                 "concept": "07534416-c1c2-5772-83d8-76a429986ec0"
               },
               "hide": {
-                "hideWhenExpression": "is_patient_alive !== '488b58ff-64f5-4f8a-8979-fa79940b1594'"
+                "hideWhenExpression": "is_patient_alive !== '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
               }
             },
             {
@@ -1122,12 +1122,12 @@
                 "answers": [
                   {
                     "label": "Yes",
-                    "concept": "cf82933b-3f3f-45e7-a5ab-5d31aaee3da3",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   },
                   {
                     "label": "No",
-                    "concept": "488b58ff-64f5-4f8a-8979-fa79940b1594",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
                 ]
@@ -1155,7 +1155,7 @@
                 ]
               },
               "hide": {
-                "hideWhenExpression": "patient_followup_required !== 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'"
+                "hideWhenExpression": "patient_followup_required !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
               }
             },
             {

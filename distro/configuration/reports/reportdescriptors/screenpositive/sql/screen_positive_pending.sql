@@ -34,7 +34,7 @@ JOIN encounter enc ON enc.encounter_id = COALESCE((
               SELECT 1 FROM obs x
               WHERE x.obs_group_id = dg.obs_id AND x.voided = 0
                 AND ((x.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'b1b5d279-8013-5ae4-83a7-0f2bd9bc8457')
-                      AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '488b58ff-64f5-4f8a-8979-fa79940b1594'))
+                      AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
                   OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
                       AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
         ORDER BY dg.obs_datetime DESC, dg.obs_id DESC
@@ -60,7 +60,7 @@ LEFT JOIN location primary_loc ON primary_loc.location_id = pa_primary.value
 
 WHERE scr.voided = 0
     AND scr.concept_id = (SELECT concept_id FROM concept WHERE uuid = '82a5fbb5-038d-57b8-82d1-3fd0ac95673d')
-    AND scr.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3')
+    AND scr.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
     -- The patient's latest Screen + answer
     AND NOT EXISTS (
         SELECT 1 FROM obs later
@@ -80,7 +80,7 @@ WHERE scr.voided = 0
                   SELECT 1 FROM obs x
                   WHERE x.obs_group_id = dg.obs_id AND x.voided = 0
                     AND ((x.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'b1b5d279-8013-5ae4-83a7-0f2bd9bc8457')
-                          AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '488b58ff-64f5-4f8a-8979-fa79940b1594'))
+                          AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
                       OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
                           AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
             ORDER BY dg.obs_datetime DESC, dg.obs_id DESC
