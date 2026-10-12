@@ -132,6 +132,7 @@
       },
       "patient-chart-summary-dashboard-slot": {
         "order": [
+          "patient-flags-list",
           "act-next-steps-card",
           "act-prophylaxis-card",
           "act-consultation-card",
@@ -142,7 +143,6 @@
           "active-medications-widget",
           "future-medications-widget",
           "past-medications-widget",
-          "patient-flags-list",
           "act-contact-card"
         ],
         "configure": {
