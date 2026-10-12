@@ -18,9 +18,15 @@
 WITH active AS (
     SELECT
         p.person_id,
-        (SELECT MAX(pa.value) FROM person_attribute pa
-         WHERE pa.person_id = p.person_id AND pa.voided = 0
-           AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE name = 'Health Center' LIMIT 1))                 AS facility_id,
+        -- The Primary Care Clinic registration records, else the Health Center patients seeded before it carry
+        COALESCE(
+            (SELECT MAX(pa.value) FROM person_attribute pa
+             WHERE pa.person_id = p.person_id AND pa.voided = 0
+               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
+                                                   WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')),
+            (SELECT MAX(pa.value) FROM person_attribute pa
+             WHERE pa.person_id = p.person_id AND pa.voided = 0
+               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE name = 'Health Center' LIMIT 1))) AS facility_id,
         CASE WHEN a.next_due BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY) AND (regimen.uuid IS NULL OR regimen.uuid IN (
                  '50be4b26-6c5b-5aaa-9254-3bfd313b4522','2f3ee632-dd14-51b0-a4ec-de10e7958019',
                  '91230c88-6a90-5d45-af50-fa6155fe5dd7',
@@ -75,19 +81,29 @@ WITH active AS (
               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
                                                   WHERE uuid = 'fe261119-2911-5b36-be40-8f9827826987')
         ))
-        AND (@primaryCareClinic IS NULL OR @primaryCareClinic = '' OR EXISTS (
-            SELECT 1 FROM person_attribute pa
-            JOIN location l ON l.location_id = pa.value AND l.uuid = @primaryCareClinic
-            WHERE pa.person_id = p.person_id AND pa.voided = 0
-              AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE name = 'Health Center' LIMIT 1)
-        ))
+        AND (@primaryCareClinic IS NULL OR @primaryCareClinic = '' OR (
+            SELECT l.uuid FROM location l WHERE l.location_id = COALESCE(
+            (SELECT MAX(pa.value) FROM person_attribute pa
+             WHERE pa.person_id = p.person_id AND pa.voided = 0
+               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
+                                                   WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')),
+            (SELECT MAX(pa.value) FROM person_attribute pa
+             WHERE pa.person_id = p.person_id AND pa.voided = 0
+               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE name = 'Health Center' LIMIT 1)))
+        ) = @primaryCareClinic)
 ),
 -- Injections in the period of any patient in scope, by the clinic recorded for them now
 timed AS (
     SELECT
-        (SELECT MAX(pa.value) FROM person_attribute pa
-         WHERE pa.person_id = t.patient_id AND pa.voided = 0
-           AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE name = 'Health Center' LIMIT 1))                 AS facility_id,
+        -- The Primary Care Clinic registration records, else the Health Center patients seeded before it carry
+        COALESCE(
+            (SELECT MAX(pa.value) FROM person_attribute pa
+             WHERE pa.person_id = t.patient_id AND pa.voided = 0
+               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
+                                                   WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')),
+            (SELECT MAX(pa.value) FROM person_attribute pa
+             WHERE pa.person_id = t.patient_id AND pa.voided = 0
+               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE name = 'Health Center' LIMIT 1))) AS facility_id,
         SUM(t.on_time)                                              AS bpg_on_time,
         COUNT(*)                                                    AS bpg_timed
     FROM actcore_injection_timing t
@@ -100,12 +116,16 @@ timed AS (
               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
                                                   WHERE uuid = 'fe261119-2911-5b36-be40-8f9827826987')
         ))
-        AND (@primaryCareClinic IS NULL OR @primaryCareClinic = '' OR EXISTS (
-            SELECT 1 FROM person_attribute pa
-            JOIN location l ON l.location_id = pa.value AND l.uuid = @primaryCareClinic
-            WHERE pa.person_id = t.patient_id AND pa.voided = 0
-              AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE name = 'Health Center' LIMIT 1)
-        ))
+        AND (@primaryCareClinic IS NULL OR @primaryCareClinic = '' OR (
+            SELECT l.uuid FROM location l WHERE l.location_id = COALESCE(
+            (SELECT MAX(pa.value) FROM person_attribute pa
+             WHERE pa.person_id = t.patient_id AND pa.voided = 0
+               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
+                                                   WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')),
+            (SELECT MAX(pa.value) FROM person_attribute pa
+             WHERE pa.person_id = t.patient_id AND pa.voided = 0
+               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE name = 'Health Center' LIMIT 1)))
+        ) = @primaryCareClinic)
     GROUP BY facility_id
 ),
 facilities AS (
