@@ -140,6 +140,9 @@
           "vitals-overview-widget",
           "biometrics-overview-widget",
           "active-medications-widget",
+          "future-medications-widget",
+          "past-medications-widget",
+          "patient-flags-list",
           "act-contact-card"
         ],
         "configure": {
