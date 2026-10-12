@@ -49,12 +49,22 @@
       "patient-chart": {
         "remove": [
           "patient-chart-order-basket"
-        ]
+        ],
+        "configure": {
+          "visit-note": {
+            "Display conditions": {
+              "expression": "!session.user.roles.some((role) => role.display === 'Organizational: ACT Community Clinician')"
+            }
+          }
+        }
       },
       "patient-chart-dashboard-slot": {
         "add": [
           "act-prophylaxis-dashboard-link",
-          "act-cardiac-tests-dashboard-link"
+          "act-consultations-dashboard-link",
+          "act-inr-reviews-dashboard-link",
+          "act-cardiac-tests-dashboard-link",
+          "act-clinical-dashboards-note"
         ],
         "remove": [
           "patient-orders-summary-dashboard",
@@ -70,13 +80,23 @@
         "order": [
           "charts-summary-dashboard",
           "act-prophylaxis-dashboard-link",
+          "act-consultations-dashboard-link",
+          "act-inr-reviews-dashboard-link",
           "encounters-summary-dashboard",
           "act-cardiac-tests-dashboard-link",
           "results-summary-dashboard",
           "allergies-summary-dashboard",
           "programs-summary-dashboard",
-          "growth-chart-dashboard-link"
-        ]
+          "growth-chart-dashboard-link",
+          "act-clinical-dashboards-note"
+        ],
+        "configure": {
+          "encounters-summary-dashboard": {
+            "Display conditions": {
+              "expression": "!session.user.roles.some((role) => role.display === 'Organizational: ACT Community Clinician')"
+            }
+          }
+        }
       },
       "patient-banner-tags-slot": {
         "remove": [
@@ -109,6 +129,26 @@
         "remove": [
           "add-patient-to-patient-list-button"
         ]
+      },
+      "patient-chart-summary-dashboard-slot": {
+        "order": [
+          "act-next-steps-card",
+          "act-prophylaxis-card",
+          "act-consultation-card",
+          "act-inr-card",
+          "conditions-overview-widget",
+          "vitals-overview-widget",
+          "biometrics-overview-widget",
+          "active-medications-widget",
+          "act-contact-card"
+        ],
+        "configure": {
+          "conditions-overview-widget": {
+            "Display conditions": {
+              "expression": "!session.user.roles.some((role) => role.display === 'Organizational: ACT Community Clinician')"
+            }
+          }
+        }
       }
     }
   },
