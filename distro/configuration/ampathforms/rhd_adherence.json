@@ -26,49 +26,30 @@
               "required": true
             },
             {
-              "label": "Since the last visit, how many doses were taken?",
+              "label": "Adherence Estimate (%)",
               "id": "adherence_estimage",
               "type": "obs",
               "questionOptions": {
-                "rendering": "radio",
-                "concept": "8edff8dc-4af6-5d0f-bf1d-8e349c7a1b15",
-                "answers": [
-                  {
-                    "label": "All doses (100%)",
-                    "concept": 100
-                  },
-                  {
-                    "label": "Most doses (80 to 99%)",
-                    "concept": 90
-                  },
-                  {
-                    "label": "About half (about 50%)",
-                    "concept": 50
-                  },
-                  {
-                    "label": "Few or none (under 25%)",
-                    "concept": 20
-                  }
-                ]
-              },
-              "required": true
+                "rendering": "number",
+                "concept": "8edff8dc-4af6-5d0f-bf1d-8e349c7a1b15"
+              }
             },
             {
               "label": "Adherence Based On",
               "id": "adherence_estimate_based_on",
               "type": "obs",
               "questionOptions": {
-                "rendering": "checkbox",
+                "rendering": "select",
                 "concept": "4313005d-d5b2-5d20-bf33-39aab1bf90c0",
                 "answers": [
                   {
-                    "label": "Patient report",
-                    "concept": "1795c346-64df-54e3-aca1-a2855c8cc740",
+                    "label": "Calendar",
+                    "concept": "5835eb9e-1e31-5866-9de7-1715dd4b7156",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Caregiver report",
-                    "concept": "dec7f177-1b23-4c2e-82a7-0f6650b34382",
+                    "label": "Patient report",
+                    "concept": "1795c346-64df-54e3-aca1-a2855c8cc740",
                     "conceptMappings": []
                   },
                   {
@@ -77,39 +58,35 @@
                     "conceptMappings": []
                   }
                 ]
-              }
+              },
+              "required": true
             },
             {
               "label": "Explanation if Adherence is Below 80%",
               "id": "explanation_adherence_below_80",
               "type": "obs",
               "questionOptions": {
-                "rendering": "radio",
+                "rendering": "select",
                 "concept": "a9fbf67b-65d7-57f6-8270-7bb65cd49469",
                 "answers": [
+                  {
+                    "label": "Could not afford medication",
+                    "concept": "90925418-a853-54a0-8105-bd003b98132d",
+                    "conceptMappings": []
+                  },
                   {
                     "label": "Forgot",
                     "concept": "30639dfc-096c-5b52-bd28-6c3f38ced1cc",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Ran out of tablets",
-                    "concept": "64c5a80b-c9c5-5dd2-a60f-85c423c4bafa",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Side effects",
+                    "label": "Medication has side effects",
                     "concept": "3bce222b-1305-5977-91f8-6adb559bcce8",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Cost",
-                    "concept": "90925418-a853-54a0-8105-bd003b98132d",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Transport",
-                    "concept": "3031eb6c-f513-4cd7-b411-b9d3a90bfe7a",
+                    "label": "Medication ran out",
+                    "concept": "64c5a80b-c9c5-5dd2-a60f-85c423c4bafa",
                     "conceptMappings": []
                   },
                   {
@@ -128,17 +105,12 @@
               "id": "prescription_duration",
               "type": "obs",
               "questionOptions": {
-                "rendering": "radio",
+                "rendering": "select",
                 "concept": "cd03af00-de81-5c08-9a02-92f95c00e1ce",
                 "answers": [
                   {
                     "label": "1 month",
                     "concept": "87bdee8a-aaf8-56e7-9e34-2b668873787d",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "2 months",
-                    "concept": "100fdd04-23d7-4b98-a02a-32eae162d4d5",
                     "conceptMappings": []
                   },
                   {
@@ -152,12 +124,11 @@
                     "conceptMappings": []
                   },
                   {
-                    "label": "None",
-                    "concept": "1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "12 months",
+                    "concept": "63726df8-d924-54fe-b88b-b8bc9749632b",
                     "conceptMappings": []
                   }
-                ],
-                "orientation": "horizontal"
+                ]
               }
             }
           ]
