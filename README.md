@@ -47,6 +47,9 @@ Each push to ACT Core's `main` deploys a new SNAPSHOT, and the backend build che
 fetches ACT Core again after a push there. A SNAPSHOT deployed any other way, or one still deploying when you
 last built, needs `docker compose build --build-arg CACHE_BUST=$(date +%s) backend`.
 
+The frontend build installs each app's `next` from npm, and Docker reuses that step until its config
+changes, so a newly published app needs `CACHE_BUST=$(date +%s) docker compose up -d --build`.
+
 ### Production deployment with SSL
 
 For production deployments with HTTPS/SSL certificates, create a `.env` file in the project root:
