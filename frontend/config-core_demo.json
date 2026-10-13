@@ -66,6 +66,16 @@
           "procedures-summary-dashboard",
           "conditions-summary-dashboard",
           "medications-summary-dashboard"
+        ],
+        "order": [
+          "charts-summary-dashboard",
+          "act-prophylaxis-dashboard-link",
+          "encounters-summary-dashboard",
+          "act-cardiac-tests-dashboard-link",
+          "results-summary-dashboard",
+          "allergies-summary-dashboard",
+          "programs-summary-dashboard",
+          "growth-chart-dashboard-link"
         ]
       },
       "patient-banner-tags-slot": {
