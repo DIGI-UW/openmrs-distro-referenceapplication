@@ -2,7 +2,7 @@
 -- Procedural Waiting List
 -- One row per open interventional recommendation in each patient's latest RHD Consultation Visit,
 -- for patients enrolled in the RHD Registry program now. A recommendation is open unless its
--- Completed answer is the concept.true concept.
+-- Completed answer is Yes: CIEL Yes, or core's True on answers saved before the form used CIEL.
 -- =============================================================================
 SELECT
     MAX(rhd_id.identifier)                                          AS rhd_id,
@@ -31,7 +31,8 @@ SELECT
               FROM obs proc_done
               JOIN obs done ON done.obs_group_id = proc_done.obs_group_id AND done.voided = 0
                   AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
-                  AND done.value_coded = (SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true')
+                  AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
+                                       (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
               JOIN encounter e_done ON e_done.encounter_id = proc_done.encounter_id AND e_done.voided = 0
                   AND e_done.patient_id = p.person_id AND e_done.form_id = e.form_id
               WHERE proc_done.person_id = p.person_id AND proc_done.voided = 0
@@ -41,7 +42,7 @@ SELECT
     ), e.encounter_datetime))                                       AS date_added,
 
     MAX(addr.state_province)                                        AS district,
-    -- The form's Yes and No answers are core's True and False concepts
+    -- Answers saved before the form used CIEL are core's True and False; CIEL Yes and No read by name
     MAX(CASE contra.value_coded
         WHEN (SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true') THEN 'Yes'
         WHEN (SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.false') THEN 'No'
@@ -131,7 +132,8 @@ WHERE e.voided = 0
         SELECT 1 FROM obs done
         WHERE done.obs_group_id = g.obs_id AND done.voided = 0
           AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
-          AND done.value_coded = (SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true')
+          AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
+                                       (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
     )
 
 GROUP BY g.obs_id, g.uuid, g.concept_id, proc.value_coded, e.encounter_id, e.uuid, e.form_id, e.encounter_datetime, f.uuid, p.person_id, p.gender, p.birthdate, p.uuid
