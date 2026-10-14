@@ -41,6 +41,9 @@ jobs:
 
       - name: Build and Run Containers
         run: docker compose -f ./tests/e2e/docker-compose-build.yml up -d
+        env:
+          # Compose grants bake read access to the build contexts but not to the m2settings secret file
+          BUILDX_BAKE_ENTITLEMENTS_FS: 0
 
       - name: Wait for the backend to start
         run: while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost/openmrs/login.htm)" != "200" ]]; do sleep 10; done
