@@ -16,11 +16,14 @@ SELECT
 
     -- The current Study status state: the one still open, else the one that started last
     (
-        SELECT cn.name
+        SELECT COALESCE(cn_short.name, cn.name)
         FROM patient_state ps
         JOIN program_workflow_state pws ON pws.program_workflow_state_id = ps.state
         JOIN concept_name cn ON cn.concept_id = pws.concept_id
             AND cn.locale = 'en' AND cn.concept_name_type = 'FULLY_SPECIFIED' AND cn.voided = 0
+        -- The short name where there is one, as Active for Active (study status)
+        LEFT JOIN concept_name cn_short ON cn_short.concept_id = pws.concept_id
+            AND cn_short.locale = 'en' AND cn_short.concept_name_type = 'SHORT' AND cn_short.voided = 0
         WHERE ps.patient_program_id = pp.patient_program_id AND ps.voided = 0
         ORDER BY ps.end_date IS NULL DESC, ps.start_date DESC, ps.patient_state_id DESC
         LIMIT 1
