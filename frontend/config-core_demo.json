@@ -211,12 +211,13 @@
         "id": "rhd-registration",
         "name": "RHD Registration",
         "fields": [
-          "assignedCardiacClinic",
-          "primaryCareClinic",
+          "consentStatement",
           "consentGiven",
           "consentRelationship",
           "consentPerson",
           "consentDate",
+          "assignedCardiacClinic",
+          "primaryCareClinic",
           "textItSettings",
           "primaryPhone",
           "phoneOwnerName",
@@ -227,6 +228,11 @@
       }
     ],
     "fieldDefinitions": [
+      {
+        "id": "consentStatement",
+        "type": "text",
+        "label": "I told the patient the following about the use of their health information: Their personal health information will go into a computer program that helps manage their heart care. The information will be kept on special computers in the United States that store their data. The data may be used for other purposes, such as researching ways to improve treatment for people with heart conditions around the world. No information that directly identifies them, such as their name or account numbers, will be shared with anyone else. Their treatment does not depend on giving this permission and they can change their mind anytime so that new health information will not be used or shared. The patient told me that they understood the risks related to this information, and the patient freely agreed to share their data."
+      },
       {
         "id": "assignedCardiacClinic",
         "type": "person attribute",
@@ -456,6 +462,16 @@
           "flag": "b1f7a2c0-0015-4a00-9000-000000000015",
           "form": "4b063fc7-996f-3001-8500-8940e201be8f",
           "concept": "c3edefd2-5777-5084-b01e-fd4ca0e40162"
+        },
+        {
+          "flag": "b1f7a2c0-0016-4a00-9000-000000000016",
+          "form": "4b063fc7-996f-3001-8500-8940e201be8f",
+          "concept": "ba4b8a87-2ce8-559e-9a30-45504a9b6c1f"
+        },
+        {
+          "flag": "b1f7a2c0-0017-4a00-9000-000000000017",
+          "form": "fe4848b2-a0b4-329f-a6a3-6ffc298e09a9",
+          "concept": "5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         }
       ]
     }
