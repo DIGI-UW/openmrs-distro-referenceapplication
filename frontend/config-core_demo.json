@@ -54,7 +54,8 @@
       "patient-chart-dashboard-slot": {
         "add": [
           "act-prophylaxis-dashboard-link",
-          "act-cardiac-tests-dashboard-link"
+          "act-cardiac-tests-dashboard-link",
+          "act-research-dashboard-link"
         ],
         "remove": [
           "patient-orders-summary-dashboard",
@@ -72,6 +73,7 @@
           "act-prophylaxis-dashboard-link",
           "encounters-summary-dashboard",
           "act-cardiac-tests-dashboard-link",
+          "act-research-dashboard-link",
           "results-summary-dashboard",
           "allergies-summary-dashboard",
           "programs-summary-dashboard",
@@ -203,6 +205,7 @@
           "assignedCardiacClinic",
           "primaryCareClinic",
           "consentGiven",
+          "consentRelationship",
           "consentPerson",
           "consentDate",
           "textItSettings",
@@ -247,10 +250,27 @@
         ]
       },
       {
+        "id": "consentRelationship",
+        "type": "person attribute",
+        "uuid": "23f7173b-bec5-5fac-81db-cbbb1046e05e",
+        "label": "Relationship to Patient",
+        "showHeading": true,
+        "customConceptAnswers": [
+          {
+            "uuid": "edebe52c-de16-5ba7-ad1c-9f0d6a2bb323",
+            "label": "Self"
+          },
+          {
+            "uuid": "3667d093-11ca-5dc5-8734-ec2dec08fcec",
+            "label": "Guardian"
+          }
+        ]
+      },
+      {
         "id": "consentPerson",
         "type": "person attribute",
         "uuid": "a8ff9d47-dcdc-579a-a9b3-1d883c4d344b",
-        "label": "Relationship to Patient",
+        "label": "Name of person giving consent (if Guardian)",
         "showHeading": true
       },
       {
