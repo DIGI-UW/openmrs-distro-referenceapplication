@@ -110,7 +110,16 @@
       "patient-actions-slot": {
         "remove": [
           "add-patient-to-patient-list-button"
-        ]
+        ],
+        "configure": {
+          "mark-patient-deceased-button": {
+            "Display conditions": {
+              "privileges": [
+                "Edit People"
+              ]
+            }
+          }
+        }
       }
     }
   },
