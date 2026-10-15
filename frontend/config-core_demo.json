@@ -10,7 +10,7 @@
       "Organizational: ACT Data Clerk": "act-community-home",
       "Organizational: ACT Clinician": "act-home",
       "Organizational: ACT Site Administrator": "act-home",
-      "Organizational: ACT Instance Administrator": "act-home",
+      "Organizational: ACT Instance Administrator": "act-instance-admin",
       "Organizational: ACT Global Administrator": "act-home"
     },
     "extensionSlots": {
@@ -18,6 +18,7 @@
         "order": [
           "act-home-dashboard-link",
           "act-community-home-dashboard-link",
+          "act-instance-admin-dashboard-link",
           "act-due-for-prophylaxis-dashboard-link",
           "act-facility-reports-dashboard-link",
           "act-registry-dashboard-link",

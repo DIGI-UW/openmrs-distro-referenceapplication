@@ -21,11 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      # The backend image's Maven build reads ACT Core from GitHub Packages with these credentials
+      # The backend image's Maven build reads ACT Core from GitHub Packages with these credentials.
+      # Kept next to the compose file so Buildx 0.19+ does not need an --allow=fs.read grant for ~/.m2
       - name: Write Maven settings for GitHub Packages
         run: |
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml << EOF
+          cat > ./tests/e2e/m2-settings.xml << EOF
           <settings>
             <servers>
               <server>

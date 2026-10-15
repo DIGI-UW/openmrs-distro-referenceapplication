@@ -8,6 +8,7 @@ f21b98fa-970e-489c-b9d0-eecd0a120b9d,,App: act.screenPositive,"Open Screen posit
 d3951a3c-ccca-422d-b8e8-b04886750734,,App: act.dueList,"Open Due for prophylaxis, and its widget on a home page"
 d34a1940-3069-4187-9990-e4b25f5a0b95,,App: act.communityHome,"Open Home, the community clinician's and data clerk's home, and its quick actions"
 1d6bc9cd-b604-4532-8cbd-e42af19e14e8,,App: act.dataClerk,"Open Facility reports, the Reports page for the session's clinic, and its quick action on Home"
+275d2109-8aa3-454b-bc17-c28e0973405f,,App: act.instanceAdmin,"Open the Instance dashboard: quick actions for clinics and role permissions, and the active and overdue patients"
 0ce25633-05ed-4b31-bb9b-f63d1dd91644,,App: act.reports,"Open Reports: programme numbers and the same by facility"
 a7360dfd-bdb8-461a-926e-c273d62bbff5,,App: act.statusFlags,"See the patient banner's prophylaxis and cardiology visit pills: red overdue, yellow due within 48 hours, green fine"
 7a99c7db-df54-43e7-b3b5-1fca4c86aa91,,Task: act.lists.export,"Download an ACT list as CSV"

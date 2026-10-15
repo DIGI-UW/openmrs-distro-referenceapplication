@@ -58,6 +58,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-openmrs}
 
 # ACT Core comes from DIGI-UW's GitHub Packages, which needs a token; the workflow writes this file
+# Kept inside the compose project so Buildx 0.19+ does not need an --allow=fs.read grant
 secrets:
   m2settings:
-    file: ~/.m2/settings.xml
+    file: ./m2-settings.xml
