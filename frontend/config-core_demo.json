@@ -238,22 +238,19 @@
         "id": "assignedCardiacClinic",
         "type": "person attribute",
         "uuid": "fe261119-2911-5b36-be40-8f9827826987",
-        "label": "Assigned Cardiac Clinic",
-        "showHeading": true
+        "label": "Assigned Cardiac Clinic"
       },
       {
         "id": "primaryCareClinic",
         "type": "person attribute",
         "uuid": "695f2990-236f-5d7c-b8aa-ddbdb22400f4",
-        "label": "Primary Care Clinic",
-        "showHeading": true
+        "label": "Primary Care Clinic"
       },
       {
         "id": "consentGiven",
         "type": "person attribute",
         "uuid": "e15bf9b7-249e-5d75-907d-937b8d9b0c46",
         "label": "Consent Obtained",
-        "showHeading": true,
         "customConceptAnswers": [
           {
             "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -270,7 +267,6 @@
         "type": "person attribute",
         "uuid": "23f7173b-bec5-5fac-81db-cbbb1046e05e",
         "label": "Relationship to Patient",
-        "showHeading": true,
         "customConceptAnswers": [
           {
             "uuid": "edebe52c-de16-5ba7-ad1c-9f0d6a2bb323",
@@ -286,15 +282,13 @@
         "id": "consentPerson",
         "type": "person attribute",
         "uuid": "a8ff9d47-dcdc-579a-a9b3-1d883c4d344b",
-        "label": "Name of person giving consent (if Guardian)",
-        "showHeading": true
+        "label": "Name of person giving consent (if Guardian)"
       },
       {
         "id": "consentDate",
         "type": "person attribute",
         "uuid": "b29617e3-c49e-5893-8dc7-e06b125a0264",
         "label": "Date of Consent",
-        "showHeading": true,
         "allowFutureDates": false
       },
       {
@@ -302,7 +296,6 @@
         "type": "person attribute",
         "uuid": "68b50c5e-250e-5dab-bd34-fb007756a7ed",
         "label": "Text-It Settings",
-        "showHeading": true,
         "customConceptAnswers": [
           {
             "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -318,29 +311,25 @@
         "id": "primaryPhone",
         "type": "person attribute",
         "uuid": "542c6fd2-05ca-53e3-a4f5-cd23bc1abd8f",
-        "label": "Primary Phone",
-        "showHeading": true
+        "label": "Primary Phone"
       },
       {
         "id": "phoneOwnerName",
         "type": "person attribute",
         "uuid": "ea3cb7ae-ffbe-5aee-8343-44977898f675",
-        "label": "Phone Owner Name",
-        "showHeading": true
+        "label": "Phone Owner Name"
       },
       {
         "id": "phoneOwnerRelationship",
         "type": "person attribute",
         "uuid": "b36b2e80-c1ad-5417-84fc-89075904a089",
-        "label": "Phone Owner Relationship",
-        "showHeading": true
+        "label": "Phone Owner Relationship"
       },
       {
         "id": "whatsappAvailable",
         "type": "person attribute",
         "uuid": "9b054d06-b812-5d57-b057-2e1b0338a888",
         "label": "WhatsApp Available",
-        "showHeading": true,
         "customConceptAnswers": [
           {
             "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -357,7 +346,6 @@
         "type": "person attribute",
         "uuid": "d6764a78-a775-501e-b2ce-8b8bd431fd74",
         "label": "Telegram Available",
-        "showHeading": true,
         "customConceptAnswers": [
           {
             "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
