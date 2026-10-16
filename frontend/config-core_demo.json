@@ -282,7 +282,11 @@
         "id": "consentPerson",
         "type": "person attribute",
         "uuid": "a8ff9d47-dcdc-579a-a9b3-1d883c4d344b",
-        "label": "Name of person giving consent (if Guardian)"
+        "label": "Name of person giving consent",
+        "showWhen": {
+          "field": "consentRelationship",
+          "answers": ["3667d093-11ca-5dc5-8734-ec2dec08fcec"]
+        }
       },
       {
         "id": "consentDate",
