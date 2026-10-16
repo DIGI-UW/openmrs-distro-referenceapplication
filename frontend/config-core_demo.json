@@ -401,6 +401,12 @@
       "showBpgColumns": true
     },
     "flagLists": {
+      "riskFlags": [
+        "RHD prophylaxis overdue",
+        "RHD oral prophylaxis overdue",
+        "RHD lost to follow-up",
+        "RHD no data for 5 months"
+      ],
       "flagForms": [
         {
           "flag": "b1f7a2c0-0005-4a00-9000-000000000005",
@@ -441,6 +447,11 @@
           "flag": "b1f7a2c0-0002-4a00-9000-000000000002",
           "form": "0119d2e6-e2e1-391c-9b88-d59a10b0780d",
           "concept": "183fb30e-b861-5b7c-806f-7118a40f2b51"
+        },
+        {
+          "flag": "b1f7a2c0-0018-4a00-9000-000000000018",
+          "form": "ba29e982-ce18-302a-9fc4-d4b2c3983465",
+          "concept": "99512ab5-208e-5c37-8f7b-8f72abe2a0db"
         },
         {
           "flag": "b1f7a2c0-0004-4a00-9000-000000000004",
