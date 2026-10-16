@@ -465,6 +465,9 @@
       ]
     }
   },
+  "@openmrs/esm-patient-forms-app": {
+    "customFormsUrl": "/ws/rest/v1/form?patient=${patientUuid}&v=custom:${representation}"
+  },
   "@openmrs/esm-fast-data-entry-app": {
     "formCategories": [
       {
