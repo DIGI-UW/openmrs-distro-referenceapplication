@@ -73,7 +73,7 @@ LEFT JOIN patient_identifier rhd_id
 LEFT JOIN person_attribute pa_primary
     ON pa_primary.person_id = p.person_id AND pa_primary.voided = 0
     AND pa_primary.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
-                                                WHERE name = 'Health Center' LIMIT 1)
+                                                WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')
 LEFT JOIN person_attribute pa_cardiac
     ON pa_cardiac.person_id = p.person_id AND pa_cardiac.voided = 0
     AND pa_cardiac.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
