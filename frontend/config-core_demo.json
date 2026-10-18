@@ -238,13 +238,19 @@
         "id": "assignedCardiacClinic",
         "type": "person attribute",
         "uuid": "fe261119-2911-5b36-be40-8f9827826987",
-        "label": "Assigned Cardiac Clinic"
+        "label": "Assigned Cardiac Clinic",
+        "validation": {
+          "required": true
+        }
       },
       {
         "id": "primaryCareClinic",
         "type": "person attribute",
         "uuid": "695f2990-236f-5d7c-b8aa-ddbdb22400f4",
-        "label": "Primary Care Clinic"
+        "label": "Primary Care Clinic",
+        "validation": {
+          "required": true
+        }
       },
       {
         "id": "consentGiven",
@@ -260,13 +266,16 @@
             "uuid": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
             "label": "No"
           }
-        ]
+        ],
+        "validation": {
+          "required": true
+        }
       },
       {
         "id": "consentRelationship",
         "type": "person attribute",
         "uuid": "23f7173b-bec5-5fac-81db-cbbb1046e05e",
-        "label": "Relationship to Patient",
+        "label": "Relationship to Patient (optional)",
         "customConceptAnswers": [
           {
             "uuid": "edebe52c-de16-5ba7-ad1c-9f0d6a2bb323",
@@ -288,14 +297,14 @@
         "id": "consentDate",
         "type": "person attribute",
         "uuid": "b29617e3-c49e-5893-8dc7-e06b125a0264",
-        "label": "Date of Consent",
+        "label": "Date of Consent (required if consent is Yes)",
         "allowFutureDates": false
       },
       {
         "id": "textItSettings",
         "type": "person attribute",
         "uuid": "68b50c5e-250e-5dab-bd34-fb007756a7ed",
-        "label": "Text-It Settings",
+        "label": "Text-It Settings (optional)",
         "customConceptAnswers": [
           {
             "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -329,7 +338,7 @@
         "id": "whatsappAvailable",
         "type": "person attribute",
         "uuid": "9b054d06-b812-5d57-b057-2e1b0338a888",
-        "label": "WhatsApp Available",
+        "label": "WhatsApp Available (optional)",
         "customConceptAnswers": [
           {
             "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -345,7 +354,7 @@
         "id": "telegramAvailable",
         "type": "person attribute",
         "uuid": "d6764a78-a775-501e-b2ce-8b8bd431fd74",
-        "label": "Telegram Available",
+        "label": "Telegram Available (optional)",
         "customConceptAnswers": [
           {
             "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",

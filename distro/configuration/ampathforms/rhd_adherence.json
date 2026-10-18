@@ -31,15 +31,19 @@
               "type": "obs",
               "questionOptions": {
                 "rendering": "number",
-                "concept": "8edff8dc-4af6-5d0f-bf1d-8e349c7a1b15"
-              }
+                "concept": "8edff8dc-4af6-5d0f-bf1d-8e349c7a1b15",
+                "min": "0",
+                "max": "100",
+                "disallowDecimals": true
+              },
+              "required": true
             },
             {
               "label": "Adherence Based On",
               "id": "adherence_estimate_based_on",
               "type": "obs",
               "questionOptions": {
-                "rendering": "select",
+                "rendering": "checkbox",
                 "concept": "4313005d-d5b2-5d20-bf33-39aab1bf90c0",
                 "answers": [
                   {
