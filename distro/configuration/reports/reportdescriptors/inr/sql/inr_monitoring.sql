@@ -5,7 +5,7 @@
 -- Concepts used:
 --   Indication:    6e8ed53f-15e6-5b00-9ed0-44b11bd2d638
 --   INR Group:     bd88ecf3-eac2-516a-8949-a93f90d6483b  (obsGroup)
---   INR Target:    0778ce12-ddba-5e22-b5fd-92424e8747b4  (coded obs on encounter, not in group)
+--   INR Target:    0778ce12-ddba-5e22-b5fd-92424e8747b4  (top-level obs, not a child of the INR group)
 --     Answer 1.5-2.5: 2822a113-1cd3-510e-b5bf-95b9279b1a4f
 --     Answer 2.0-3.0: d894d89a-04bd-5fc0-91a0-5dc3ddd8802b
 --     Answer 2.5-3.5: ea841a3a-f9cb-5761-aac6-939ffb158d94
@@ -96,7 +96,7 @@ LEFT JOIN obs inr_group
     AND inr_group.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'bd88ecf3-eac2-516a-8949-a93f90d6483b')
     AND inr_group.obs_group_id IS NULL
 
--- INR Target (coded obs on encounter, not in group)
+-- INR Target: the form saves it outside the INR group, so join on the encounter, not inr_group
 LEFT JOIN obs inr_target_obs
     ON inr_target_obs.encounter_id = e.encounter_id
     AND inr_target_obs.voided = 0
