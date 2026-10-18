@@ -4,8 +4,8 @@
 -- Encounter type: RHD INR Monitoring (b4bb88a3-9a04-5142-85bd-bb63c270f632)
 -- Concepts used:
 --   Indication:    6e8ed53f-15e6-5b00-9ed0-44b11bd2d638
---   INR Group:     0778ce12-ddba-5e22-b5fd-92424e8747b4  (obsGroup)
---   INR Target:    0778ce12-ddba-5e22-b5fd-92424e8747b4  (coded answer in group)
+--   INR Group:     bd88ecf3-eac2-516a-8949-a93f90d6483b  (obsGroup)
+--   INR Target:    0778ce12-ddba-5e22-b5fd-92424e8747b4  (coded obs on encounter, not in group)
 --     Answer 1.5-2.5: 2822a113-1cd3-510e-b5bf-95b9279b1a4f
 --     Answer 2.0-3.0: d894d89a-04bd-5fc0-91a0-5dc3ddd8802b
 --     Answer 2.5-3.5: ea841a3a-f9cb-5761-aac6-939ffb158d94
@@ -93,14 +93,16 @@ LEFT JOIN obs indication_obs
 LEFT JOIN obs inr_group
     ON inr_group.encounter_id = e.encounter_id
     AND inr_group.voided = 0
-    AND inr_group.concept_id = (SELECT concept_id FROM concept WHERE uuid = '0778ce12-ddba-5e22-b5fd-92424e8747b4')
+    AND inr_group.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'bd88ecf3-eac2-516a-8949-a93f90d6483b')
     AND inr_group.obs_group_id IS NULL
 
--- INR Target (coded, child of group)
+-- INR Target (coded obs on encounter, not in group)
 LEFT JOIN obs inr_target_obs
-    ON inr_target_obs.obs_group_id = inr_group.obs_id
+    ON inr_target_obs.encounter_id = e.encounter_id
     AND inr_target_obs.voided = 0
     AND inr_target_obs.concept_id = (SELECT concept_id FROM concept WHERE uuid = '0778ce12-ddba-5e22-b5fd-92424e8747b4')
+    AND inr_target_obs.obs_group_id IS NULL
+    AND inr_target_obs.value_coded IS NOT NULL
 
 -- INR Date (child of group)
 LEFT JOIN obs inr_date_obs
