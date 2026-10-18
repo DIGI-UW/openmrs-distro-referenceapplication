@@ -392,7 +392,12 @@
         "isRiskPriority": true
       },
       {
-        "priority": "RHD Data Quality"
+        "priority": "RHD Data Quality",
+        "color": "orange"
+      },
+      {
+        "priority": "RHD Early Warning",
+        "color": "blue"
       }
     ]
   },
