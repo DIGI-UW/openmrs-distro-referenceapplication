@@ -101,6 +101,18 @@
               }
             },
             {
+              "label": "Other explanation",
+              "id": "other_explanation_adherence_below_80",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "4f2b5123-e9e5-5073-81b5-b656aa3d5d9a"
+              },
+              "hide": {
+                "hideWhenExpression": "explanation_adherence_below_80 !== '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            },
+            {
               "label": "New Prescription Duration",
               "id": "prescription_duration",
               "type": "obs",

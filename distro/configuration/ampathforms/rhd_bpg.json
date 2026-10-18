@@ -158,6 +158,18 @@
               }
             },
             {
+              "label": "Other reason injection late",
+              "id": "other_reason_injection_late",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "cf031680-957d-561e-a027-45015afdf80b"
+              },
+              "hide": {
+                "hideWhenExpression": "if_injection_is_late_why !== 'a620dfe1-9626-5d26-8149-e85646e0c3cc'"
+              }
+            },
+            {
               "label": "Injection Tolerance",
               "id": "injection_tolerance",
               "type": "obs",
@@ -191,6 +203,18 @@
                     "conceptMappings": []
                   }
                 ]
+              }
+            },
+            {
+              "label": "Other injection tolerance",
+              "id": "other_injection_tolerance",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "dc8a4de6-3685-5b83-82d5-d32e13eaa71e"
+              },
+              "hide": {
+                "hideWhenExpression": "!includes(injection_tolerance, '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
               }
             }
           ]
