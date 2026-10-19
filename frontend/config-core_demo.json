@@ -392,6 +392,12 @@
   },
   "@openmrs/esm-patient-flags-app": {
     "allowFlagDeletion": false,
+    "flagActions": [
+      {
+        "flagName": "RHD consent date missing",
+        "url": "${openmrsSpaBase}/patient/${patientUuid}/edit"
+      }
+    ],
     "tagActions": [
       {
         "tagName": "RHD",
