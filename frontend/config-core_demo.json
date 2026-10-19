@@ -396,6 +396,10 @@
       {
         "flagName": "RHD consent date missing",
         "url": "${openmrsSpaBase}/patient/${patientUuid}/edit"
+      },
+      {
+        "flagName": "RHD death not recorded on patient",
+        "workspace": "mark-patient-deceased-workspace-form"
       }
     ],
     "tagActions": [
