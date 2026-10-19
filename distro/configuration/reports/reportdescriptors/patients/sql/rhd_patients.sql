@@ -6,7 +6,7 @@
 SELECT
     -- Identifiers
     MAX(rhd_id.identifier)                                          AS rhd_id,
-    MAX(ext_id.identifier)                                          AS external_id,
+    COALESCE(MAX(alt_id.identifier), MAX(ext_id.identifier))        AS external_id,
     MAX(nat_id.identifier)                                          AS national_id,
 
     -- Demographics
@@ -262,11 +262,15 @@ LEFT JOIN patient_identifier rhd_id
     ON rhd_id.patient_id = p.person_id AND rhd_id.voided = 0
     AND rhd_id.identifier_type = (SELECT patient_identifier_type_id FROM patient_identifier_type
                                    WHERE uuid = '240f85fa-46e1-540e-9234-2796c623f7ea')
--- Alternate ID, which registration records, or an External Patient ID
+-- Alternate ID, which registration records; an External Patient ID only when there is none
+LEFT JOIN patient_identifier alt_id
+    ON alt_id.patient_id = p.person_id AND alt_id.voided = 0
+    AND alt_id.identifier_type = (SELECT patient_identifier_type_id FROM patient_identifier_type
+                                   WHERE uuid = '060a2595-da89-5509-8cf4-645a8e50ad8a')
 LEFT JOIN patient_identifier ext_id
     ON ext_id.patient_id = p.person_id AND ext_id.voided = 0
-    AND ext_id.identifier_type IN (SELECT patient_identifier_type_id FROM patient_identifier_type
-                                   WHERE uuid IN ('060a2595-da89-5509-8cf4-645a8e50ad8a', '810bfaee-85de-5a81-b79c-954774076594'))
+    AND ext_id.identifier_type = (SELECT patient_identifier_type_id FROM patient_identifier_type
+                                   WHERE uuid = '810bfaee-85de-5a81-b79c-954774076594')
 -- National ID
 LEFT JOIN patient_identifier nat_id
     ON nat_id.patient_id = p.person_id AND nat_id.voided = 0
