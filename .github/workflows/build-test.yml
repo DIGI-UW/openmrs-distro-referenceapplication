@@ -10,7 +10,8 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # the validator's Testcontainers client is too old for ubuntu-26.04's Docker; drop the pin once it is upgraded
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       # ACT Core is pulled from DIGI-UW's GitHub Packages, which needs a token even to read
