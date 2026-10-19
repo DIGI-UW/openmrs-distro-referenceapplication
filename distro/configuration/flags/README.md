@@ -21,6 +21,7 @@ A criteria that works for every patient can still be wrong for one. Then the fla
 - End the outer query with its `WHERE` conditions. A top-level `ORDER BY`, `GROUP BY`, `HAVING` or `LIMIT` breaks the appended condition. Put them in a subquery.
 - Wrap any top-level `OR` in parentheses: `WHERE a OR b and pat.patient_id = 7` filters only `b`.
 - No trailing line comment (`--` or `#`). The appended condition would end up inside it.
+- Keep `description` to 255 characters, and keep commas out of any unquoted field. A longer description fails validation and Initializer skips the whole row, criteria included, so the flag keeps its previous text.
 
 To check a new flag, run its criteria as written, then once per patient with the condition appended, and compare the results.
 

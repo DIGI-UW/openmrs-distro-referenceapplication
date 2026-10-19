@@ -49,6 +49,14 @@
 			<value>8edff8dc-4af6-5d0f-bf1d-8e349c7a1b15</value>
 		</globalProperty>
 		<globalProperty>
+			<property>actcore.adherence.estimateDateConcept</property>
+			<value>99512ab5-208e-5c37-8f7b-8f72abe2a0db</value>
+		</globalProperty>
+		<globalProperty>
+			<property>actcore.adherence.oralFirstDueDays</property>
+			<value>0</value>
+		</globalProperty>
+		<globalProperty>
 			<property>actcore.adherence.prescriptionDurationConcept</property>
 			<value>cd03af00-de81-5c08-9a02-92f95c00e1ce</value>
 		</globalProperty>
@@ -103,6 +111,34 @@
 		<globalProperty>
 			<property>actcore.nextSteps.nextInrDateConcept</property>
 			<value>5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</value>
+		</globalProperty>
+		<globalProperty>
+			<property>actcore.registryProgram</property>
+			<value>7d73e143-a550-5a9d-aecd-dd771add098d</value>
+		</globalProperty>
+		<globalProperty>
+			<property>actcore.studyTemplateProgram</property>
+			<value>6b3c0479-95ee-516d-8d72-a66bf902978b</value>
+		</globalProperty>
+		<globalProperty>
+			<property>actcore.listFlagTag</property>
+			<value></value>
+		</globalProperty>
+		<globalProperty>
+			<property>actcore.listCohortType</property>
+			<value>System List</value>
+		</globalProperty>
+		<globalProperty>
+			<property>actcore.consultation.nextAmountConcept</property>
+			<value>ba4b8a87-2ce8-559e-9a30-45504a9b6c1f</value>
+		</globalProperty>
+		<globalProperty>
+			<property>actcore.consultation.nextPeriodConcept</property>
+			<value>1732AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</value>
+		</globalProperty>
+		<globalProperty>
+			<property>actcore.forms.femaleOnly</property>
+			<value>a4f9103b-8396-3087-8cf4-e91610ec7c2d</value>
 		</globalProperty>
 	</globalProperties>
 </config>
