@@ -60,7 +60,6 @@
         ],
         "remove": [
           "patient-orders-summary-dashboard",
-          "test-results-summary-dashboard",
           "billing-summary-dashboard-link",
           "patient-appointments-summary-dashboard",
           "attachments-results-summary-dashboard",
@@ -74,12 +73,22 @@
           "act-prophylaxis-dashboard-link",
           "encounters-summary-dashboard",
           "act-cardiac-tests-dashboard-link",
+          "test-results-summary-dashboard",
           "act-research-dashboard-link",
           "results-summary-dashboard",
           "allergies-summary-dashboard",
           "programs-summary-dashboard",
           "growth-chart-dashboard-link"
-        ]
+        ],
+        "configure": {
+          "test-results-summary-dashboard": {
+            "Display conditions": {
+              "privileges": [
+                "Task: act.enterClinicalForms"
+              ]
+            }
+          }
+        }
       },
       "patient-chart-summary-dashboard-slot": {
         "remove": [
@@ -131,6 +140,14 @@
         }
       }
     }
+  },
+  "@openmrs/esm-patient-tests-app": {
+    "resultsViewerConcepts": [
+      {
+        "conceptUuid": "161482AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "defaultOpen": true
+      }
+    ]
   },
   "@openmrs/esm-ward-app": {
     "extensionSlots": {
