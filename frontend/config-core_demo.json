@@ -234,6 +234,18 @@
     ],
     "sectionDefinitions": [
       {
+        "id": "contact",
+        "name": "Contact Details",
+        "fields": [
+          "address",
+          "primaryPhone",
+          "phoneOwnerName",
+          "phoneOwnerRelationship",
+          "whatsappAvailable",
+          "telegramAvailable"
+        ]
+      },
+      {
         "id": "rhd-registration",
         "name": "RHD Registration",
         "fields": [
@@ -244,12 +256,7 @@
           "consentDate",
           "assignedCardiacClinic",
           "primaryCareClinic",
-          "textItSettings",
-          "primaryPhone",
-          "phoneOwnerName",
-          "phoneOwnerRelationship",
-          "whatsappAvailable",
-          "telegramAvailable"
+          "textItSettings"
         ]
       }
     ],
