@@ -212,6 +212,8 @@ SELECT
          WHEN MAX(adh.regimen_concept_id) IS NOT NULL THEN 'Oral' END   AS prophylaxis_type,
     MAX(adh.injection_interval_days)                                AS injection_interval_days,
     DATE(MAX(adh.last_given))                                       AS last_injection_date,
+    -- The last dose ACT Core knows of was given today, on the server's clock: Enter prophylaxis says Recorded today
+    CASE WHEN DATE(MAX(adh.last_given)) = CURDATE() THEN 1 ELSE 0 END AS recorded_today,
     DATE(MAX(adh.next_due))                                         AS next_due_date,
     DATEDIFF(MAX(adh.next_due), CURDATE())                          AS days_until_due,
     ROUND(MAX(adh.adherence) * 100)                                 AS adherence,

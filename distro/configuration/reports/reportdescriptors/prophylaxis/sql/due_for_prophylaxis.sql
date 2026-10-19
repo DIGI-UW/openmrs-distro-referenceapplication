@@ -1,8 +1,9 @@
 -- =============================================================================
 -- Due for Prophylaxis
 -- One row per living patient enrolled in the RHD Registry now whose next dose, in ACT Core's
--- actcore_prophylaxis_adherence, is due in the next two days, due today or overdue. That table is rebuilt by ACT Core's daily
--- adherence refresh, so a dose recorded today shows after the next run.
+-- actcore_prophylaxis_adherence, is due in the next two days, due today or overdue. ACT Core rewrites that table's row
+-- when a dose is saved and rebuilds it all in its daily refresh, so a dose recorded today moves the patient's next due
+-- date at once; recorded_today says whether the last dose ACT Core knows of was given today.
 -- =============================================================================
 SELECT
     p.uuid                                                          AS patient_uuid,
@@ -18,6 +19,8 @@ SELECT
          WHEN a.next_due = CURDATE() THEN 'due_today'
          ELSE 'due_soon' END                                        AS status,
     ROUND(a.adherence * 100)                                        AS adherence,
+    -- The last dose is dated today, on the server's clock as status is: the due list says Recorded today
+    CASE WHEN a.last_given = CURDATE() THEN 1 ELSE 0 END            AS recorded_today,
     MAX(primary_loc.name)                                           AS primary_care_clinic
 
 FROM patient_program pp
