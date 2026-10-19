@@ -190,6 +190,22 @@
               ]
             },
             {
+              "label": "Category at diagnosis",
+              "id": "category_at_diagnosis",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "1a5aa050-661d-5e89-95d7-c1eba476df22",
+                "isTransient": true,
+                "calculate": {
+                  "calculateExpression": "resolve(api.getLatestObs(patient.id, '1a5aa050-661d-5e89-95d7-c1eba476df22', 'ffdc883f-f99f-496a-83f9-2c3c581e1af0')).then(obs => obs?.valueCodeableConcept?.coding?.[0]?.code ?? '')"
+                }
+              },
+              "hide": {
+                "hideWhenExpression": "true"
+              }
+            },
+            {
               "label": "RACHs Score",
               "id": "rachs_score",
               "type": "obs",
@@ -235,7 +251,7 @@
                 ]
               },
               "hide": {
-                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'"
+                "hideWhenExpression": "procedure_type !== 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616' || category_at_diagnosis !== '365e75bb-35bc-503f-b8db-53bea2528d1b'"
               }
             },
             {
