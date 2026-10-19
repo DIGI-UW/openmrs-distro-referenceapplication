@@ -18,7 +18,7 @@ WITH rhd_active AS (
 diagnosis AS (
     SELECT g.person_id, g.obs_id, g.obs_datetime
     FROM obs g
-    WHERE g.voided = 0 AND g.obs_datetime <= @endDate
+    WHERE g.voided = 0 AND g.obs_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
       AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
       AND EXISTS (SELECT 1 FROM obs has_cat WHERE has_cat.obs_group_id = g.obs_id AND has_cat.voided = 0
                   AND has_cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22'))
@@ -51,7 +51,7 @@ sap_encounter AS (
            SUBSTRING_INDEX(GROUP_CONCAT(o.encounter_id ORDER BY o.obs_datetime DESC, o.obs_id DESC), ',', 1) AS encounter_id
     FROM obs o
     JOIN rhd r ON r.patient_id = o.person_id
-    WHERE o.voided = 0 AND o.value_coded IS NOT NULL AND o.obs_datetime <= @endDate
+    WHERE o.voided = 0 AND o.value_coded IS NOT NULL AND o.obs_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
       AND o.concept_id = (SELECT concept_id FROM concept WHERE uuid = '668e0221-8b41-5669-9ad8-78e193d42494')
     GROUP BY o.person_id
 ),
@@ -81,7 +81,7 @@ initiated AS (
     SELECT b.person_id FROM bpg b
     WHERE EXISTS (SELECT 1 FROM obs d WHERE d.person_id = b.person_id AND d.voided = 0
                     AND d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '183fb30e-b861-5b7c-806f-7118a40f2b51')
-                    AND d.value_datetime IS NOT NULL AND d.obs_datetime <= @endDate)
+                    AND d.value_datetime IS NOT NULL AND d.obs_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY))
 ),
 -- ACT Core's adherence as of its last run, not the end date.
 adherence AS (

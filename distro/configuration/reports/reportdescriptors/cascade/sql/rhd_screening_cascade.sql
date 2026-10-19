@@ -19,7 +19,7 @@ WITH scr_active AS (
 diagnosis AS (
     SELECT g.person_id, g.obs_id, g.obs_datetime
     FROM obs g
-    WHERE g.voided = 0 AND g.obs_datetime <= @endDate
+    WHERE g.voided = 0 AND g.obs_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
       AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
       AND EXISTS (SELECT 1 FROM obs has_cat WHERE has_cat.obs_group_id = g.obs_id AND has_cat.voided = 0
                   AND has_cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22'))
@@ -45,12 +45,12 @@ category AS (
 screened_positive AS (
     SELECT a.patient_id
     FROM scr_active a
-    JOIN obs s ON s.person_id = a.patient_id AND s.voided = 0 AND s.obs_datetime <= @endDate
+    JOIN obs s ON s.person_id = a.patient_id AND s.voided = 0 AND s.obs_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
      AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = '82a5fbb5-038d-57b8-82d1-3fd0ac95673d')
      AND s.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
     WHERE NOT EXISTS (SELECT 1 FROM obs later
                       WHERE later.person_id = s.person_id AND later.concept_id = s.concept_id AND later.voided = 0
-                        AND later.obs_datetime <= @endDate
+                        AND later.obs_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
                         AND (later.obs_datetime > s.obs_datetime OR (later.obs_datetime = s.obs_datetime AND later.obs_id > s.obs_id)))
 )
 SELECT 1 AS step_order, 'Active' AS step, COUNT(*) AS patients
