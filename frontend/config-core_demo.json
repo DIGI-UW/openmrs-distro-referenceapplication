@@ -81,6 +81,14 @@
           "growth-chart-dashboard-link"
         ]
       },
+      "patient-chart-summary-dashboard-slot": {
+        "remove": [
+          "conditions-overview-widget",
+          "active-medications-widget",
+          "future-medications-widget",
+          "past-medications-widget"
+        ]
+      },
       "patient-banner-tags-slot": {
         "remove": [
           "queue-patient-info-queue-entry-status",
