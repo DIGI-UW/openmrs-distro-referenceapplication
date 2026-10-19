@@ -81,7 +81,8 @@ jobs:
           overwrite: true
 
   run-e2e-tests:
-    runs-on: ubuntu-latest
+    # Playwright 1.58 cannot install browsers on ubuntu-26.04; drop the pin once it can
+    runs-on: ubuntu-24.04
     needs: build
     timeout-minutes: 15
     strategy:
