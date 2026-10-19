@@ -242,7 +242,12 @@
           "phoneOwnerName",
           "phoneOwnerRelationship",
           "whatsappAvailable",
-          "telegramAvailable"
+          "telegramAvailable",
+          "secondaryPhone",
+          "secondaryPhoneOwnerName",
+          "secondaryPhoneOwnerRelationship",
+          "secondaryWhatsappAvailable",
+          "secondaryTelegramAvailable"
         ]
       },
       {
@@ -387,6 +392,56 @@
         "type": "person attribute",
         "uuid": "d6764a78-a775-501e-b2ce-8b8bd431fd74",
         "label": "Telegram Available (optional)",
+        "customConceptAnswers": [
+          {
+            "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "label": "Yes"
+          },
+          {
+            "uuid": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "id": "secondaryPhone",
+        "type": "person attribute",
+        "uuid": "c6f4ebdf-4eca-5d21-97cb-f45231b5c104",
+        "label": "Secondary Phone"
+      },
+      {
+        "id": "secondaryPhoneOwnerName",
+        "type": "person attribute",
+        "uuid": "168367b1-0a0e-5a5b-bd21-95a5ca1986d4",
+        "label": "Secondary Phone Owner Name"
+      },
+      {
+        "id": "secondaryPhoneOwnerRelationship",
+        "type": "person attribute",
+        "uuid": "bddb0074-736d-55e7-8765-14c62c1591a6",
+        "label": "Secondary Phone Owner Relationship"
+      },
+      {
+        "id": "secondaryWhatsappAvailable",
+        "type": "person attribute",
+        "uuid": "5df4e478-2752-564b-be07-30b502b18fed",
+        "label": "Secondary Phone WhatsApp Available (optional)",
+        "customConceptAnswers": [
+          {
+            "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "label": "Yes"
+          },
+          {
+            "uuid": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "id": "secondaryTelegramAvailable",
+        "type": "person attribute",
+        "uuid": "65245e71-1061-5e39-900b-e83b92171d78",
+        "label": "Secondary Phone Telegram Available (optional)",
         "customConceptAnswers": [
           {
             "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
