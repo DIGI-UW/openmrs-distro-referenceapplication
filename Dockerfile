@@ -42,3 +42,8 @@ COPY --from=dev /openmrs/distribution/openmrs-distro.properties /openmrs/distrib
 COPY --from=dev /openmrs/distribution/openmrs_modules /openmrs/distribution/openmrs_modules
 COPY --from=dev /openmrs/distribution/openmrs_owas /openmrs/distribution/openmrs_owas
 COPY --from=dev  /openmrs/distribution/openmrs_config /openmrs/distribution/openmrs_config
+
+# The audit log module reads Envers' revisions, so Envers is on; hbm2ddl.auto=update creates the audit tables
+# before the first audited write, as the module prescribes
+ENV OMRS_EXTRA_HIBERNATE_INTEGRATION_ENVERS_ENABLED="true"
+ENV OMRS_EXTRA_HIBERNATE_HBM2DDL_AUTO="update"
