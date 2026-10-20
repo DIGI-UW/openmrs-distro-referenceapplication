@@ -507,7 +507,7 @@
       }
     ]
   },
-  "@mherman22/esm-act-app": {
+  "@act-registry/esm-act-app": {
     "registry": {
       "showBpgColumns": true
     },
