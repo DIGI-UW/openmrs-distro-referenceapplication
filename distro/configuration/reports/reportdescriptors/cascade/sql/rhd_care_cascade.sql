@@ -1,7 +1,7 @@
 -- =============================================================================
 -- RHD Care Cascade
 -- Step names are the ACT Registry prototype's; ACT home's widget matches them by name.
--- Parameter: @endDate
+-- Parameters: @endDate; @cardiacClinic and @primaryCareClinic, location uuids, each counting only its patients when set
 -- =============================================================================
 WITH rhd_active AS (
     SELECT DISTINCT pp.patient_id
@@ -12,6 +12,20 @@ WITH rhd_active AS (
     WHERE pp.voided = 0
       AND DATE(pp.date_enrolled) <= DATE(@endDate)
       AND (pp.date_completed IS NULL OR DATE(pp.date_completed) > DATE(@endDate))
+      AND (@cardiacClinic IS NULL OR @cardiacClinic = '' OR EXISTS (
+          SELECT 1 FROM person_attribute pa
+          JOIN location l ON l.location_id = pa.value AND l.uuid = @cardiacClinic
+          WHERE pa.person_id = pp.patient_id AND pa.voided = 0
+            AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
+                                                WHERE uuid = 'fe261119-2911-5b36-be40-8f9827826987')
+      ))
+      AND (@primaryCareClinic IS NULL OR @primaryCareClinic = '' OR EXISTS (
+          SELECT 1 FROM person_attribute pa
+          JOIN location l ON l.location_id = pa.value AND l.uuid = @primaryCareClinic
+          WHERE pa.person_id = pp.patient_id AND pa.voided = 0
+            AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
+                                                WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')
+      ))
 ),
 -- Each patient's latest Diagnosis group by the end date with a Category and not answered inactive or secondary, as ACT 2.0
 -- took the active primary diagnosis (unanswered counts, as those questions did not load before 2026-10-07).
