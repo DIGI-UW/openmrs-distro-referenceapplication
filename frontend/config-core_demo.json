@@ -25,7 +25,8 @@
           "act-worklists-dashboard-link",
           "act-waiting-list-dashboard-link",
           "act-screen-positive-dashboard-link",
-          "act-reports-dashboard-link"
+          "act-reports-dashboard-link",
+          "act-scan-patient-card-dashboard-link"
         ],
         "remove": [
           "clinical-appointments-dashboard-link",
@@ -140,6 +141,9 @@
         }
       }
     }
+  },
+  "@openmrs/esm-patient-label-printing-app": {
+    "showPrintIdentifierStickerButton": true
   },
   "@openmrs/esm-patient-tests-app": {
     "resultsViewerConcepts": [
