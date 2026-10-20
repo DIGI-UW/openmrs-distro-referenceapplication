@@ -546,6 +546,34 @@
           "isExpanded": "true",
           "questions": [
             {
+              "label": "Last echocardiogram",
+              "id": "last_echocardiogram",
+              "type": "obs",
+              "readonly": true,
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "ad533240-b503-5b82-a2fd-c7b69868d632",
+                "isTransient": true,
+                "calculate": {
+                  "calculateExpression": "resolve(api.getPreviousEncounter(patient.id, '730f5ec2-7102-55d0-8602-2d792844f245')).then(e => !e ? 'None recorded' : [((e.obs.filter(o => !o.voided && o.concept.uuid === '911be530-9457-54be-8515-4bbcdb832ccb').map(o => o.value && o.value.name ? o.value.name.name : o.value)[0] || e.encounterDatetime) + '').slice(0, 10)].concat(e.obs.filter(o => !o.voided && o.concept.uuid === 'd6ab05e2-1ece-5f8f-893d-74739aa66ce5').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'MR ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === 'ed209fc3-0138-516c-a0bd-bcd3b2697a87').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'MS ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === '0bbc510f-1e95-5c74-bbe3-8896907fd6c1').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'AR ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === '7586c9a6-73db-5ab2-8f23-71a3cc4bae62').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'AS ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === 'ed630fda-8451-53c0-929e-40eafd9bca9b').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'EF ' + x + '%')).join(', '))"
+                }
+              }
+            },
+            {
+              "label": "Last electrocardiogram",
+              "id": "last_electrocardiogram",
+              "type": "obs",
+              "readonly": true,
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "67d65827-eea5-57ac-ae8b-77f91d128063",
+                "isTransient": true,
+                "calculate": {
+                  "calculateExpression": "resolve(api.getPreviousEncounter(patient.id, '64c3f35f-a3ec-59d6-8178-0ca9f068cda8')).then(e => !e ? 'None recorded' : [((e.obs.filter(o => !o.voided && o.concept.uuid === 'a85d4e63-500f-5af9-8ebd-9e1db5ddc3ed').map(o => o.value && o.value.name ? o.value.name.name : o.value)[0] || e.encounterDatetime) + '').slice(0, 10)].concat(e.obs.filter(o => !o.voided && o.concept.uuid === '1c5476e4-ff12-5fbd-b2ad-53f66f9006a0').map(o => o.value && o.value.name ? o.value.name.name : o.value), e.obs.filter(o => !o.voided && o.concept.uuid === '67d65827-eea5-57ac-ae8b-77f91d128063').map(o => o.value && o.value.name ? o.value.name.name : o.value)).join(', '))"
+                }
+              }
+            },
+            {
               "label": "Key Findings/Recommendations from this Visit",
               "id": "key_findings_recommendations",
               "type": "obs",
@@ -1109,6 +1137,23 @@
                   }
                 }
               ]
+            },
+            {
+              "label": "Latest INR",
+              "id": "latest_inr",
+              "type": "obs",
+              "readonly": true,
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "f27f6ed2-48db-5be7-91da-3e2483915462",
+                "isTransient": true,
+                "calculate": {
+                  "calculateExpression": "resolve(api.getLatestObs(patient.id, '161482AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'b4bb88a3-9a04-5142-85bd-bb63c270f632')).then(i => !i ? '' : resolve(api.getLatestObs(patient.id, '0778ce12-ddba-5e22-b5fd-92424e8747b4', 'b4bb88a3-9a04-5142-85bd-bb63c270f632')).then(t => i.valueQuantity.value + ' on ' + (i.effectiveDateTime + '').slice(0, 10) + (t && t.valueCodeableConcept ? ', target ' + (t.valueCodeableConcept.text || t.valueCodeableConcept.coding[0].display) : '')))"
+                }
+              },
+              "hide": {
+                "hideWhenExpression": "isEmpty(latest_inr)"
+              }
             }
           ]
         },
