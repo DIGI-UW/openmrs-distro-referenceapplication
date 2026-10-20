@@ -343,6 +343,11 @@
                       "type": "js_expression",
                       "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
                       "message": "Choose a Category first"
+                    },
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "isEmpty(myValue) && !isEmpty(category_at_diagnosis)",
+                      "message": "Required when a Category is chosen"
                     }
                   ]
                 },
@@ -371,6 +376,11 @@
                       "type": "js_expression",
                       "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
                       "message": "Choose a Category first"
+                    },
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "isEmpty(myValue) && !isEmpty(category_at_diagnosis)",
+                      "message": "Required when a Category is chosen"
                     }
                   ]
                 },
@@ -387,6 +397,11 @@
                       "type": "js_expression",
                       "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
                       "message": "Choose a Category first"
+                    },
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "isEmpty(myValue) && !isEmpty(category_at_diagnosis)",
+                      "message": "Required when a Category is chosen"
                     }
                   ]
                 },
