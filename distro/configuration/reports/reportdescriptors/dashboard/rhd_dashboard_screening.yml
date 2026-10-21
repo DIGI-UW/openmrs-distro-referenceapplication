@@ -1,0 +1,25 @@
+key: rhdDashboardScreening
+uuid: "324be9a8-b377-4c57-88a2-0bff6bc271fc"
+name: "RHD Dashboard Screening"
+description: "RHD Registry patients enrolled in a period, by Screen +, how their case was detected, age band and sex, for the Dashboard"
+parameters:
+  - key: startDate
+    type: java.util.Date
+    label: "Enrolled from"
+  - key: endDate
+    type: java.util.Date
+    label: "Enrolled to"
+  - key: cardiacClinic
+    type: java.lang.String
+    label: "Cardiac clinic (location uuid)"
+    required: false
+  - key: primaryCareClinic
+    type: java.lang.String
+    label: "Primary care clinic (location uuid)"
+    required: false
+datasets:
+  - key: screeningData
+    type: sql
+    config: "sql/rhd_dashboard_screening.sql"
+designs:
+  - type: csv

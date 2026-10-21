@@ -1,0 +1,22 @@
+key: rhdDashboardRegistrants
+uuid: "a2ca1cb0-e35e-4c42-8ffb-398283396165"
+name: "RHD Dashboard Registrants"
+description: "RHD Registry patients counted by status, and by age band, sex and diagnosis, for the Dashboard"
+parameters:
+  - key: endDate
+    type: java.util.Date
+    label: "As of date"
+  - key: cardiacClinic
+    type: java.lang.String
+    label: "Cardiac clinic (location uuid)"
+    required: false
+  - key: primaryCareClinic
+    type: java.lang.String
+    label: "Primary care clinic (location uuid)"
+    required: false
+datasets:
+  - key: registrantsData
+    type: sql
+    config: "sql/rhd_dashboard_registrants.sql"
+designs:
+  - type: csv

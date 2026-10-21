@@ -23,3 +23,4 @@ e688aa98-d50a-461e-968e-88cf349316ea,,Task: act.dismissFlags,"Dismiss a patient'
 4504779d-4bd0-4633-90ee-f3d3aedda08e,,Task: act.downloadData,"Download a form's fields for every patient, without names, birth dates, ID numbers or phones"
 2cd77080-e2bf-4040-a6d2-cae8d528a154,,Task: act.downloadIdentifiers,"With Task: act.downloadData, keep the patients' names, birth dates, ID numbers and phones in a download"
 0de4ee5d-8478-46eb-876a-493b00907866,,Task: act.downloadResearchData,"Download a form's fields, never with identifiers, for the patients who opted in to research"
+b669faa2-228f-44b6-9a2f-4921a898e530,,App: act.dashboard,"Open the Dashboard: registrants, demographics, the screening cascade, the procedural waitlist, medical optimisation and screening, by clinic"

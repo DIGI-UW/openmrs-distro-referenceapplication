@@ -6,6 +6,14 @@ parameters:
   - key: endDate
     type: java.util.Date
     label: "As of date"
+  - key: cardiacClinic
+    type: java.lang.String
+    label: "Cardiac clinic (location uuid)"
+    required: false
+  - key: primaryCareClinic
+    type: java.lang.String
+    label: "Primary care clinic (location uuid)"
+    required: false
 datasets:
   - key: screeningCascadeData
     type: sql

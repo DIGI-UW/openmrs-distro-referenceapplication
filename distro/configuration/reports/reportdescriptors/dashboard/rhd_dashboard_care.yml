@@ -1,0 +1,22 @@
+key: rhdDashboardCare
+uuid: "39c9d8ce-433f-449c-a0c5-ffb8e075207b"
+name: "RHD Dashboard Care"
+description: "The procedural waitlist by procedure and urgency, procedures performed, and medical optimisation of active RHD Registry patients, for the Dashboard"
+parameters:
+  - key: endDate
+    type: java.util.Date
+    label: "As of date"
+  - key: cardiacClinic
+    type: java.lang.String
+    label: "Cardiac clinic (location uuid)"
+    required: false
+  - key: primaryCareClinic
+    type: java.lang.String
+    label: "Primary care clinic (location uuid)"
+    required: false
+datasets:
+  - key: careData
+    type: sql
+    config: "sql/rhd_dashboard_care.sql"
+designs:
+  - type: csv
