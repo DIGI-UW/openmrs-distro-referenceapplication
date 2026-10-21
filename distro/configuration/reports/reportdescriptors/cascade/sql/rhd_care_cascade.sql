@@ -102,6 +102,14 @@ adherence AS (
     SELECT b.person_id, a.adherence, a.next_due
     FROM bpg b
     JOIN actcore_prophylaxis_adherence a ON a.patient_id = b.person_id
+),
+-- Covered today: initiated, with ACT Core's next due on or after the end date. Adherent counts within it, so each step
+-- is a subset of the one before, as the wiki reads the cascade; an overdue patient with a good year is not adherent.
+covered AS (
+    SELECT i.person_id, a.adherence
+    FROM initiated i
+    JOIN adherence a ON a.person_id = i.person_id
+    WHERE DATE(a.next_due) >= DATE(@endDate)
 )
 SELECT 1 AS step_order, 'Active' AS step, COUNT(*) AS patients FROM rhd
 UNION ALL
@@ -116,9 +124,7 @@ SELECT 4, 'BPG', COUNT(*) FROM bpg
 UNION ALL
 SELECT 5, 'Initiated', COUNT(*) FROM initiated
 UNION ALL
-SELECT 6, 'Covered today', COUNT(*) FROM initiated i
- JOIN adherence a ON a.person_id = i.person_id
- WHERE DATE(a.next_due) >= DATE(@endDate)
+SELECT 6, 'Covered today', COUNT(*) FROM covered
 UNION ALL
-SELECT 7, 'Adherent (80%+)', COUNT(*) FROM adherence WHERE adherence >= 0.8
+SELECT 7, 'Adherent (80%+)', COUNT(*) FROM covered WHERE adherence >= 0.8
 ORDER BY step_order
