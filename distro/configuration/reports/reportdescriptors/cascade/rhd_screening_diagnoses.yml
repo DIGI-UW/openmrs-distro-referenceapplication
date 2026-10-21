@@ -1,0 +1,22 @@
+key: rhdScreeningDiagnoses
+uuid: "6ddf6b36-2789-4733-8433-a877d54795cf"
+name: "RHD Screening Diagnoses"
+description: "The diagnosis categories of the patients who screened positive and were diagnosed, and the diagnosis details of those with RHD"
+parameters:
+  - key: endDate
+    type: java.util.Date
+    label: "As of date"
+  - key: cardiacClinic
+    type: java.lang.String
+    label: "Cardiac clinic (location uuid)"
+    required: false
+  - key: primaryCareClinic
+    type: java.lang.String
+    label: "Primary care clinic (location uuid)"
+    required: false
+datasets:
+  - key: screeningDiagnosesData
+    type: sql
+    config: "sql/rhd_screening_diagnoses.sql"
+designs:
+  - type: csv
