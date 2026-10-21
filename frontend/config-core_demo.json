@@ -57,7 +57,10 @@
         "add": [
           "act-prophylaxis-dashboard-link",
           "act-cardiac-tests-dashboard-link",
-          "act-research-dashboard-link"
+          "act-research-dashboard-link",
+          "act-consultations-dashboard-link",
+          "act-inr-reviews-dashboard-link",
+          "act-clinicians-only-note"
         ],
         "remove": [
           "patient-orders-summary-dashboard",
@@ -72,6 +75,8 @@
         "order": [
           "charts-summary-dashboard",
           "act-prophylaxis-dashboard-link",
+          "act-consultations-dashboard-link",
+          "act-inr-reviews-dashboard-link",
           "encounters-summary-dashboard",
           "act-cardiac-tests-dashboard-link",
           "test-results-summary-dashboard",
@@ -79,10 +84,25 @@
           "results-summary-dashboard",
           "allergies-summary-dashboard",
           "programs-summary-dashboard",
-          "growth-chart-dashboard-link"
+          "growth-chart-dashboard-link",
+          "act-clinicians-only-note"
         ],
         "configure": {
           "test-results-summary-dashboard": {
+            "Display conditions": {
+              "privileges": [
+                "Task: act.enterClinicalForms"
+              ]
+            }
+          },
+          "encounters-summary-dashboard": {
+            "Display conditions": {
+              "privileges": [
+                "Task: act.enterClinicalForms"
+              ]
+            }
+          },
+          "act-cardiac-tests-dashboard-link": {
             "Display conditions": {
               "privileges": [
                 "Task: act.enterClinicalForms"
@@ -93,11 +113,27 @@
       },
       "patient-chart-summary-dashboard-slot": {
         "remove": [
-          "conditions-overview-widget",
           "active-medications-widget",
           "future-medications-widget",
           "past-medications-widget"
-        ]
+        ],
+        "order": [
+          "act-next-steps-card",
+          "act-prophylaxis-card",
+          "act-consultation-card",
+          "act-inr-card",
+          "conditions-overview-widget",
+          "act-contact-card"
+        ],
+        "configure": {
+          "conditions-overview-widget": {
+            "Display conditions": {
+              "privileges": [
+                "Task: act.enterClinicalForms"
+              ]
+            }
+          }
+        }
       },
       "patient-banner-tags-slot": {
         "remove": [
