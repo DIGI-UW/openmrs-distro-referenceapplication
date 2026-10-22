@@ -87,7 +87,8 @@
                 "concept": "d80478b2-4ed2-5d93-a604-6b5b50dab441",
                 "repeatOptions": {
                   "limit": "20"
-                }
+                },
+                "prefillFromPreviousEncounter": true
               },
               "questions": [
                 {
@@ -216,7 +217,8 @@
                 "concept": "cd73e118-64ee-5855-b276-f7cb44fdcf7e",
                 "repeatOptions": {
                   "limit": "20"
-                }
+                },
+                "prefillFromPreviousEncounter": true
               },
               "questions": [
                 {
@@ -352,7 +354,8 @@
                 "concept": "a04d2268-a7de-589f-b4b6-92c47c13e342",
                 "repeatOptions": {
                   "limit": "20"
-                }
+                },
+                "prefillFromPreviousEncounter": true
               },
               "questions": [
                 {
@@ -598,7 +601,8 @@
                 "concept": "668e0221-8b41-5669-9ad8-78e193d42494",
                 "repeatOptions": {
                   "limit": "20"
-                }
+                },
+                "prefillFromPreviousEncounter": true
               },
               "questions": [
                 {
@@ -814,7 +818,8 @@
                 "concept": "0734567e-4f0a-5090-9d74-b953921a30e6",
                 "repeatOptions": {
                   "limit": "20"
-                }
+                },
+                "prefillFromPreviousEncounter": true
               },
               "questions": [
                 {
@@ -1179,7 +1184,8 @@
                     "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
-                ]
+                ],
+                "prefillFromPreviousEncounter": true
               }
             },
             {
@@ -1191,7 +1197,8 @@
                 "concept": "ce93d393-1df5-587f-bf11-c373eac2ccf4",
                 "repeatOptions": {
                   "limit": "20"
-                }
+                },
+                "prefillFromPreviousEncounter": true
               },
               "questions": [
                 {
