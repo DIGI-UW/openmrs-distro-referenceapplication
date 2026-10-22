@@ -51,7 +51,16 @@
       "patient-chart": {
         "remove": [
           "patient-chart-order-basket"
-        ]
+        ],
+        "configure": {
+          "visit-note": {
+            "Display conditions": {
+              "privileges": [
+                "Task: act.enterClinicalForms"
+              ]
+            }
+          }
+        }
       },
       "patient-chart-dashboard-slot": {
         "add": [
