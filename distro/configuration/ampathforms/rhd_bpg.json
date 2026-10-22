@@ -29,6 +29,23 @@
               }
             },
             {
+              "label": "Next injection due",
+              "id": "next_injection_due",
+              "type": "obs",
+              "disabled": "true",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "3ca72d04-b1f5-43b4-a2ff-377704d31f6f",
+                "isTransient": true,
+                "calculate": {
+                  "calculateExpression": "actNextInjectionDue(patient.id, date_of_service)"
+                }
+              },
+              "hide": {
+                "hideWhenExpression": "isEmpty(date_of_service) || (includes(injection_tolerance, '148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') && bpg_given_at_visit === '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
+              }
+            },
+            {
               "label": "Dose given",
               "id": "dose_given",
               "type": "obs",
@@ -103,10 +120,9 @@
             {
               "label": "Facility",
               "id": "facility",
-              "type": "obs",
+              "type": "encounterLocation",
               "questionOptions": {
-                "rendering": "ui-select-extended",
-                "concept": "01e6dd39-b8ba-5b0a-bcd7-6b8d5973c1bc",
+                "rendering": "encounter-location",
                 "datasource": {
                   "name": "location_datasource",
                   "config": {
