@@ -2,9 +2,11 @@
 """
 Checks the Dashboard's count reports against the lists they summarise, on a running ACT stack.
 
-It seeds a new test clinic with three registrants (an enrolment ended in a terminal state, an active patient with no
-birth date, and an active patient whose latest diagnosis is RHD with no details and who has one open and one completed
-recommendation), then asserts the counts at that clinic and, for every clinic, that rhd_dashboard_registrants and
+It seeds a new test clinic with five registrants (an enrolment ended in a terminal state, an active patient with no
+birth date, an active patient whose latest diagnosis is RHD with no details and who has one open recommendation and two
+completed with the consultation, a patient whose surgery recommended 400 days ago is completed by a later edit of that
+consultation, and a patient whose balloon valvuloplasty completed 400 days ago has its consultation moved a day), then
+asserts the counts at that clinic today and yesterday and, for every clinic, that rhd_dashboard_registrants and
 rhd_dashboard_waitlist total what the RHD Patient List and the Procedural Waiting List list.
 
 Usage: python3 tests/reports/dashboard_totals.py [--base http://localhost/openmrs] [--user admin] [--password ...]
@@ -15,6 +17,7 @@ import base64
 import datetime
 import json
 import sys
+import time
 import urllib.parse
 import urllib.request
 from collections import Counter
@@ -36,12 +39,16 @@ DIAGNOSIS = '594b4495-36dc-52a6-9810-15a9e2e2dcb9'
 DIAGNOSIS_CATEGORY = '1a5aa050-661d-5e89-95d7-c1eba476df22'
 RHD = '4e529463-2036-5327-ad69-7cbd39df86a1'
 RECOMMENDATION = 'ce93d393-1df5-587f-bf11-c373eac2ccf4'
+PROCEDURE_TYPE = '3a576b80-744a-59ee-9515-d9fdca06f3d7'
+SURGERY = 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'
+CATHETERIZATION = '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'
 URGENCY = '7b8eda07-34b6-55f2-ab6c-1b295f41918b'
 URGENT = '33bf504a-15f2-5504-9bdc-ddded0b5eb00'
 COMPLETED = '1632f8dc-195d-5d67-a52e-6c7a057cb536'
 YES = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 AORTIC_VALVE = 'cd9c582a-71f9-5441-97a8-6d50d7dc15c8'
 MITRAL_BALLOON = 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'
+PULMONARY_VALVULOPLASTY = '36b3cc68-c53f-5a23-8380-24dbaf9c88fb'
 
 
 class Stack:
@@ -103,9 +110,21 @@ def enrol(stack, patient, enrolled, *, completed=None):
 
 
 def consultation(stack, patient, clinic, when, obs):
-    stack.call('POST', '/encounter', {'patient': patient, 'encounterType': CONSULTATION_TYPE,
-                                      'form': CONSULTATION_FORM, 'location': clinic,
-                                      'encounterDatetime': when, 'obs': obs})
+    return stack.call('POST', '/encounter', {'patient': patient, 'encounterType': CONSULTATION_TYPE,
+                                             'form': CONSULTATION_FORM, 'location': clinic,
+                                             'encounterDatetime': when, 'obs': obs})['uuid']
+
+
+def recommendation(procedure_type, procedure, *members):
+    return {'concept': RECOMMENDATION, 'groupMembers': [{'concept': PROCEDURE_TYPE, 'value': procedure_type},
+                                                        {'concept': RECOMMENDATION, 'value': procedure}, *members]}
+
+
+def group(stack, encounter):
+    """The consultation's one recommendation, with its members."""
+    found = stack.call('GET', f'/encounter/{encounter}?v=custom:(obs:(uuid,concept:(uuid),'
+                              'groupMembers:(uuid,voided,concept:(uuid))))')['obs']
+    return next(obs for obs in found if obs['concept']['uuid'] == RECOMMENDATION)
 
 
 def by(rows, breakdown, key='label', value='patients'):
@@ -138,19 +157,40 @@ def main():
     enrol(stack, rhd, day(300))
     consultation(stack, rhd, clinic, day(20) + 'T10:00:00', [
         {'concept': DIAGNOSIS, 'groupMembers': [{'concept': DIAGNOSIS_CATEGORY, 'value': RHD}]},
-        {'concept': RECOMMENDATION, 'groupMembers': [{'concept': RECOMMENDATION, 'value': AORTIC_VALVE},
-                                                     {'concept': URGENCY, 'value': URGENT}]},
-        {'concept': RECOMMENDATION, 'groupMembers': [{'concept': RECOMMENDATION, 'value': MITRAL_BALLOON},
-                                                     {'concept': COMPLETED, 'value': YES}]},
+        recommendation(SURGERY, AORTIC_VALVE, {'concept': URGENCY, 'value': URGENT}),
+        recommendation(CATHETERIZATION, MITRAL_BALLOON, {'concept': COMPLETED, 'value': YES}),
+        recommendation(CATHETERIZATION, PULMONARY_VALVULOPLASTY, {'concept': COMPLETED, 'value': YES}),
     ])
+    edited = registrant(stack, clinic, f'{stamp} completed later', birthdate='1990-03-15')
+    enrol(stack, edited, day(500))
+    edited_consultation = consultation(stack, edited, clinic, day(400) + 'T10:00:00', [
+        recommendation(SURGERY, AORTIC_VALVE, {'concept': URGENCY, 'value': URGENT}),
+    ])
+    moved = registrant(stack, clinic, f'{stamp} visit moved', birthdate='1990-03-15')
+    enrol(stack, moved, day(500))
+    moved_consultation = consultation(stack, moved, clinic, day(400) + 'T10:00:00', [
+        recommendation(CATHETERIZATION, MITRAL_BALLOON, {'concept': COMPLETED, 'value': YES}),
+    ])
+    # The report dates a Completed answer saved within a minute of its consultation by the consultation's date.
+    time.sleep(65)
+    # As the form engine saves the waiting list's Completed action: the stored group, with only the new member
+    stack.call('POST', f'/encounter/{edited_consultation}', {'obs': [
+        {'uuid': group(stack, edited_consultation)['uuid'], 'concept': RECOMMENDATION,
+         'groupMembers': [{'concept': COMPLETED, 'value': YES}]},
+    ]})
+    stored = next(member['uuid'] for member in group(stack, moved_consultation)['groupMembers']
+                  if member['concept']['uuid'] == COMPLETED)
+    stack.call('POST', f'/encounter/{moved_consultation}', {'encounterDatetime': day(399) + 'T10:00:00'})
+    if not stack.call('GET', f'/obs/{stored}?v=custom:(voided)')['voided']:
+        failures.append('moving the consultation did not save its Completed answer again, so that case was not built')
 
     end = today.isoformat()
     at_clinic = stack.rows(REGISTRANTS, endDate=end, cardiacClinic=clinic)
-    check('status at the test clinic', by(at_clinic, 'status'), {'Active': 2, terminal_name: 1})
-    check('age at the test clinic', by(at_clinic, 'age'), {'20-39': 1, 'Age unknown': 1})
+    check('status at the test clinic', by(at_clinic, 'status'), {'Active': 4, terminal_name: 1})
+    check('age at the test clinic', by(at_clinic, 'age'), {'20-39': 3, 'Age unknown': 1})
     check('disease at the test clinic', by(at_clinic, 'disease'),
-          {'RHD, details not recorded': 1, 'No diagnosis yet': 1})
-    check('sex at the test clinic', by(at_clinic, 'sex'), {'Female': 1, 'Male': 1})
+          {'RHD, details not recorded': 1, 'No diagnosis yet': 3})
+    check('sex at the test clinic', by(at_clinic, 'sex'), {'Female': 3, 'Male': 1})
 
     waitlist = stack.rows(WAITLIST, endDate=end, cardiacClinic=clinic)
     check('registrants among the clinics listed', by(stack.rows(REGISTRANTS, endDate=end, clinics=clinic), 'status'),
@@ -162,7 +202,16 @@ def main():
           [('Aortic valve repair/replacement', '2: urgent (60 days/2 months)', 1, 1)])
     check('total waiting at the test clinic', by(waitlist, 'total', 'procedure', 'patients'), {'All': 1})
     check('performed at the test clinic', by(waitlist, 'performed', 'procedure', 'recommendations'),
-          {'Mitral balloon valvuloplasty': 1, 'Other procedure': 0})
+          {'Mitral balloon valvuloplasty': 1, 'Surgery': 1})
+
+    yesterday = stack.rows(WAITLIST, endDate=day(1), cardiacClinic=clinic)
+    check('open at the test clinic before the later completion',
+          [(row['procedure'], row['urgency'], int(row['patients']), int(row['recommendations']))
+           for row in yesterday if row['breakdown'] == 'open'],
+          [('Aortic valve repair/replacement', '2: urgent (60 days/2 months)', 2, 2)])
+    check('performed at the test clinic before the later completion',
+          by(yesterday, 'performed', 'procedure', 'recommendations'),
+          {'Mitral balloon valvuloplasty': 1, 'Surgery': 0})
 
     registry = stack.rows(REGISTRY, startDate='1900-01-01', endDate=end)
     if not registry:

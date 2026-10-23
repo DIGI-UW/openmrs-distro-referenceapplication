@@ -1,7 +1,7 @@
 key: rhdDashboardWaitlist
 uuid: "9d4e2f7a-1c63-5b08-8a2d-4f6e1b9c3a52"
 name: "RHD Dashboard Waitlist"
-description: "Counts of the open interventional recommendations by procedure and urgency, and of the procedures performed in the year to the end date, for the Dashboard"
+description: "Counts of the open interventional recommendations by procedure and urgency, and of the balloon valvuloplasties and surgeries completed in the year to the end date, for the Dashboard"
 parameters:
   - key: endDate
     type: java.util.Date
