@@ -44,7 +44,7 @@ consultation AS (
       AND e.encounter_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
 ),
 latest_consultation AS (
-    SELECT c.encounter_id, c.patient_id
+    SELECT c.encounter_id, c.patient_id, c.encounter_datetime
     FROM consultation c
     WHERE NOT EXISTS (SELECT 1 FROM consultation later
                       WHERE later.patient_id = c.patient_id
@@ -60,10 +60,25 @@ recommendation AS (
                    WHERE done.obs_group_id = g.obs_id AND done.voided = 0
                      AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
                      AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
-                                              (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))) AS completed
+                                              (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')))
+           -- or the procedure recorded on Procedures and Outcomes on or after the consultation's day (AR-162)
+           OR EXISTS (
+               SELECT 1 FROM obs pd
+               JOIN encounter pd_e ON pd_e.encounter_id = pd.encounter_id AND pd_e.voided = 0
+               LEFT JOIN obs pd_d ON pd_d.encounter_id = pd_e.encounter_id AND pd_d.voided = 0
+                   AND pd_d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a')
+               WHERE pd.person_id = lc.patient_id AND pd.voided = 0
+                 AND pd.concept_id IN ((SELECT concept_id FROM concept WHERE uuid = '46f4af80-b783-59f4-beb1-81144ccf3084'),
+                                           (SELECT concept_id FROM concept WHERE uuid = 'bb4a77ee-836a-57e7-a262-632fa22288d2'))
+                 AND pd.value_coded = proc.value_coded
+                 AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) >= DATE(lc.encounter_datetime)
+                 AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) <= DATE(@endDate)
+           ) AS completed
     FROM latest_consultation lc
     JOIN obs g ON g.encounter_id = lc.encounter_id AND g.voided = 0 AND g.obs_group_id IS NULL
      AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'ce93d393-1df5-587f-bf11-c373eac2ccf4')
+    -- The recommended procedure: the group's member with the group's concept
+    LEFT JOIN obs proc ON proc.obs_group_id = g.obs_id AND proc.voided = 0 AND proc.concept_id = g.concept_id
     -- A Procedure Type of None records that no intervention is recommended
     WHERE NOT EXISTS (SELECT 1 FROM obs typ
                       WHERE typ.obs_group_id = g.obs_id AND typ.voided = 0
