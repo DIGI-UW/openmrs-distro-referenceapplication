@@ -309,8 +309,7 @@
           "consentPerson",
           "consentDate",
           "assignedCardiacClinic",
-          "primaryCareClinic",
-          "textItSettings"
+          "primaryCareClinic"
         ]
       }
     ],
@@ -385,22 +384,6 @@
         "uuid": "b29617e3-c49e-5893-8dc7-e06b125a0264",
         "label": "Date of Consent (required if consent is Yes)",
         "allowFutureDates": false
-      },
-      {
-        "id": "textItSettings",
-        "type": "person attribute",
-        "uuid": "68b50c5e-250e-5dab-bd34-fb007756a7ed",
-        "label": "Text-It Settings (optional)",
-        "customConceptAnswers": [
-          {
-            "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            "label": "Yes"
-          },
-          {
-            "uuid": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            "label": "No"
-          }
-        ]
       },
       {
         "id": "primaryPhone",
@@ -569,7 +552,8 @@
       "earlyWarningFlags": [
         "RHD cardiology follow-up due",
         "RHD INR review due",
-        "RHD no data for 5 months"
+        "RHD no data for 5 months",
+        "RHD referred to a clinician"
       ],
       "flagForms": [
         {
