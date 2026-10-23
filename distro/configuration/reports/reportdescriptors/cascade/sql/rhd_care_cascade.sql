@@ -9,6 +9,9 @@ WITH rhd_active AS (
     -- Enrolled in the RHD Registry on the end date and not completed by then, as the registry report counts
     -- an enrolment active. O3 records no workflow state on enrolment, and entering a terminal state completes it.
     JOIN program pr ON pr.program_id = pp.program_id AND pr.uuid = '7d73e143-a550-5a9d-aecd-dd771add098d'
+    -- Alive on the end date, as every Dashboard count but registrant status is of the patients enrolled and alive
+    JOIN person p ON p.person_id = pp.patient_id
+     AND NOT (p.dead = 1 AND (p.death_date IS NULL OR DATE(p.death_date) <= DATE(@endDate)))
     WHERE pp.voided = 0
       AND DATE(pp.date_enrolled) <= DATE(@endDate)
       AND (pp.date_completed IS NULL OR DATE(pp.date_completed) > DATE(@endDate))
