@@ -22,9 +22,9 @@ parameters:
     type: java.lang.String
     label: "measure"
     required: false
-  - key: done
+  - key: outcome
     type: java.lang.String
-    label: "done"
+    label: "outcome"
     required: false
 datasets:
   - key: patientsData

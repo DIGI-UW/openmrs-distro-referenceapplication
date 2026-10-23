@@ -2,7 +2,7 @@
 -- RHD Medical Optimisation Patients
 -- The patients (or consultations or recommendations) behind one figure of rhd_medical_optimisation.sql, one row each, from
 -- the same CTEs, so a figure's rows equal its count; tests/reports/dashboard_totals.py checks that they do.
--- Parameters: those of rhd_medical_optimisation.sql, and @measure, @done
+-- Parameters: those of rhd_medical_optimisation.sql, and @measure, @outcome
 -- =============================================================================
 WITH active AS (
     SELECT DISTINCT pp.patient_id
@@ -108,7 +108,7 @@ inr_done AS (
       AND e.encounter_datetime >= DATE_SUB(DATE(@endDate), INTERVAL 90 DAY)
       AND e.encounter_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
 ),
--- The rows behind @measure's done (@done = 'done') or not done ('notDone'), both when @done is empty: consultations
+-- The rows behind @measure's done (@outcome = 'done') or not done ('notDone'), both when it is empty: consultations
 -- one row per consultation, interventions one per recommendation, every other measure one per patient
 done_or_not AS (
     SELECT 'echocardiogram' AS measure, a.patient_id, e.patient_id IS NOT NULL AS done, NULL AS date
@@ -132,7 +132,7 @@ figure AS (
     SELECT patient_id, IF(done, 'Done', 'Not done') AS value, date
     FROM done_or_not
     WHERE measure = @measure
-      AND (@done IS NULL OR @done = '' OR (@done = 'done') = done)
+      AND (@outcome IS NULL OR @outcome = '' OR (@outcome = 'done') = done)
 )
 SELECT p.uuid AS patient_uuid,
        (SELECT pi.identifier FROM patient_identifier pi

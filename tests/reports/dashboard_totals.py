@@ -167,11 +167,11 @@ def check_figure_lists(stack, where, **params):
         check(f"cascade {row['step']} listed at {where}", listed(CASCADE_PATIENTS, step=row['step']), int(row['patients']))
 
     for row in stack.rows(OPTIMISATION, **params):
-        check(f"{row['measure']} done listed at {where}", listed(OPTIMISATION_PATIENTS, measure=row['measure'], done='done'),
+        check(f"{row['measure']} done listed at {where}", listed(OPTIMISATION_PATIENTS, measure=row['measure'], outcome='done'),
               int(row['done']))
         if row['not_done'] is not None:
             check(f"{row['measure']} not done listed at {where}",
-                  listed(OPTIMISATION_PATIENTS, measure=row['measure'], done='notDone'), int(row['not_done']))
+                  listed(OPTIMISATION_PATIENTS, measure=row['measure'], outcome='notDone'), int(row['not_done']))
 
 
 def main():
