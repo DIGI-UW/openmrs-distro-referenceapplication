@@ -33,6 +33,16 @@ REGISTRANT_PATIENTS = 'e8296d2d-def8-5f8e-ba2d-78c59859b9e3'
 WAITLIST_PATIENTS = 'bc987343-8b70-5f95-84a8-d017cffa14da'
 CASCADE_PATIENTS = '7c62fcfd-03b2-5d84-9cea-92a43b70ae76'
 OPTIMISATION_PATIENTS = '45c646b2-f223-585e-963a-3c74fe883ae4'
+SCREENING = '0f4b7c2d-6a1e-5d93-8b47-2c9e1f5a3d68'
+PATIENT_INFORMATION_TYPE = 'ffdc883f-f99f-496a-83f9-2c3c581e1af0'
+SCREEN_POSITIVE = '82a5fbb5-038d-57b8-82d1-3fd0ac95673d'
+CASE_DETECTED_BY = '955632a1-82f7-5b84-a341-de85f95588d1'
+NO = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+SCHOOL_SCREENING = '5b7d5eb4-4c6a-52cb-95f3-ac5033708fc9'
+CLINICAL_PRESENTATION = '28452410-f2a2-5ad7-9590-43e47df1d254'
+# How the screening section buckets Case Detected By, by the answer's name as the registry prints it
+DETECTION_BUCKETS = {'School health screening': 'School', 'Community-based screening': 'Community',
+                     'Healthcare center screening': 'Health facility'}
 
 RHD_REGISTRY = '7d73e143-a550-5a9d-aecd-dd771add098d'
 TERMINAL_STATE = '407a4a4d-bc47-51e2-aa48-32e9a8d5634f'
@@ -134,8 +144,18 @@ def group(stack, encounter):
     return next(obs for obs in found if obs['concept']['uuid'] == RECOMMENDATION)
 
 
+def patient_information(stack, patient, clinic, when, answers):
+    stack.call('POST', '/encounter', {'patient': patient, 'encounterType': PATIENT_INFORMATION_TYPE, 'location': clinic,
+                                      'encounterDatetime': when,
+                                      'obs': [{'concept': concept, 'value': value} for concept, value in answers]})
+
+
 def by(rows, breakdown, key='label', value='patients'):
     return {row[key]: int(row[value]) for row in rows if row['breakdown'] == breakdown}
+
+
+def params_clinic(params):
+    return {key: value for key, value in params.items() if key != 'endDate'}
 
 
 def check_figure_lists(stack, where, **params):
@@ -198,6 +218,13 @@ def main():
     enrol(stack, unknown_age, day(200))
     rhd = registrant(stack, clinic, f'{stamp} rhd', birthdate='1990-03-15')
     enrol(stack, rhd, day(300))
+    patient_information(stack, rhd, clinic, day(300) + 'T09:00:00',
+                        [(SCREEN_POSITIVE, YES), (CASE_DETECTED_BY, SCHOOL_SCREENING)])
+    patient_information(stack, unknown_age, clinic, day(200) + 'T09:00:00',
+                        [(SCREEN_POSITIVE, NO), (CASE_DETECTED_BY, CLINICAL_PRESENTATION)])
+    # Registered before the period the screening check reads, so never counted in it
+    patient_information(stack, ended, clinic, day(400) + 'T09:00:00',
+                        [(SCREEN_POSITIVE, YES), (CASE_DETECTED_BY, SCHOOL_SCREENING)])
     consultation(stack, rhd, clinic, day(20) + 'T10:00:00', [
         {'concept': DIAGNOSIS, 'groupMembers': [{'concept': DIAGNOSIS_CATEGORY, 'value': RHD}]},
         recommendation(SURGERY, AORTIC_VALVE, {'concept': URGENCY, 'value': URGENT}),
@@ -283,12 +310,37 @@ def main():
         check(f'active at {where}', status.get('Active', 0), sum(1 for row in listed if alive(row)))
         for breakdown in ('sex', 'age', 'disease'):
             check(f'{breakdown} total at {where}', sum(by(counts, breakdown).values()), status.get('Active', 0))
+        registered_here = [row for row in listed if day(364) <= str(row.get('date_enrolled'))[:10] <= end]
+        screening = stack.rows(SCREENING, startDate=day(364), endDate=end, **params_clinic(params))
+        check(f'screening registered at {where}', by(screening, 'total').get('Registered', 0), len(registered_here))
+        check(f'screening female at {where}', by(screening, 'female').get('Female', 0),
+              sum(1 for row in registered_here if row.get('sex') == 'F'))
+        detected = {}
+        for row in registered_here:
+            name_ = row.get('case_detected_by')
+            bucket = DETECTION_BUCKETS.get(name_, 'Other') if name_ else 'Not recorded'
+            detected[bucket] = detected.get(bucket, 0) + 1
+        check(f'screening detection at {where}', by(screening, 'detected'), detected)
+        for breakdown in ('screen', 'age', 'detected'):
+            check(f'screening {breakdown} total at {where}', sum(by(screening, breakdown).values()), len(registered_here))
         waiting_here = [row for row in waiting if not name or row.get('cardiac_clinic') == name]
         open_rows = [row for row in stack.rows(WAITLIST, **params) if row['breakdown'] == 'open']
         check(f'open recommendations at {where}', sum(int(row['recommendations']) for row in open_rows),
               len(waiting_here))
         check(f'patients waiting at {where}', by(stack.rows(WAITLIST, **params), 'total', 'procedure', 'patients'),
               {'All': len({row['patient_uuid'] for row in waiting_here})})
+
+    # Registered in the 365 days to today at the test clinic: no birth date (Screen + No, Other), rhd (Yes, School) and
+    # operated then ended (nothing recorded); ended, completed later and visit moved were registered before.
+    period = {'startDate': day(364), 'endDate': end}
+    screening = stack.rows(SCREENING, **period, cardiacClinic=clinic)
+    check('screening total at the test clinic', by(screening, 'total'), {'Registered': 3})
+    check('screening female at the test clinic', by(screening, 'female'), {'Female': 2})
+    check('screening Screen + at the test clinic', by(screening, 'screen'), {'Yes': 1, 'No': 1, 'Not recorded': 1})
+    check('screening age at the test clinic', by(screening, 'age'), {'Adults 20+': 2, 'Age unknown': 1})
+    check('screening detection at the test clinic', by(screening, 'detected'),
+          {'School': 1, 'Other': 1, 'Not recorded': 1})
+    check('screening among the clinics listed', stack.rows(SCREENING, **period, clinics=clinic), screening)
 
     check_figure_lists(stack, 'the test clinic', endDate=end, cardiacClinic=clinic)
     check_figure_lists(stack, 'the clinics listed', endDate=end, clinics=clinic)
