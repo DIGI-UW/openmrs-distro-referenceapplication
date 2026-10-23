@@ -48,8 +48,8 @@ WITH registered AS (
 ),
 labelled AS (
     SELECT r.patient_id, r.gender,
-           -- The latest Screen + by the end date: CIEL Yes or No, or core's True or False on answers saved before
-           -- the form used CIEL; anything else, or none, is Not recorded.
+           -- The latest Screen +, as recorded now like Case Detected By: CIEL Yes or No, or core's True or False on
+           -- answers saved before the form used CIEL; anything else, or none, is Not recorded.
            (SELECT CASE
                        WHEN s.value_coded IN ((SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),
                                               (SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'))
@@ -61,7 +61,6 @@ labelled AS (
             FROM obs s
             WHERE s.person_id = r.patient_id AND s.voided = 0
               AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = '82a5fbb5-038d-57b8-82d1-3fd0ac95673d')
-              AND s.obs_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
             ORDER BY s.obs_datetime DESC, s.obs_id DESC LIMIT 1) AS screen,
            CASE
                WHEN r.birthdate IS NULL THEN 'Age unknown'
@@ -69,7 +68,7 @@ labelled AS (
                WHEN TIMESTAMPDIFF(YEAR, r.birthdate, DATE(r.date_enrolled)) < 20 THEN 'Adolescents 10-19'
                ELSE 'Adults 20+'
            END AS age,
-           -- The earliest Case Detected By, as the registry's case_detected_by reads it, by the ticket's settings
+           -- The earliest Case Detected By, as the registry's case_detected_by reads it
            (SELECT CASE c.uuid
                        WHEN '5b7d5eb4-4c6a-52cb-95f3-ac5033708fc9' THEN 'School'
                        WHEN '24b5320c-bf9b-5c3b-a43c-d700cc1134e1' THEN 'Community'
