@@ -552,7 +552,8 @@
       "earlyWarningFlags": [
         "RHD cardiology follow-up due",
         "RHD INR review due",
-        "RHD no data for 5 months"
+        "RHD no data for 5 months",
+        "RHD referred to a clinician"
       ],
       "flagForms": [
         {
