@@ -117,6 +117,13 @@
                 "Task: act.enterClinicalForms"
               ]
             }
+          },
+          "programs-summary-dashboard": {
+            "Display conditions": {
+              "privileges": [
+                "Task: act.enterClinicalForms"
+              ]
+            }
           }
         }
       },
