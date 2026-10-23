@@ -2,30 +2,25 @@
 -- RHD Dashboard Waitlist
 -- The Dashboard's procedural waitlist and the procedures performed in the year to the end date, as counts.
 -- Rows: breakdown, procedure, urgency, patients, recommendations.
---   open: the recommendations not yet completed on the end date by procedure and urgency, from each patient's latest
---         consultation by then, each counted once under its own procedure; on today's date, the Procedural Waiting List
+--   open: the recommendations not yet completed on the end date by procedure and urgency, from the latest consultation
+--         by then of each patient alive and enrolled then, each counted once under its own procedure; on today's date,
+--         the Procedural Waiting List
 --   total: procedure 'All', the patients waiting and their open recommendations
 --   performed: recommendations completed in the 365 days to the end date, as Mitral balloon valvuloplasty (mitral
---              balloon valvuloplasty or mitral valvuloplasty) or Surgery (procedure type Surgery)
+--              balloon valvuloplasty or mitral valvuloplasty) or Surgery (procedure type Surgery), including those of
+--              patients who have since died or whose enrolment has since ended
 -- A recommendation is completed on its consultation's date when its Completed Yes was saved with the consultation, and
 -- otherwise when a later edit of the consultation saved it, as the waiting list's row action does.
+-- A Completed answer written over a minute after its consultation, as by a bulk import, is dated when it was written.
 -- Parameters: @endDate; @cardiacClinic and @primaryCareClinic, location uuids, each counting only its patients when
 -- set; @clinics, location uuids separated by commas, counting only the patients either of whose clinics is one of them.
 -- =============================================================================
-WITH RECURSIVE patient_at AS (
-    -- Patients at the clinics chosen, alive on the end date and enrolled in the RHD Registry then
-    SELECT p.person_id
+WITH RECURSIVE clinic_patient AS (
+    -- Patients at the clinics chosen
+    SELECT p.person_id, p.dead, p.death_date
     FROM person p
     JOIN patient pat ON pat.patient_id = p.person_id AND pat.voided = 0
     WHERE p.voided = 0
-      AND NOT (p.dead = 1 AND (p.death_date IS NULL OR DATE(p.death_date) <= DATE(@endDate)))
-      AND EXISTS (
-          SELECT 1 FROM patient_program pp
-          JOIN program pr ON pr.program_id = pp.program_id AND pr.uuid = '7d73e143-a550-5a9d-aecd-dd771add098d'
-          WHERE pp.patient_id = p.person_id AND pp.voided = 0
-            AND DATE(pp.date_enrolled) <= DATE(@endDate)
-            AND (pp.date_completed IS NULL OR DATE(pp.date_completed) > DATE(@endDate))
-      )
       AND (@cardiacClinic IS NULL OR @cardiacClinic = '' OR EXISTS (
           SELECT 1 FROM person_attribute pa
           JOIN location l ON l.location_id = pa.value AND l.uuid = @cardiacClinic
@@ -49,11 +44,24 @@ WITH RECURSIVE patient_at AS (
                                                                 '695f2990-236f-5d7c-b8aa-ddbdb22400f4'))
       ))
 ),
+-- Of them, those alive on the end date and enrolled in the RHD Registry then
+patient_at AS (
+    SELECT cp.person_id
+    FROM clinic_patient cp
+    WHERE NOT (cp.dead = 1 AND (cp.death_date IS NULL OR DATE(cp.death_date) <= DATE(@endDate)))
+      AND EXISTS (
+          SELECT 1 FROM patient_program pp
+          JOIN program pr ON pr.program_id = pp.program_id AND pr.uuid = '7d73e143-a550-5a9d-aecd-dd771add098d'
+          WHERE pp.patient_id = cp.person_id AND pp.voided = 0
+            AND DATE(pp.date_enrolled) <= DATE(@endDate)
+            AND (pp.date_completed IS NULL OR DATE(pp.date_completed) > DATE(@endDate))
+      )
+),
 consultation AS (
     SELECT e.encounter_id, e.patient_id, e.encounter_datetime, e.date_created
     FROM encounter e
     JOIN form f ON f.form_id = e.form_id AND f.uuid = '4b063fc7-996f-3001-8500-8940e201be8f'
-    JOIN patient_at pa ON pa.person_id = e.patient_id
+    JOIN clinic_patient cp ON cp.person_id = e.patient_id
     WHERE e.voided = 0 AND e.encounter_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
 ),
 -- A Completed answer of Yes (CIEL Yes, or core's True on answers saved before the form used CIEL), with the earlier
@@ -99,9 +107,11 @@ recommendation AS (
     LEFT JOIN (SELECT obs_group_id, MIN(date_created) AS saved FROM completed_yes GROUP BY obs_group_id) yes
         ON yes.obs_group_id = g.obs_id
 ),
--- The recommendations in each patient's latest consultation by the end date not completed by then
+-- The recommendations in the latest consultation by the end date of each patient alive and enrolled then, not completed
+-- by then
 open_recommendation AS (
     SELECT r.* FROM recommendation r
+    JOIN patient_at pa ON pa.person_id = r.patient_id
     WHERE (r.completed_on IS NULL OR r.completed_on >= DATE_ADD(DATE(@endDate), INTERVAL 1 DAY))
       AND NOT EXISTS (
           SELECT 1 FROM encounter later

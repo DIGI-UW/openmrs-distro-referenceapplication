@@ -2,10 +2,11 @@
 """
 Checks the Dashboard's count reports against the lists they summarise, on a running ACT stack.
 
-It seeds a new test clinic with five registrants (an enrolment ended in a terminal state, an active patient with no
+It seeds a new test clinic with six registrants (an enrolment ended in a terminal state, an active patient with no
 birth date, an active patient whose latest diagnosis is RHD with no details and who has one open recommendation and two
 completed with the consultation, a patient whose surgery recommended 400 days ago is completed by a later edit of that
-consultation, and a patient whose balloon valvuloplasty completed 400 days ago has its consultation moved a day), then
+consultation, a patient whose balloon valvuloplasty completed 400 days ago has its consultation moved a day, and a
+patient with a surgery completed and a balloon valvuloplasty open whose enrolment then ended), then
 asserts the counts at that clinic today and yesterday and, for every clinic, that rhd_dashboard_registrants and
 rhd_dashboard_waitlist total what the RHD Patient List and the Procedural Waiting List list.
 
@@ -166,6 +167,13 @@ def main():
     edited_consultation = consultation(stack, edited, clinic, day(400) + 'T10:00:00', [
         recommendation(SURGERY, AORTIC_VALVE, {'concept': URGENCY, 'value': URGENT}),
     ])
+    operated_then_ended = registrant(stack, clinic, f'{stamp} operated then ended', birthdate='1990-03-15')
+    enrol(stack, operated_then_ended, day(300))
+    consultation(stack, operated_then_ended, clinic, day(100) + 'T10:00:00', [
+        recommendation(SURGERY, AORTIC_VALVE, {'concept': COMPLETED, 'value': YES}),
+        recommendation(CATHETERIZATION, MITRAL_BALLOON, {'concept': URGENCY, 'value': URGENT}),
+    ])
+    enrol(stack, operated_then_ended, day(300), completed=day(50))
     moved = registrant(stack, clinic, f'{stamp} visit moved', birthdate='1990-03-15')
     enrol(stack, moved, day(500))
     moved_consultation = consultation(stack, moved, clinic, day(400) + 'T10:00:00', [
@@ -186,7 +194,7 @@ def main():
 
     end = today.isoformat()
     at_clinic = stack.rows(REGISTRANTS, endDate=end, cardiacClinic=clinic)
-    check('status at the test clinic', by(at_clinic, 'status'), {'Active': 4, terminal_name: 1})
+    check('status at the test clinic', by(at_clinic, 'status'), {'Active': 4, terminal_name: 2})
     check('age at the test clinic', by(at_clinic, 'age'), {'20-39': 3, 'Age unknown': 1})
     check('disease at the test clinic', by(at_clinic, 'disease'),
           {'RHD, details not recorded': 1, 'No diagnosis yet': 3})
@@ -202,7 +210,7 @@ def main():
           [('Aortic valve repair/replacement', '2: urgent (60 days/2 months)', 1, 1)])
     check('total waiting at the test clinic', by(waitlist, 'total', 'procedure', 'patients'), {'All': 1})
     check('performed at the test clinic', by(waitlist, 'performed', 'procedure', 'recommendations'),
-          {'Mitral balloon valvuloplasty': 1, 'Surgery': 1})
+          {'Mitral balloon valvuloplasty': 1, 'Surgery': 2})
 
     yesterday = stack.rows(WAITLIST, endDate=day(1), cardiacClinic=clinic)
     check('open at the test clinic before the later completion',
@@ -211,7 +219,7 @@ def main():
           [('Aortic valve repair/replacement', '2: urgent (60 days/2 months)', 2, 2)])
     check('performed at the test clinic before the later completion',
           by(yesterday, 'performed', 'procedure', 'recommendations'),
-          {'Mitral balloon valvuloplasty': 1, 'Surgery': 0})
+          {'Mitral balloon valvuloplasty': 1, 'Surgery': 1})
 
     registry = stack.rows(REGISTRY, startDate='1900-01-01', endDate=end)
     if not registry:
