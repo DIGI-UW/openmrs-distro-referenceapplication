@@ -282,6 +282,13 @@ SELECT
                 AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
                                          (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
           )
+          -- A Procedure Type of None records that no intervention is recommended
+          AND NOT EXISTS (
+              SELECT 1 FROM obs typ
+              WHERE typ.obs_group_id = g_rec.obs_id AND typ.voided = 0
+                AND typ.concept_id = (SELECT concept_id FROM concept WHERE uuid = '3a576b80-744a-59ee-9515-d9fdca06f3d7')
+                AND typ.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+          )
     )                                                               AS earliest_procedure_due,
 
     -- Clinics, from the Assigned Cardiac Clinic and Primary Care Clinic location attributes

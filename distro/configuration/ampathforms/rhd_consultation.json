@@ -50,27 +50,6 @@
                 "concept": "90b7d412-1273-5814-bf02-2672e67c427e",
                 "rows": "3"
               }
-            },
-            {
-              "label": "Contraindications for Mechanical Valve",
-              "id": "contraindications_mechanical_valve",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "radio",
-                "concept": "b393b00a-8641-5013-bcc7-dec1334a1252",
-                "answers": [
-                  {
-                    "label": "Yes",
-                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "No",
-                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  }
-                ]
-              }
             }
           ]
         },
@@ -417,6 +396,15 @@
                   }
                 },
                 {
+                  "label": "Details",
+                  "id": "rhdComplicationDetails",
+                  "type": "obs",
+                  "questionOptions": {
+                    "rendering": "text",
+                    "concept": "747cfebf-e6e1-5a3c-8436-94a066a157a6"
+                  }
+                },
+                {
                   "label": "Date Added",
                   "id": "dateAdded_rhdComplications",
                   "type": "obs",
@@ -430,74 +418,9 @@
           ]
         },
         {
-          "label": "Vital signs",
+          "label": "Examination",
           "isExpanded": "true",
           "questions": [
-            {
-              "label": "Height (cm)",
-              "id": "height",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-              },
-              "historicalExpression": "HD.getObject('prevEnc')?.getValue('5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
-            },
-            {
-              "label": "Weight (kg)",
-              "id": "weight",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-              },
-              "historicalExpression": "HD.getObject('prevEnc')?.getValue('5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')"
-            },
-            {
-              "label": "Heart Rate (BPM)",
-              "id": "heart_rate",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "5087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-              }
-            },
-            {
-              "label": "Respiratory Rate (breaths/min)",
-              "id": "respiratoryRate",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "5242AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-              }
-            },
-            {
-              "label": "Oxygen Saturation (%)",
-              "id": "oxygen_saturation",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "5092AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-              }
-            },
-            {
-              "label": "Systolic Blood Pressure (mmHg)",
-              "id": "systolicBloodPressure",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-              }
-            },
-            {
-              "label": "Diastolic Blood Pressure (mmHg)",
-              "id": "diastolicBloodPressure",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "number",
-                "concept": "5086AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-              }
-            },
             {
               "label": "NYHA Classification",
               "id": "nyha_classification",
@@ -719,12 +642,39 @@
               ]
             },
             {
-              "label": "If not given SAP, why?",
-              "id": "if_not_given_sap_why",
+              "label": "If not prescribed, why?",
+              "id": "if_not_prescribed_reason",
               "type": "obs",
               "questionOptions": {
-                "rendering": "text",
-                "concept": "53d3cb00-b556-5842-b67f-32239176b746"
+                "rendering": "select",
+                "concept": "9b0bd40c-1074-55bc-ac7d-9e6e0362ce2c",
+                "answers": [
+                  {
+                    "label": "Does not meet criteria (echocardiographic normalization)",
+                    "concept": "2fe0e445-06fd-5aa2-81bf-b7d0b483fb9f",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Does not meet criteria (prophylaxis completed)",
+                    "concept": "6507f288-8673-55ca-af89-ce56db5235fa",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Patient preference",
+                    "concept": "39af49bd-5dd0-5acd-8ffb-260bc83dbfd7",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Provider preference",
+                    "concept": "26b8c9f5-ad2d-5e1a-adbb-84666bb86549",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Other",
+                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
               }
             },
             {
@@ -746,17 +696,12 @@
                     "conceptMappings": []
                   },
                   {
-                    "label": "5 years or until age 21",
+                    "label": "5 years or until age 21, whichever is longer",
                     "concept": "024cdfe6-c2eb-521c-8616-4729ac35439e",
                     "conceptMappings": []
                   },
                   {
-                    "label": "Whichever is longer",
-                    "concept": "36ce4f25-03d4-5447-aba0-48545be2281c",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "10 years or until age 40",
+                    "label": "10 years or until age 40, whichever is longer",
                     "concept": "ecc08a4c-6494-5737-b142-f59d18c07db1",
                     "conceptMappings": []
                   },
@@ -1211,6 +1156,11 @@
                         "label": "Surgery",
                         "concept": "aa5fefb0-cf61-5f36-82e6-31dbbdf3f616",
                         "conceptMappings": []
+                      },
+                      {
+                        "label": "None, no intervention recommended",
+                        "concept": "1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                        "conceptMappings": []
                       }
                     ]
                   }
@@ -1503,28 +1453,7 @@
                     ]
                   },
                   "hide": {
-                    "hideWhenExpression": "isEmpty(procedureType)"
-                  }
-                },
-                {
-                  "label": "Completed",
-                  "id": "interventional_recommendation_completed",
-                  "type": "obs",
-                  "questionOptions": {
-                    "rendering": "radio",
-                    "concept": "1632f8dc-195d-5d67-a52e-6c7a057cb536",
-                    "answers": [
-                      {
-                        "label": "Yes",
-                        "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "No",
-                        "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                        "conceptMappings": []
-                      }
-                    ]
+                    "hideWhenExpression": "isEmpty(procedureType) || procedureType === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
                   }
                 }
               ]
@@ -1535,7 +1464,10 @@
               "type": "obs",
               "questionOptions": {
                 "rendering": "number",
-                "concept": "ba4b8a87-2ce8-559e-9a30-45504a9b6c1f"
+                "concept": "ba4b8a87-2ce8-559e-9a30-45504a9b6c1f",
+                "min": "1",
+                "step": 1,
+                "disallowDecimals": true
               }
             },
             {

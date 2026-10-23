@@ -52,7 +52,8 @@ latest_consultation AS (
                              OR (later.encounter_datetime = c.encounter_datetime AND later.encounter_id > c.encounter_id)))
 ),
 -- Each interventional recommendation in a latest consultation, and whether it is answered Completed: CIEL Yes, or
--- core's True on answers saved before the form used CIEL, as the Procedural Waiting List reads it.
+-- core's True on answers saved before the form used CIEL, as the Procedural Waiting List reads it. A group whose
+-- Procedure Type is None records that no intervention is recommended, so it is not a recommendation.
 recommendation AS (
     SELECT lc.patient_id, g.obs_id,
            EXISTS (SELECT 1 FROM obs done
@@ -63,6 +64,11 @@ recommendation AS (
     FROM latest_consultation lc
     JOIN obs g ON g.encounter_id = lc.encounter_id AND g.voided = 0 AND g.obs_group_id IS NULL
      AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'ce93d393-1df5-587f-bf11-c373eac2ccf4')
+    -- A Procedure Type of None records that no intervention is recommended
+    WHERE NOT EXISTS (SELECT 1 FROM obs typ
+                      WHERE typ.obs_group_id = g.obs_id AND typ.voided = 0
+                        AND typ.concept_id = (SELECT concept_id FROM concept WHERE uuid = '3a576b80-744a-59ee-9515-d9fdca06f3d7')
+                        AND typ.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
 ),
 echo_done AS (
     SELECT DISTINCT e.patient_id

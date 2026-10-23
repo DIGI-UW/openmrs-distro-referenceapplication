@@ -135,6 +135,9 @@ WHERE e.voided = 0
           AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
                                        (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
     )
+    -- A Procedure Type of None records that no intervention is recommended
+    AND (typ.value_coded IS NULL
+         OR typ.value_coded <> (SELECT concept_id FROM concept WHERE uuid = '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
 
 GROUP BY g.obs_id, g.uuid, g.concept_id, proc.value_coded, e.encounter_id, e.uuid, e.form_id, e.encounter_datetime, f.uuid, p.person_id, p.gender, p.birthdate, p.uuid
 
