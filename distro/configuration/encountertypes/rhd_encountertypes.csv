@@ -10,3 +10,4 @@ c9b87090-8768-50be-987e-8ca0a8983429,RHD Interventions and Outcomes,Surgical or 
 b4bb88a3-9a04-5142-85bd-bb63c270f632,RHD INR Monitoring,Anticoagulation INR monitoring for patients on Warfarin,false,Task: act.enterClinicalForms
 ffdc883f-f99f-496a-83f9-2c3c581e1af0,RHD Patient Information,"Diagnosis, screening and how the case was detected",false,Task: act.enterPatientInformation
 f064aaf0-bd36-43c5-9f35-00077457a569,RHD Research Participation,Consent and enrolment in research studies,false,Task: act.enterClinicalForms
+f423ba04-0f7a-414e-98c7-6b4d5ba0d93a,RHD Referral,"A user who may not record the consultation asks a clinician to review the patient",false,Task: act.sendReferral
