@@ -27,6 +27,12 @@ REGISTRY = 'f1a2b3c4-d5e6-7890-abcd-ef1234567890'
 WAITING_LIST = '5b0f1c2e-9d3a-4c1b-8f6e-2a7d9e4b3c10'
 REGISTRANTS = '3b0a6c2e-8f41-5d7b-9e15-6a2c4d8f0b71'
 WAITLIST = '9d4e2f7a-1c63-5b08-8a2d-4f6e1b9c3a52'
+CASCADE = '9c6751ae-65fc-5f25-9aa6-8c65cb1dff68'
+OPTIMISATION = '733a512c-3243-4e91-a44a-06a8e5384606'
+REGISTRANT_PATIENTS = 'e8296d2d-def8-5f8e-ba2d-78c59859b9e3'
+WAITLIST_PATIENTS = 'bc987343-8b70-5f95-84a8-d017cffa14da'
+CASCADE_PATIENTS = '7c62fcfd-03b2-5d84-9cea-92a43b70ae76'
+OPTIMISATION_PATIENTS = '45c646b2-f223-585e-963a-3c74fe883ae4'
 
 RHD_REGISTRY = '7d73e143-a550-5a9d-aecd-dd771add098d'
 TERMINAL_STATE = '407a4a4d-bc47-51e2-aa48-32e9a8d5634f'
@@ -130,6 +136,42 @@ def group(stack, encounter):
 
 def by(rows, breakdown, key='label', value='patients'):
     return {row[key]: int(row[value]) for row in rows if row['breakdown'] == breakdown}
+
+
+def check_figure_lists(stack, where, **params):
+    """Every figure the count reports give equals the rows of its patients report, with the same parameters."""
+    def listed(report, **figure):
+        return len(stack.rows(report, **params, **figure))
+
+    registrants = stack.rows(REGISTRANTS, **params)
+    for row in registrants:
+        check(f"{row['breakdown']} {row['label']} listed at {where}",
+              listed(REGISTRANT_PATIENTS, breakdown=row['breakdown'], label=row['label']), int(row['patients']))
+    status = by(registrants, 'status')
+    check(f'registered listed at {where}', listed(REGISTRANT_PATIENTS, breakdown='registered'), sum(status.values()))
+    check(f'active listed at {where}', listed(REGISTRANT_PATIENTS, breakdown='active'), status.get('Active', 0))
+
+    for row in stack.rows(WAITLIST, **params):
+        if row['breakdown'] == 'open':
+            got = listed(WAITLIST_PATIENTS, breakdown='open', procedure=row['procedure'], urgency=row['urgency'])
+            check(f"open {row['procedure']} {row['urgency']} listed at {where}", got, int(row['recommendations']))
+        elif row['breakdown'] == 'total':
+            check(f'waiting listed at {where}', listed(WAITLIST_PATIENTS, breakdown='total'), int(row['patients']))
+            check(f'open recommendations listed at {where}', listed(WAITLIST_PATIENTS, breakdown='open'),
+                  int(row['recommendations']))
+        else:
+            check(f"performed {row['procedure']} listed at {where}",
+                  listed(WAITLIST_PATIENTS, breakdown='performed', procedure=row['procedure']), int(row['recommendations']))
+
+    for row in stack.rows(CASCADE, **params):
+        check(f"cascade {row['step']} listed at {where}", listed(CASCADE_PATIENTS, step=row['step']), int(row['patients']))
+
+    for row in stack.rows(OPTIMISATION, **params):
+        check(f"{row['measure']} done listed at {where}", listed(OPTIMISATION_PATIENTS, measure=row['measure'], done='done'),
+              int(row['done']))
+        if row['not_done'] is not None:
+            check(f"{row['measure']} not done listed at {where}",
+                  listed(OPTIMISATION_PATIENTS, measure=row['measure'], done='notDone'), int(row['not_done']))
 
 
 def main():
@@ -247,6 +289,11 @@ def main():
               len(waiting_here))
         check(f'patients waiting at {where}', by(stack.rows(WAITLIST, **params), 'total', 'procedure', 'patients'),
               {'All': len({row['patient_uuid'] for row in waiting_here})})
+
+    check_figure_lists(stack, 'the test clinic', endDate=end, cardiacClinic=clinic)
+    check_figure_lists(stack, 'the clinics listed', endDate=end, clinics=clinic)
+    check_figure_lists(stack, 'every clinic', endDate=end)
+    check_figure_lists(stack, 'every clinic a day back', endDate=day(1))
 
     if failures:
         print('\n'.join(failures))

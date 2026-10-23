@@ -1,0 +1,34 @@
+key: rhdMedicalOptimisationPatients
+uuid: "45c646b2-f223-585e-963a-3c74fe883ae4"
+name: "RHD Medical Optimisation Patients"
+description: "The patients behind one figure of the Dashboard's RHD Medical Optimisation counts, for the Dashboard's links"
+parameters:
+  - key: endDate
+    type: java.util.Date
+    label: "As of date"
+  - key: cardiacClinic
+    type: java.lang.String
+    label: "Cardiac clinic (location uuid)"
+    required: false
+  - key: primaryCareClinic
+    type: java.lang.String
+    label: "Primary care clinic (location uuid)"
+    required: false
+  - key: clinics
+    type: java.lang.String
+    label: "Either clinic among these (location uuids separated by commas, no spaces)"
+    required: false
+  - key: measure
+    type: java.lang.String
+    label: "measure"
+    required: false
+  - key: done
+    type: java.lang.String
+    label: "done"
+    required: false
+datasets:
+  - key: patientsData
+    type: sql
+    config: "sql/rhd_medical_optimisation_patients.sql"
+designs:
+  - type: csv
