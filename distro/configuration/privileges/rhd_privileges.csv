@@ -24,3 +24,4 @@ e688aa98-d50a-461e-968e-88cf349316ea,,Task: act.dismissFlags,"Dismiss a patient'
 2cd77080-e2bf-4040-a6d2-cae8d528a154,,Task: act.downloadIdentifiers,"With Task: act.downloadData, keep the patients' names, birth dates, ID numbers and phones in a download"
 0de4ee5d-8478-46eb-876a-493b00907866,,Task: act.downloadResearchData,"Download a form's fields, never with identifiers, for the patients who opted in to research"
 75927401-7dbe-41cb-8bc5-96941dbbed5a,,Task: act.allClinics,"Administer the users of every clinic: not limited to the clinics on the user's own account, as a site administrator is"
+afe864ac-2b08-41cd-945a-57db92bc3a23,,Task: act.sendReferral,"Send a patient's referral to a clinician from Next steps: the edit privilege of the RHD Referral encounter type"
