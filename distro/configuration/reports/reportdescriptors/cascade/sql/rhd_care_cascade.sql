@@ -2,6 +2,7 @@
 -- RHD Care Cascade
 -- Step names are the ACT Registry prototype's; ACT home's widget matches them by name.
 -- Parameters: @endDate; @cardiacClinic and @primaryCareClinic, location uuids, each counting only its patients when set
+-- @clinics, location uuids separated by commas, counting only the patients either of whose clinics is one of them
 -- =============================================================================
 WITH rhd_active AS (
     SELECT DISTINCT pp.patient_id
@@ -9,6 +10,9 @@ WITH rhd_active AS (
     -- Enrolled in the RHD Registry on the end date and not completed by then, as the registry report counts
     -- an enrolment active. O3 records no workflow state on enrolment, and entering a terminal state completes it.
     JOIN program pr ON pr.program_id = pp.program_id AND pr.uuid = '7d73e143-a550-5a9d-aecd-dd771add098d'
+    -- Alive on the end date, as every Dashboard count but registrant status is of the patients enrolled and alive
+    JOIN person p ON p.person_id = pp.patient_id
+     AND NOT (p.dead = 1 AND (p.death_date IS NULL OR DATE(p.death_date) <= DATE(@endDate)))
     WHERE pp.voided = 0
       AND DATE(pp.date_enrolled) <= DATE(@endDate)
       AND (pp.date_completed IS NULL OR DATE(pp.date_completed) > DATE(@endDate))
@@ -25,6 +29,14 @@ WITH rhd_active AS (
           WHERE pa.person_id = pp.patient_id AND pa.voided = 0
             AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
                                                 WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')
+      ))
+      AND (@clinics IS NULL OR @clinics = '' OR EXISTS (
+          SELECT 1 FROM person_attribute pa
+          JOIN location l ON l.location_id = pa.value AND FIND_IN_SET(l.uuid, @clinics) > 0
+          WHERE pa.person_id = pp.patient_id AND pa.voided = 0
+            AND pa.person_attribute_type_id IN (SELECT person_attribute_type_id FROM person_attribute_type
+                                                 WHERE uuid IN ('fe261119-2911-5b36-be40-8f9827826987',
+                                                                '695f2990-236f-5d7c-b8aa-ddbdb22400f4'))
       ))
 ),
 -- Each patient's latest Diagnosis group by the end date with a Category and not answered inactive or secondary, as ACT 2.0
