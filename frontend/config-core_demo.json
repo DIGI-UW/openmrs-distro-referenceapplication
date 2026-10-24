@@ -658,5 +658,17 @@
         ]
       }
     }
+  },
+  "@openmrs/esm-help-menu-app": {
+    "extensionSlots": {
+      "help-menu-slot": {
+        "remove": [
+          "contact-us",
+          "docs",
+          "release-notes",
+          "tutorials"
+        ]
+      }
+    }
   }
 }
