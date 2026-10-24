@@ -12,6 +12,106 @@
       "label": "RHD Patient Information",
       "sections": [
         {
+          "label": "Screening",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "About screening",
+              "id": "screening_note",
+              "type": "markdown",
+              "questionOptions": {
+                "rendering": "markdown"
+              },
+              "value": [
+                "For a patient found by an echo screening: whether the screening echo was positive, and where. A Yes puts the patient on the Screen positive, pending confirmation worklist until a confirmatory echo is recorded."
+              ]
+            },
+            {
+              "label": "Screen +",
+              "id": "screen_positive",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "82a5fbb5-038d-57b8-82d1-3fd0ac95673d",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Date",
+              "id": "screen_positive_date",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "96d6d328-87ba-5a2e-bb71-2d1cd73b3e90"
+              },
+              "hide": {
+                "hideWhenExpression": "screen_positive !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            },
+            {
+              "label": "Screening site",
+              "id": "screening_site",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "a5be20e6-88c0-42b0-9557-54771e06e644"
+              },
+              "hide": {
+                "hideWhenExpression": "screen_positive !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            },
+            {
+              "label": "School Name (if screened at a school)",
+              "id": "school_name",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "cfd8f77a-a2b5-5836-96c1-d3e5fdd48e02"
+              }
+            },
+            {
+              "label": "Confirmatory echo follow-up",
+              "id": "screen_positive_follow_up_status",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "c25c84d9-1f23-4426-8d43-ad1e3829cbb7",
+                "answers": [
+                  {
+                    "label": "Not contacted",
+                    "concept": "1035a94f-d8c1-4f0c-b376-5f6c5976b737",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Echo booked",
+                    "concept": "6bcba113-f828-4635-9c47-bcf14b605532",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "Urgent",
+                    "concept": "437bd172-c32b-430f-a9d1-acf20e398022",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "screen_positive !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            }
+          ]
+        },
+        {
           "label": "Diagnosis",
           "isExpanded": "true",
           "questions": [
@@ -319,39 +419,6 @@
                   }
                 },
                 {
-                  "label": "Diagnosis Priority",
-                  "id": "diagnosis_priority",
-                  "type": "obs",
-                  "questionOptions": {
-                    "rendering": "select",
-                    "concept": "97c025b2-f42c-5c53-8aaa-0506c8dd3774",
-                    "answers": [
-                      {
-                        "label": "Primary",
-                        "concept": "deba7fd3-1780-5b23-b702-76140a161169",
-                        "conceptMappings": []
-                      },
-                      {
-                        "label": "Secondary",
-                        "concept": "af45fb2a-ed18-5beb-935e-8e4d92df2dac",
-                        "conceptMappings": []
-                      }
-                    ]
-                  },
-                  "validators": [
-                    {
-                      "type": "js_expression",
-                      "failsWhenExpression": "!isEmpty(myValue) && isEmpty(category_at_diagnosis)",
-                      "message": "Choose a Category first"
-                    },
-                    {
-                      "type": "js_expression",
-                      "failsWhenExpression": "isEmpty(myValue) && !isEmpty(category_at_diagnosis)",
-                      "message": "Required when a Category is chosen"
-                    }
-                  ]
-                },
-                {
                   "label": "Active",
                   "id": "diagnosis_active",
                   "type": "obs",
@@ -422,176 +489,6 @@
                   ]
                 }
               ]
-            },
-            {
-              "label": "Screen +",
-              "id": "screen_positive",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "radio",
-                "concept": "82a5fbb5-038d-57b8-82d1-3fd0ac95673d",
-                "answers": [
-                  {
-                    "label": "Yes",
-                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "No",
-                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  }
-                ]
-              }
-            },
-            {
-              "label": "Date",
-              "id": "screen_positive_date",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "date",
-                "concept": "96d6d328-87ba-5a2e-bb71-2d1cd73b3e90"
-              },
-              "hide": {
-                "hideWhenExpression": "screen_positive !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
-              }
-            },
-            {
-              "label": "Screening site",
-              "id": "screening_site",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "a5be20e6-88c0-42b0-9557-54771e06e644"
-              },
-              "hide": {
-                "hideWhenExpression": "screen_positive !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
-              }
-            },
-            {
-              "label": "Follow-up status",
-              "id": "screen_positive_follow_up_status",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "radio",
-                "concept": "c25c84d9-1f23-4426-8d43-ad1e3829cbb7",
-                "answers": [
-                  {
-                    "label": "Not contacted",
-                    "concept": "1035a94f-d8c1-4f0c-b376-5f6c5976b737",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Echo booked",
-                    "concept": "6bcba113-f828-4635-9c47-bcf14b605532",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Urgent",
-                    "concept": "437bd172-c32b-430f-a9d1-acf20e398022",
-                    "conceptMappings": []
-                  }
-                ]
-              },
-              "hide": {
-                "hideWhenExpression": "screen_positive !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
-              }
-            },
-            {
-              "label": "Case Detected By",
-              "id": "case_detected_by",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "select",
-                "concept": "955632a1-82f7-5b84-a341-de85f95588d1",
-                "answers": [
-                  {
-                    "label": "Clinical presentation",
-                    "concept": "28452410-f2a2-5ad7-9590-43e47df1d254",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Pregnancy / labor",
-                    "concept": "06d80315-eaf9-5c71-a4c7-cb9759f93fe1",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "School health screening",
-                    "concept": "5b7d5eb4-4c6a-52cb-95f3-ac5033708fc9",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Community-based screening",
-                    "concept": "24b5320c-bf9b-5c3b-a43c-d700cc1134e1",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Healthcare center screening",
-                    "concept": "9e861499-cebe-5371-a893-5747f365da73",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Coincidental finding",
-                    "concept": "fdecbe0d-8c8d-545d-a3b8-b2fd31704db1",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Post-mortem",
-                    "concept": "00e06a31-9d6f-5045-a6f8-62cf96fcd526",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "Other non-coded",
-                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  }
-                ]
-              }
-            },
-            {
-              "label": "School Name",
-              "id": "school_name",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "cfd8f77a-a2b5-5836-96c1-d3e5fdd48e02"
-              },
-              "hide": {
-                "hideWhenExpression": "case_detected_by !== '5b7d5eb4-4c6a-52cb-95f3-ac5033708fc9'"
-              }
-            }
-          ]
-        },
-        {
-          "label": "Contact and location",
-          "isExpanded": "true",
-          "questions": [
-            {
-              "label": "Home Address",
-              "id": "home_address",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "1af5b942-8747-5dfb-aa40-805b5575f2e3"
-              }
-            },
-            {
-              "label": "Village/Area of Residence",
-              "id": "village_area_of_residence",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "c5641213-1ec1-5378-b6de-9135ca25a56d"
-              }
-            },
-            {
-              "label": "Additional information to help locate patient",
-              "id": "additional_information_to_help_locate_patient",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "2cebe220-2a9d-5c53-be68-f2257a4bfc9e"
-              }
             }
           ]
         },
@@ -776,6 +673,50 @@
               },
               "hide": {
                 "hideWhenExpression": "reason_inactive !== '159AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            }
+          ]
+        },
+        {
+          "label": "Where to find the patient",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Why these fields",
+              "id": "locate_patient_note",
+              "type": "markdown",
+              "questionOptions": {
+                "rendering": "markdown"
+              },
+              "value": [
+                "Directions for finding the patient at home when they miss prophylaxis or a review, beyond the address recorded at registration. These identify the patient, so a download leaves them out unless the user may download identifiers."
+              ]
+            },
+            {
+              "label": "Home Address",
+              "id": "home_address",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "1af5b942-8747-5dfb-aa40-805b5575f2e3"
+              }
+            },
+            {
+              "label": "Village/Area of Residence",
+              "id": "village_area_of_residence",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "c5641213-1ec1-5378-b6de-9135ca25a56d"
+              }
+            },
+            {
+              "label": "Additional information to help locate patient",
+              "id": "additional_information_to_help_locate_patient",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "2cebe220-2a9d-5c53-be68-f2257a4bfc9e"
               }
             }
           ]

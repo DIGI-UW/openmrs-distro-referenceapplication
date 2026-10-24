@@ -1,0 +1,29 @@
+key: rhdDashboardScreening
+uuid: "0f4b7c2d-6a1e-5d93-8b47-2c9e1f5a3d68"
+name: "RHD Dashboard Screening"
+description: "Counts of the patients registered in a period, by sex, Screen +, age at registration and how the case was detected, for the Dashboard's screening from registrations"
+parameters:
+  - key: startDate
+    type: java.util.Date
+    label: "Registered from"
+  - key: endDate
+    type: java.util.Date
+    label: "Registered to"
+  - key: cardiacClinic
+    type: java.lang.String
+    label: "Cardiac clinic (location uuid)"
+    required: false
+  - key: primaryCareClinic
+    type: java.lang.String
+    label: "Primary care clinic (location uuid)"
+    required: false
+  - key: clinics
+    type: java.lang.String
+    label: "Either clinic among these (location uuids separated by commas, no spaces)"
+    required: false
+datasets:
+  - key: screeningData
+    type: sql
+    config: "sql/rhd_dashboard_screening.sql"
+designs:
+  - type: csv

@@ -11,6 +11,7 @@
 --   warfarin       of the patients whose latest medication answer is warfarin or another vitamin K antagonist without a
 --                  Date Stopped (as the INR flags read it), those with an RHD INR Monitoring in the 90 days to the end date
 -- Parameters: @endDate; @cardiacClinic and @primaryCareClinic, location uuids, each counting only its patients when set
+-- @clinics, location uuids separated by commas, counting only the patients either of whose clinics is one of them
 -- =============================================================================
 WITH active AS (
     SELECT DISTINCT pp.patient_id
@@ -33,6 +34,14 @@ WITH active AS (
           WHERE pa.person_id = pp.patient_id AND pa.voided = 0
             AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
                                                 WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')
+      ))
+      AND (@clinics IS NULL OR @clinics = '' OR EXISTS (
+          SELECT 1 FROM person_attribute pa
+          JOIN location l ON l.location_id = pa.value AND FIND_IN_SET(l.uuid, @clinics) > 0
+          WHERE pa.person_id = pp.patient_id AND pa.voided = 0
+            AND pa.person_attribute_type_id IN (SELECT person_attribute_type_id FROM person_attribute_type
+                                                 WHERE uuid IN ('fe261119-2911-5b36-be40-8f9827826987',
+                                                                '695f2990-236f-5d7c-b8aa-ddbdb22400f4'))
       ))
 ),
 consultation AS (
