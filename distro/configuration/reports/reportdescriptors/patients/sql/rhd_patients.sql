@@ -248,7 +248,7 @@ SELECT
                 AND proc_first.concept_id = g_rec.concept_id AND proc_first.value_coded = proc_rec.value_coded
             WHERE g_first.person_id = p.person_id AND g_first.voided = 0
               AND g_first.concept_id = g_rec.concept_id AND g_first.obs_group_id IS NULL
-              AND e_first.encounter_datetime > COALESCE((
+              AND e_first.encounter_datetime > GREATEST(COALESCE((
                   SELECT MAX(e_done.encounter_datetime)
                   FROM obs proc_done
                   JOIN obs done ON done.obs_group_id = proc_done.obs_group_id AND done.voided = 0
@@ -260,7 +260,17 @@ SELECT
                   WHERE proc_done.person_id = p.person_id AND proc_done.voided = 0
                     AND proc_done.concept_id = g_rec.concept_id AND proc_done.obs_group_id IS NOT NULL
                     AND proc_done.value_coded = proc_rec.value_coded
-              ), '1900-01-01')
+              ), '1900-01-01'), COALESCE(
+                  (SELECT MAX(DATE(COALESCE(pl_d.value_datetime, pl_e.encounter_datetime)))
+                   FROM obs pl
+                   JOIN encounter pl_e ON pl_e.encounter_id = pl.encounter_id AND pl_e.voided = 0
+                   LEFT JOIN obs pl_d ON pl_d.encounter_id = pl_e.encounter_id AND pl_d.voided = 0
+                       AND pl_d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a')
+                   WHERE pl.person_id = p.person_id AND pl.voided = 0
+                     AND pl.concept_id IN ((SELECT concept_id FROM concept WHERE uuid = '46f4af80-b783-59f4-beb1-81144ccf3084'),
+                                           (SELECT concept_id FROM concept WHERE uuid = 'bb4a77ee-836a-57e7-a262-632fa22288d2'))
+                     AND pl.value_coded = proc_rec.value_coded)
+              + INTERVAL 1 DAY, '1900-01-01'))
         ), e_rec.encounter_datetime)))
         FROM encounter e_rec
         JOIN form f_rec ON f_rec.form_id = e_rec.form_id AND f_rec.uuid = '4b063fc7-996f-3001-8500-8940e201be8f'
@@ -281,6 +291,25 @@ SELECT
                 AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
                 AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
                                          (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
+          )
+          -- Not done on Procedures and Outcomes on or after this consultation's day (AR-162)
+          AND NOT EXISTS (
+              SELECT 1 FROM obs pd
+              JOIN encounter pd_e ON pd_e.encounter_id = pd.encounter_id AND pd_e.voided = 0
+              LEFT JOIN obs pd_d ON pd_d.encounter_id = pd_e.encounter_id AND pd_d.voided = 0
+                  AND pd_d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a')
+              WHERE pd.person_id = p.person_id AND pd.voided = 0
+                AND pd.concept_id IN ((SELECT concept_id FROM concept WHERE uuid = '46f4af80-b783-59f4-beb1-81144ccf3084'),
+                                          (SELECT concept_id FROM concept WHERE uuid = 'bb4a77ee-836a-57e7-a262-632fa22288d2'))
+                AND pd.value_coded = proc_rec.value_coded
+                AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) >= DATE(e_rec.encounter_datetime)
+          )
+          -- A Procedure Type of None records that no intervention is recommended
+          AND NOT EXISTS (
+              SELECT 1 FROM obs typ
+              WHERE typ.obs_group_id = g_rec.obs_id AND typ.voided = 0
+                AND typ.concept_id = (SELECT concept_id FROM concept WHERE uuid = '3a576b80-744a-59ee-9515-d9fdca06f3d7')
+                AND typ.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
           )
     )                                                               AS earliest_procedure_due,
 

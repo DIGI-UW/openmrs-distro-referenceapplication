@@ -11,6 +11,7 @@
 --   warfarin       of the patients whose latest medication answer is warfarin or another vitamin K antagonist without a
 --                  Date Stopped (as the INR flags read it), those with an RHD INR Monitoring in the 90 days to the end date
 -- Parameters: @endDate; @cardiacClinic and @primaryCareClinic, location uuids, each counting only its patients when set
+-- @clinics, location uuids separated by commas, counting only the patients either of whose clinics is one of them
 -- =============================================================================
 WITH active AS (
     SELECT DISTINCT pp.patient_id
@@ -34,6 +35,14 @@ WITH active AS (
             AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
                                                 WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')
       ))
+      AND (@clinics IS NULL OR @clinics = '' OR EXISTS (
+          SELECT 1 FROM person_attribute pa
+          JOIN location l ON l.location_id = pa.value AND FIND_IN_SET(l.uuid, @clinics) > 0
+          WHERE pa.person_id = pp.patient_id AND pa.voided = 0
+            AND pa.person_attribute_type_id IN (SELECT person_attribute_type_id FROM person_attribute_type
+                                                 WHERE uuid IN ('fe261119-2911-5b36-be40-8f9827826987',
+                                                                '695f2990-236f-5d7c-b8aa-ddbdb22400f4'))
+      ))
 ),
 consultation AS (
     SELECT e.encounter_id, e.patient_id, e.encounter_datetime
@@ -44,7 +53,7 @@ consultation AS (
       AND e.encounter_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
 ),
 latest_consultation AS (
-    SELECT c.encounter_id, c.patient_id
+    SELECT c.encounter_id, c.patient_id, c.encounter_datetime
     FROM consultation c
     WHERE NOT EXISTS (SELECT 1 FROM consultation later
                       WHERE later.patient_id = c.patient_id
@@ -52,17 +61,38 @@ latest_consultation AS (
                              OR (later.encounter_datetime = c.encounter_datetime AND later.encounter_id > c.encounter_id)))
 ),
 -- Each interventional recommendation in a latest consultation, and whether it is answered Completed: CIEL Yes, or
--- core's True on answers saved before the form used CIEL, as the Procedural Waiting List reads it.
+-- core's True on answers saved before the form used CIEL, as the Procedural Waiting List reads it. A group whose
+-- Procedure Type is None records that no intervention is recommended, so it is not a recommendation.
 recommendation AS (
     SELECT lc.patient_id, g.obs_id,
            EXISTS (SELECT 1 FROM obs done
                    WHERE done.obs_group_id = g.obs_id AND done.voided = 0
                      AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
                      AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
-                                              (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))) AS completed
+                                              (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')))
+           -- or the procedure recorded on Procedures and Outcomes on or after the consultation's day (AR-162)
+           OR EXISTS (
+               SELECT 1 FROM obs pd
+               JOIN encounter pd_e ON pd_e.encounter_id = pd.encounter_id AND pd_e.voided = 0
+               LEFT JOIN obs pd_d ON pd_d.encounter_id = pd_e.encounter_id AND pd_d.voided = 0
+                   AND pd_d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a')
+               WHERE pd.person_id = lc.patient_id AND pd.voided = 0
+                 AND pd.concept_id IN ((SELECT concept_id FROM concept WHERE uuid = '46f4af80-b783-59f4-beb1-81144ccf3084'),
+                                           (SELECT concept_id FROM concept WHERE uuid = 'bb4a77ee-836a-57e7-a262-632fa22288d2'))
+                 AND pd.value_coded = proc.value_coded
+                 AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) >= DATE(lc.encounter_datetime)
+                 AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) <= DATE(@endDate)
+           ) AS completed
     FROM latest_consultation lc
     JOIN obs g ON g.encounter_id = lc.encounter_id AND g.voided = 0 AND g.obs_group_id IS NULL
      AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'ce93d393-1df5-587f-bf11-c373eac2ccf4')
+    -- The recommended procedure: the group's member with the group's concept
+    LEFT JOIN obs proc ON proc.obs_group_id = g.obs_id AND proc.voided = 0 AND proc.concept_id = g.concept_id
+    -- A Procedure Type of None records that no intervention is recommended
+    WHERE NOT EXISTS (SELECT 1 FROM obs typ
+                      WHERE typ.obs_group_id = g.obs_id AND typ.voided = 0
+                        AND typ.concept_id = (SELECT concept_id FROM concept WHERE uuid = '3a576b80-744a-59ee-9515-d9fdca06f3d7')
+                        AND typ.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
 ),
 echo_done AS (
     SELECT DISTINCT e.patient_id

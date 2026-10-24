@@ -34,7 +34,8 @@
                 "concept": "8edff8dc-4af6-5d0f-bf1d-8e349c7a1b15",
                 "min": "0",
                 "max": "100",
-                "disallowDecimals": true
+                "disallowDecimals": true,
+                "step": 1
               },
               "required": true
             },
