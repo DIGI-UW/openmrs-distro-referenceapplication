@@ -10,7 +10,7 @@ changes so that it no longer matches. The rules are in the distribution's config
 - **Once a day** by default, ACT Core re-evaluates every flag for every patient and mirrors the
   results into the lists on ACT home (the interval is the scheduler's, changed in Manage Scheduler),
   and an administrator can run the same refresh at any time from Admin, Flags and adherence.
-- **When a person is saved** (registration, Edit patient details, Mark deceased), that patient's
+- **When a person is saved** (registration, Edit patient details, Update patient status marking a patient deceased), that patient's
   flags are re-evaluated as soon as the save commits, so a data-quality flag about registration
   clears the moment the missing field is filled.
 
@@ -43,7 +43,7 @@ dismissed flag stays hidden until its rule stops matching and later matches agai
 | Site Infection missing on Procedures and Outcomes | Orange | As above, for Site Infection | The field is answered |
 | Bacterial Sepsis missing on Procedures and Outcomes | Orange | As above, for Bacterial Sepsis | The field is answered |
 | Delivery mode missing on RHD Pregnancy | Orange | The pregnancy's estimated due date passed 30 or more days ago and no delivery is recorded | The delivery is recorded |
-| Death recorded on a form but not on the patient | Orange | A form records the patient's death but the patient record is not marked deceased | Mark deceased on the chart, or the form's death answer is corrected |
+| Death recorded on a form but not on the patient | Orange | A form records the patient's death but the patient record is not marked deceased | Update patient status on the chart (Deceased), or the form's death answer is corrected |
 
 Flags tagged **RHD** (the red and blue ones) are decision support; flags tagged **Critical data** (the
 orange ones) are the data-completeness checks carried over from ACT 2.0's critical data flags.
