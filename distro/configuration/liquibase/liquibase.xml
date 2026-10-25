@@ -14,4 +14,14 @@
             SELECT person_id, 'admin', user_id, NOW(), 0, 'ba1e27d3-2c89-49fc-9851-3b509abcce93' FROM users WHERE system_id = 'admin'
         </sql>
     </changeSet>
+
+    <changeSet id="act3-auto-close-visits-1" author="act3">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">SELECT COUNT(*) FROM scheduler_task_config WHERE name = 'Auto Close Visits Task'</sqlCheck>
+        </preConditions>
+        <comment>Start core's Auto Close Visits Task at boot, so it stops the open visits of visits.autoCloseVisitType at its daily time, 23:59:59 server time</comment>
+        <sql>
+            UPDATE scheduler_task_config SET start_on_startup = 1 WHERE name = 'Auto Close Visits Task'
+        </sql>
+    </changeSet>
 </databaseChangeLog>
