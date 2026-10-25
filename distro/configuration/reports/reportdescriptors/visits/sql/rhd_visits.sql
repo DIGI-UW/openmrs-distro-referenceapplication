@@ -71,7 +71,6 @@ JOIN encounter_type et ON et.encounter_type_id = e.encounter_type AND et.retired
         '181e0106-35d3-537a-a25e-18d3ebf61883',  -- RHD Hospital Admission
         'ce6b111e-9beb-5a91-91ad-ec5043976fd5',  -- RHD Pregnancy
         '55271793-ef37-58da-9d86-1d9092a5a809',  -- RHD Oral Adherence
-        '8a51f352-5f1b-4836-a669-536e276a21db',  -- RHD Prophylaxis Update
         'c9b87090-8768-50be-987e-8ca0a8983429',  -- RHD Interventions and Outcomes
         'b4bb88a3-9a04-5142-85bd-bb63c270f632'   -- RHD INR Monitoring
     )
