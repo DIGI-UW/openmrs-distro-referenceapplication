@@ -57,6 +57,7 @@ services:
       - ./distro/configuration/programworkflows:/openmrs/distribution/openmrs_config/programworkflows/rhd:ro
       - ./distro/configuration/programworkflowstates:/openmrs/distribution/openmrs_config/programworkflowstates/rhd:ro
       - ./distro/configuration/personattributetypes:/openmrs/distribution/openmrs_config/personattributetypes/rhd:ro
+      - ./distro/configuration/relationshiptypes:/openmrs/distribution/openmrs_config/relationshiptypes/rhd:ro
       - ./distro/configuration/drugs:/openmrs/distribution/openmrs_config/drugs/rhd:ro
       - ./distro/configuration/concepts:/openmrs/distribution/openmrs_config/concepts/rhd:ro
       - ./distro/configuration/visittypes:/openmrs/distribution/openmrs_config/visittypes:ro
