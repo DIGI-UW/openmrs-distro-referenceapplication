@@ -1,8 +1,7 @@
 -- =============================================================================
 -- RHD Run Chart Metrics
--- ACT 2.0's runchart_record metrics (scheduled_record_calcs.py create_clinic_daily_record), as of the end date: one row
--- per clinic, a patient counting at their Assigned Cardiac Clinic and at their Primary Care Clinic, and one row with
--- no clinic_uuid for every clinic, so their total counts each patient once. ACT Core snapshots the rows daily.
+-- ACT 2.0's runchart_record metrics (scheduled_record_calcs.py create_clinic_daily_record), as of the end date.
+-- One row per clinic, a patient counting at both their clinics, and one row with no clinic_uuid counting each patient once.
 -- Parameter: @endDate
 -- =============================================================================
 WITH registrant AS (
@@ -10,7 +9,9 @@ WITH registrant AS (
     SELECT pp.patient_id, (pp.date_completed IS NULL OR DATE(pp.date_completed) > DATE(@endDate)) AS active
     FROM patient_program pp
     JOIN program pr ON pr.program_id = pp.program_id AND pr.uuid = '7d73e143-a550-5a9d-aecd-dd771add098d'
+    -- Not dead on the end date, as the care cascade counts
     JOIN person p ON p.person_id = pp.patient_id AND p.voided = 0
+     AND NOT (p.dead = 1 AND (p.death_date IS NULL OR DATE(p.death_date) <= DATE(@endDate)))
     WHERE pp.voided = 0
       AND DATE(pp.date_enrolled) <= DATE(@endDate)
       AND NOT EXISTS (
@@ -32,8 +33,7 @@ clinic_patient AS (
     UNION ALL
     SELECT NULL, r.patient_id FROM registrant r
 ),
--- Each patient's latest Diagnosis group by the end date with a Category and not answered inactive or secondary, as the
--- care cascade takes it, for its Active: Rheumatic Heart Disease/Rheumatic Fever.
+-- Each active patient's latest Diagnosis group with a Category, not answered inactive or secondary, as the care cascade takes it
 diagnosis AS (
     SELECT g.person_id, g.obs_id, g.obs_datetime
     FROM obs g
@@ -59,8 +59,7 @@ rhd AS (
                       WHERE later.person_id = d.person_id
                         AND (later.obs_datetime > d.obs_datetime OR (later.obs_datetime = d.obs_datetime AND later.obs_id > d.obs_id)))
 ),
--- The regimens the latest consultation recording one prescribes, less those with a Date Stopped in their group, and
--- of them the BPG ones, as the care cascade counts Prescribed and Adherent (80%+)
+-- The regimens in the latest consultation recording one, without a Date Stopped, as the care cascade reads them
 sap_encounter AS (
     SELECT o.person_id,
            SUBSTRING_INDEX(GROUP_CONCAT(o.encounter_id ORDER BY o.obs_datetime DESC, o.obs_id DESC), ',', 1) AS encounter_id
@@ -91,58 +90,86 @@ bpg AS (
     WHERE regimen_uuid IN ('50be4b26-6c5b-5aaa-9254-3bfd313b4522','2f3ee632-dd14-51b0-a4ec-de10e7958019',
                            '91230c88-6a90-5d45-af50-fa6155fe5dd7')
 ),
--- Each active patient's measures. Adherent reads ACT Core's adherence rows as of its last run, as the care cascade
--- does; the 7 months are ACT 2.0's 210 days.
+-- Every consultation by the end date of the active patients, and whether it is their latest
+all_consultation AS (
+    SELECT e.encounter_id, e.patient_id, e.encounter_datetime,
+           NOT EXISTS (SELECT 1 FROM encounter later
+                       WHERE later.patient_id = e.patient_id AND later.voided = 0
+                         AND later.encounter_type = e.encounter_type
+                         AND later.encounter_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
+                         AND (later.encounter_datetime > e.encounter_datetime
+                              OR (later.encounter_datetime = e.encounter_datetime AND later.encounter_id > e.encounter_id))) AS latest
+    FROM encounter e
+    JOIN registrant r ON r.patient_id = e.patient_id AND r.active
+    WHERE e.voided = 0
+      AND e.encounter_type = (SELECT encounter_type_id FROM encounter_type WHERE uuid = 'c2503561-c00d-5460-8157-43d594472b4a')
+      AND e.encounter_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
+),
+-- Each interventional recommendation, as rhd_medical_optimisation.sql counts it
+recommendation AS (
+    SELECT c.encounter_id, c.patient_id, c.latest,
+           -- Completed is only read on a latest consultation, as ACT 2.0 counted its recommendations
+           (c.latest AND (
+               EXISTS (SELECT 1 FROM obs done
+                       WHERE done.obs_group_id = g.obs_id AND done.voided = 0
+                         AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
+                         AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
+                                                  (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')))
+               -- Or the procedure recorded on Procedures and Outcomes on or after the consultation's day (AR-162)
+               OR EXISTS (
+                   SELECT 1 FROM obs pd
+                   JOIN encounter pd_e ON pd_e.encounter_id = pd.encounter_id AND pd_e.voided = 0
+                   LEFT JOIN obs pd_d ON pd_d.encounter_id = pd_e.encounter_id AND pd_d.voided = 0
+                       AND pd_d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a')
+                   WHERE pd.person_id = c.patient_id AND pd.voided = 0
+                     AND pd.concept_id IN ((SELECT concept_id FROM concept WHERE uuid = '46f4af80-b783-59f4-beb1-81144ccf3084'),
+                                           (SELECT concept_id FROM concept WHERE uuid = 'bb4a77ee-836a-57e7-a262-632fa22288d2'))
+                     AND pd.value_coded = proc.value_coded
+                     AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) >= DATE(c.encounter_datetime)
+                     AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) <= DATE(@endDate)))) AS completed
+    FROM all_consultation c
+    JOIN obs g ON g.encounter_id = c.encounter_id AND g.voided = 0 AND g.obs_group_id IS NULL
+     AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'ce93d393-1df5-587f-bf11-c373eac2ccf4')
+    -- The recommended procedure is the group's member with the group's concept
+    LEFT JOIN obs proc ON proc.obs_group_id = g.obs_id AND proc.voided = 0 AND proc.concept_id = g.concept_id
+    -- A Procedure Type of None records that no intervention is recommended
+    WHERE NOT EXISTS (SELECT 1 FROM obs typ
+                      WHERE typ.obs_group_id = g.obs_id AND typ.voided = 0
+                        AND typ.concept_id = (SELECT concept_id FROM concept WHERE uuid = '3a576b80-744a-59ee-9515-d9fdca06f3d7')
+                        AND typ.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
+),
+-- The consultations in the 365 days to the end date, each with whether an echo fell in the 13 months to it
+consultation AS (
+    SELECT c.patient_id,
+           EXISTS (SELECT 1 FROM encounter echo
+                   JOIN encounter_type et ON et.encounter_type_id = echo.encounter_type AND et.uuid = '730f5ec2-7102-55d0-8602-2d792844f245'
+                   WHERE echo.patient_id = c.patient_id AND echo.voided = 0
+                     AND echo.encounter_datetime >= DATE_SUB(DATE(c.encounter_datetime), INTERVAL 394 DAY)
+                     AND echo.encounter_datetime < DATE_ADD(DATE(c.encounter_datetime), INTERVAL 1 DAY)) AS with_echo,
+           EXISTS (SELECT 1 FROM recommendation rc WHERE rc.encounter_id = c.encounter_id) AS with_recommendation
+    FROM all_consultation c
+    WHERE c.encounter_datetime >= DATE_SUB(DATE(@endDate), INTERVAL 365 DAY)
+),
+-- Each registrant's measures; adherence is ACT Core's rows as of its last run
 measure AS (
     SELECT r.patient_id, r.active,
            r.active AND (
                EXISTS (SELECT 1 FROM encounter e
                        JOIN encounter_type et ON et.encounter_type_id = e.encounter_type AND et.uuid = 'c2503561-c00d-5460-8157-43d594472b4a'
                        WHERE e.patient_id = r.patient_id AND e.voided = 0
-                         AND e.encounter_datetime >= DATE_SUB(DATE(@endDate), INTERVAL 209 DAY)
+                         AND e.encounter_datetime >= DATE_SUB(DATE(@endDate), INTERVAL 210 DAY)
                          AND e.encounter_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY))
                OR EXISTS (SELECT 1 FROM obs d
                           WHERE d.person_id = r.patient_id AND d.voided = 0
                             AND d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '183fb30e-b861-5b7c-806f-7118a40f2b51')
-                            AND d.value_datetime >= DATE_SUB(DATE(@endDate), INTERVAL 209 DAY)
+                            AND d.value_datetime >= DATE_SUB(DATE(@endDate), INTERVAL 210 DAY)
                             AND d.value_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY))) AS seen,
            EXISTS (SELECT 1 FROM prescribed pr WHERE pr.person_id = r.patient_id) AS prescribed,
            (EXISTS (SELECT 1 FROM bpg b WHERE b.person_id = r.patient_id) AND adh.adherence >= 0.8) IS TRUE AS adherent,
-           -- Procedures recorded completed by the end date, each once
-           CASE WHEN r.active THEN (
-               SELECT COUNT(DISTINCT proc.value_coded)
-               FROM obs g
-               JOIN obs proc ON proc.obs_group_id = g.obs_id AND proc.voided = 0 AND proc.concept_id = g.concept_id
-               JOIN obs done ON done.obs_group_id = g.obs_id AND done.voided = 0
-                AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
-                AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
-                                         (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
-               WHERE g.person_id = r.patient_id AND g.voided = 0 AND g.obs_group_id IS NULL
-                 AND g.obs_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
-                 AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'ce93d393-1df5-587f-bf11-c373eac2ccf4')
-           ) ELSE 0 END AS completed
+           (SELECT COUNT(*) FROM recommendation rc
+            WHERE rc.patient_id = r.patient_id AND rc.latest AND rc.completed) AS completed
     FROM registrant r
     LEFT JOIN actcore_prophylaxis_adherence adh ON adh.patient_id = r.patient_id
-),
--- The active patients' consultations in the 365 days to the end date (ACT 2.0's snapshot counted every visit ever),
--- whether the patient had an echocardiogram in the 13 months (395 days) to the visit, ACT 2.0's echo window, and whether
--- the visit recommends a procedure
-consultation AS (
-    SELECT e.patient_id,
-           EXISTS (SELECT 1 FROM encounter echo
-                   JOIN encounter_type et ON et.encounter_type_id = echo.encounter_type AND et.uuid = '730f5ec2-7102-55d0-8602-2d792844f245'
-                   WHERE echo.patient_id = e.patient_id AND echo.voided = 0
-                     AND echo.encounter_datetime >= DATE_SUB(DATE(e.encounter_datetime), INTERVAL 394 DAY)
-                     AND echo.encounter_datetime < DATE_ADD(DATE(e.encounter_datetime), INTERVAL 1 DAY)) AS with_echo,
-           EXISTS (SELECT 1 FROM obs g
-                   WHERE g.encounter_id = e.encounter_id AND g.voided = 0 AND g.obs_group_id IS NULL
-                     AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'ce93d393-1df5-587f-bf11-c373eac2ccf4')) AS with_recommendation
-    FROM encounter e
-    JOIN encounter_type et ON et.encounter_type_id = e.encounter_type AND et.uuid = 'c2503561-c00d-5460-8157-43d594472b4a'
-    JOIN registrant r ON r.patient_id = e.patient_id AND r.active
-    WHERE e.voided = 0
-      AND e.encounter_datetime >= DATE_SUB(DATE(@endDate), INTERVAL 364 DAY)
-      AND e.encounter_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
 ),
 visits AS (
     SELECT patient_id, COUNT(*) AS total, SUM(with_echo) AS with_echo, SUM(with_recommendation) AS with_recommendation
@@ -162,4 +189,8 @@ FROM clinic_patient cp
 JOIN measure m ON m.patient_id = cp.patient_id
 LEFT JOIN visits v ON v.patient_id = cp.patient_id
 GROUP BY cp.clinic_uuid
-ORDER BY cp.clinic_uuid
+UNION ALL
+-- The all-clinics row with nobody registered, which ACT Core's snapshot refuses to go without
+SELECT NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0
+WHERE NOT EXISTS (SELECT 1 FROM registrant)
+ORDER BY clinic_uuid
