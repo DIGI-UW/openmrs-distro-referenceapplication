@@ -134,12 +134,13 @@
           "past-medications-widget"
         ],
         "order": [
+          "patient-flags-list",
           "act-next-steps-card",
           "act-prophylaxis-card",
           "act-consultation-card",
           "act-inr-card",
-          "conditions-overview-widget",
-          "act-contact-card"
+          "act-contact-card",
+          "conditions-overview-widget"
         ],
         "configure": {
           "conditions-overview-widget": {
