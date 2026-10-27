@@ -20,7 +20,7 @@ Test users (password Act12345 unless --user-password): cc community clinician, d
 cl clinician, sa site administrator (Acimi HCIII), ia instance administrator, ga global administrator.
 Needs only the Python 3 standard library.
 """
-import argparse, base64, datetime, json, sys, urllib.error, urllib.request
+import argparse, base64, datetime, json, sys, time, urllib.error, urllib.request
 
 ARGS = None
 
@@ -45,6 +45,9 @@ def call(method, path, body=None, user=None, pw=None):
             err = {"message": raw[:300]}
         return {"__error__": e.code, "message": err.get("message"),
                 "detail": str(err.get("globalErrors") or err.get("fieldErrors") or "")[:400]}
+    except urllib.error.URLError as e:
+        # The server is down, or still booting on a fresh stack.
+        return {"__error__": "unreachable", "message": str(e.reason)}
 
 def must(result, what):
     if isinstance(result, dict) and "__error__" in result:
@@ -397,8 +400,9 @@ def seed_care(pat, p, rng, reg, status):
                                  obs("admitOutcome", "dischargeHome"), dobs("dischargeDate", admit + datetime.timedelta(days=rng.randint(3, 14)))], p["cardiac"])
 
 def seed_population(n, workers):
+    """Seeds the population and returns how many of its people failed."""
     people = population_people(n)
-    statuses = {}
+    statuses, failed = {}, []
     def one(p):
         try:
             status = seed_person(p)
@@ -408,9 +412,13 @@ def seed_population(n, workers):
             raise
         except Exception as e:
             print(f"  population patient {p['given']} {p['family']} failed: {e}")
+            with _lock:
+                failed.append(p)
     with ThreadPoolExecutor(max_workers=workers) as pool:
         list(pool.map(one, people))
-    print(f"population: {n} patients, by registry status {dict(sorted(statuses.items()))}")
+    print(f"population: {n - len(failed)} of {n} patients seeded, {len(failed)} failed,"
+          f" by registry status {dict(sorted(statuses.items()))}")
+    return len(failed)
 
 # The seeded patients, by name and birth date: how a rerun finds them to skip or void.
 SEEDED = [("Abebe","Okot","2010-05-01"),("Grace","Akello","2012-03-02"),("Sarah","Apio","2008-07-07"),("Faith","Auma","2011-01-15"),
@@ -443,17 +451,26 @@ ROLES = {"cc":("Community Clinician","b9ab4b76-e7b9-46a7-b4ec-5b7fdd8fa540"), "d
 
 def users():
     for username, (label, role) in ROLES.items():
-        existing = call("GET", f"/user?username={username}&v=custom:(uuid)").get("results", [])
-        if existing:
-            print(f"user {username} exists")
+        if "__error__" in call("GET", f"/role/{role}?v=custom:(uuid)"):
+            print(f"user {username} skipped: this server has no {label} role yet")
             continue
-        clinics = {"cc": ACIMI, "dc": ACIMI, "cl": UHI, "sa": ACIMI}.get(username)
-        created = must(call("POST", "/user", {
-            "username": username, "password": ARGS.user_password, "roles": [role],
-            "person": {"names": [{"givenName": "Test", "familyName": label}], "gender": "F"},
-            "userProperties": {"actcore.clinics": clinics} if clinics else {}}), f"user {username}")
-        must(call("POST", "/provider", {"person": created["person"]["uuid"], "identifier": username}), f"provider {username}")
-        print(f"user {username} ({label}) created")
+        found = call("GET", f"/user?username={username}&v=custom:(uuid,roles:(uuid),person:(uuid))").get("results", [])
+        if found:
+            user, roles = found[0], [r["uuid"] for r in found[0]["roles"]]
+            if role not in roles:
+                must(call("POST", f"/user/{user['uuid']}", {"roles": roles + [role]}), f"role for {username}")
+                print(f"user {username} exists, given {label}")
+            else:
+                print(f"user {username} exists")
+        else:
+            clinics = {"cc": ACIMI, "dc": ACIMI, "cl": UHI, "sa": ACIMI}.get(username)
+            user = must(call("POST", "/user", {
+                "username": username, "password": ARGS.user_password, "roles": [role],
+                "person": {"names": [{"givenName": "Test", "familyName": label}], "gender": "F"},
+                "userProperties": {"actcore.clinics": clinics} if clinics else {}}), f"user {username}")
+            print(f"user {username} ({label}) created")
+        if not call("GET", f"/provider?user={user['uuid']}&v=custom:(uuid)").get("results"):
+            must(call("POST", "/provider", {"person": user["person"]["uuid"], "identifier": username}), f"provider {username}")
 
 def studies():
     existing = {s["name"]: s for s in must(call("GET", "/actcore/studies"), "studies").get("results", [])}
@@ -491,9 +508,21 @@ def main():
     parser.add_argument("--reset-only", action="store_true", help="only void the seeded patients")
     parser.add_argument("--population", type=int, default=180, help="how many more generated patients to add (default 180, 0 for none)")
     parser.add_argument("--workers", type=int, default=6, help="patients seeded in parallel (default 6)")
+    parser.add_argument("--wait", type=int, default=0, metavar="SECONDS",
+                        help="keep trying to reach the server for this long, for a stack still booting (default 0)")
     ARGS = parser.parse_args()
 
-    if "__error__" in call("GET", "/session") or not call("GET", "/session").get("authenticated"):
+    deadline = time.monotonic() + ARGS.wait
+    while True:
+        session = call("GET", "/session")
+        if session.get("__error__") != "unreachable":
+            break
+        if time.monotonic() >= deadline:
+            print(f"Cannot reach {ARGS.url}: {session['message']}")
+            sys.exit(1)
+        print(f"waiting for {ARGS.url} ...")
+        time.sleep(10)
+    if "__error__" in session or not session.get("authenticated"):
         print(f"Cannot sign in to {ARGS.url} as {ARGS.user}")
         sys.exit(1)
     missing = check()
@@ -511,14 +540,18 @@ def main():
     all_studies = studies()
     seed()
     research_and_deaths(all_studies)
+    failed = 0
     if ARGS.population:
         print(f"seeding a population of {ARGS.population} more patients across eight clinics ...")
-        seed_population(ARGS.population, ARGS.workers)
+        failed = seed_population(ARGS.population, ARGS.workers)
     refresh = call("POST", "/actcore/refresh", {})
     print("flags and adherence refreshed" if "__error__" not in refresh else f"refresh failed: {refresh}")
     print(f"seeded {len(LOG)} patients:")
     for name, ident, uuid in LOG:
         print(f"  {ident}  {name}  {ARGS.url.rstrip('/')}/openmrs/spa/patient/{uuid}/chart")
+    if failed:
+        print(f"{failed} population patients failed to seed; run again with --reset to seed them")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
