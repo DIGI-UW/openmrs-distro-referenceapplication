@@ -133,7 +133,9 @@
         "remove": [
           "active-medications-widget",
           "future-medications-widget",
-          "past-medications-widget"
+          "past-medications-widget",
+          "vitals-overview-widget",
+          "biometrics-overview-widget"
         ],
         "order": [
           "patient-flags-list",
@@ -141,11 +143,12 @@
           "act-prophylaxis-card",
           "act-consultation-card",
           "act-inr-card",
-          "act-contact-card",
-          "conditions-overview-widget"
+          "conditions-overview-widget",
+          "act-medications-card"
         ],
         "configure": {
           "conditions-overview-widget": {
+            "fullWidth": true,
             "Display conditions": {
               "privileges": [
                 "Task: act.enterClinicalForms"
@@ -675,5 +678,11 @@
         ]
       }
     }
+  },
+  "@openmrs/esm-patient-banner-app": {
+    "contactAttributeTypes": [
+      "542c6fd2-05ca-53e3-a4f5-cd23bc1abd8f",
+      "ea3cb7ae-ffbe-5aee-8343-44977898f675"
+    ]
   }
 }
