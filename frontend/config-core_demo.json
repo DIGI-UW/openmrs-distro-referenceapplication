@@ -540,6 +540,9 @@
     ]
   },
   "@act-registry/esm-act-app": {
+    "helpMenu": {
+      "contactUrl": "mailto:McCall.Miller@cchmc.org"
+    },
     "registry": {
       "showBpgColumns": true
     },
@@ -655,6 +658,18 @@
           "billable-services-admin-card-link",
           "bed-management-admin-card-link",
           "stock-management-admin-card-link"
+        ]
+      }
+    }
+  },
+  "@openmrs/esm-help-menu-app": {
+    "extensionSlots": {
+      "help-menu-slot": {
+        "remove": [
+          "contact-us",
+          "docs",
+          "release-notes",
+          "tutorials"
         ]
       }
     }
