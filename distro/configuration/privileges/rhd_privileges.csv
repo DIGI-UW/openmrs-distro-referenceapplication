@@ -27,3 +27,5 @@ e688aa98-d50a-461e-968e-88cf349316ea,,Task: act.dismissFlags,"Dismiss a patient'
 0de4ee5d-8478-46eb-876a-493b00907866,,Task: act.downloadResearchData,"Download a form's fields, never with identifiers, for the patients who opted in to research"
 75927401-7dbe-41cb-8bc5-96941dbbed5a,,Task: act.allClinics,"Administer the users of every clinic: not limited to the clinics on the user's own account, as a site administrator is"
 afe864ac-2b08-41cd-945a-57db92bc3a23,,Task: act.sendReferral,"Send a patient's referral to a clinician from Next steps: the edit privilege of the RHD Referral encounter type"
+6666f0e4-83cc-4190-ab01-d699e2dfaefc,,App: act.screeningCounts,"Open Screening counts in the Admin section: each clinic's monthly screening counts"
+02f87214-68c8-422a-a4a7-c11c5d6ebe75,,Task: act.enterScreeningCounts,"Enter and save a clinic's monthly screening counts; a site administrator, for the clinics on their account"
