@@ -135,7 +135,8 @@
           "future-medications-widget",
           "past-medications-widget",
           "vitals-overview-widget",
-          "biometrics-overview-widget"
+          "biometrics-overview-widget",
+          "conditions-overview-widget"
         ],
         "order": [
           "patient-flags-list",
@@ -143,19 +144,8 @@
           "act-prophylaxis-card",
           "act-consultation-card",
           "act-inr-card",
-          "conditions-overview-widget",
           "act-medications-card"
-        ],
-        "configure": {
-          "conditions-overview-widget": {
-            "fullWidth": true,
-            "Display conditions": {
-              "privileges": [
-                "Task: act.enterClinicalForms"
-              ]
-            }
-          }
-        }
+        ]
       },
       "patient-banner-tags-slot": {
         "remove": [
