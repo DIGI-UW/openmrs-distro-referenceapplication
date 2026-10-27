@@ -71,6 +71,7 @@ JOIN encounter_type et ON et.encounter_type_id = e.encounter_type
         'ce6b111e-9beb-5a91-91ad-ec5043976fd5',
         '55271793-ef37-58da-9d86-1d9092a5a809',
         '8a51f352-5f1b-4836-a669-536e276a21db',
+        'e3f1b6a8-5c2d-4f7e-9a41-6d8b2c0e7f53',
         'c9b87090-8768-50be-987e-8ca0a8983429',
         'b4bb88a3-9a04-5142-85bd-bb63c270f632'
     )

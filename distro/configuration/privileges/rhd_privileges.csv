@@ -17,6 +17,7 @@ b013ab1f-925e-4e4e-96b0-3d6808e14bce,,Task: act.enterClinicalForms,"Record the c
 081b8ebc-8d24-42fa-b891-33b6427f7257,,Task: act.refreshFlags,"Refresh every patient's critical data flags and prophylaxis adherence now, from the Admin section, and take the run chart snapshot through its endpoint"
 bba8c1e6-2c61-4b59-b7ae-e5a92cd4ac1c,,Task: act.enterPatientInformation,"Record Patient Information: the edit privilege of its encounter type"
 b844bfa2-b62e-4d0a-afc7-4c9b9b6a044e,,Task: act.enterProphylaxis,"Record BPG Delivery and Oral Adherence: the edit privilege of their encounter types"
+5a9c3e71-8b24-4d6f-a0e5-2f7b9d1c4e86,,Task: act.enterMedications,"Record Medication Update: a patient's past and current cardiac medicines, and starting or stopping one. The edit privilege of its encounter type"
 ba727f98-58dd-56e8-aec4-144798387f98,,App: act.studies,"Open Studies: the research studies and their participants, and a patient's Research participation page"
 95db03dc-ed65-59dc-ae70-034b61ece263,,Task: act.manageStudies,"Create and rename research studies"
 5a63ca76-fb96-5d71-9b57-13ce2a2f7992,,Get Patient Program Attribute Types,"Read the attribute types of programme enrolments, such as Study Participant ID. Core checks it but does not create it."
