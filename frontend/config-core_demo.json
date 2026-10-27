@@ -68,6 +68,7 @@
           "act-cardiac-tests-dashboard-link",
           "act-research-dashboard-link",
           "act-consultations-dashboard-link",
+          "act-medications-dashboard-link",
           "act-inr-reviews-dashboard-link",
           "act-clinicians-only-note"
         ],
@@ -85,6 +86,7 @@
           "charts-summary-dashboard",
           "act-prophylaxis-dashboard-link",
           "act-consultations-dashboard-link",
+          "act-medications-dashboard-link",
           "act-inr-reviews-dashboard-link",
           "encounters-summary-dashboard",
           "act-cardiac-tests-dashboard-link",

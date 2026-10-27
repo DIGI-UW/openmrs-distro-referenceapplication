@@ -23,7 +23,7 @@
                 "rendering": "markdown"
               },
               "value": [
-                "Add each cardiac medicine the patient takes now or took before, with the date they started it. A medicine they no longer take also needs its date stopped; to stop a current one, add it again with its date stopped."
+                "Add each cardiac medicine the patient takes now or took before, with the date they started it. A medicine they no longer take also needs its date stopped; to stop or change a current one, use its Edit on the Medications page."
               ]
             },
             {
