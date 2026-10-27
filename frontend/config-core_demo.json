@@ -68,6 +68,7 @@
           "act-cardiac-tests-dashboard-link",
           "act-research-dashboard-link",
           "act-consultations-dashboard-link",
+          "act-medications-dashboard-link",
           "act-inr-reviews-dashboard-link",
           "act-clinicians-only-note"
         ],
@@ -85,6 +86,7 @@
           "charts-summary-dashboard",
           "act-prophylaxis-dashboard-link",
           "act-consultations-dashboard-link",
+          "act-medications-dashboard-link",
           "act-inr-reviews-dashboard-link",
           "encounters-summary-dashboard",
           "act-cardiac-tests-dashboard-link",
@@ -134,12 +136,13 @@
           "past-medications-widget"
         ],
         "order": [
+          "patient-flags-list",
           "act-next-steps-card",
           "act-prophylaxis-card",
           "act-consultation-card",
           "act-inr-card",
-          "conditions-overview-widget",
-          "act-contact-card"
+          "act-contact-card",
+          "conditions-overview-widget"
         ],
         "configure": {
           "conditions-overview-widget": {
@@ -539,6 +542,9 @@
     ]
   },
   "@act-registry/esm-act-app": {
+    "helpMenu": {
+      "contactUrl": "mailto:McCall.Miller@cchmc.org"
+    },
     "registry": {
       "showBpgColumns": true
     },
@@ -654,6 +660,18 @@
           "billable-services-admin-card-link",
           "bed-management-admin-card-link",
           "stock-management-admin-card-link"
+        ]
+      }
+    }
+  },
+  "@openmrs/esm-help-menu-app": {
+    "extensionSlots": {
+      "help-menu-slot": {
+        "remove": [
+          "contact-us",
+          "docs",
+          "release-notes",
+          "tutorials"
         ]
       }
     }
