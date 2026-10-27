@@ -74,6 +74,12 @@ completed_yes AS (
 recommendation AS (
     SELECT c.encounter_id, c.patient_id, c.encounter_datetime, g.obs_id,
            COALESCE(proc_name.name, 'Not given') AS procedure_name,
+           CASE WHEN proc_concept.uuid IN ('af9429ff-1b76-55f3-81ca-a9f775d93fb4', 'aca1be99-d090-5078-be63-81353ae89195',
+                                           '69678122-dc66-5b8a-93bc-3358d241ad1b', '36b3cc68-c53f-5a23-8380-24dbaf9c88fb')
+                THEN 'Balloon valvuloplasty'
+                WHEN proc_concept.uuid = '7af8595d-407e-5705-bd8a-812735e2f188' THEN 'Mitral valve'
+                WHEN proc_concept.uuid = 'cd9c582a-71f9-5441-97a8-6d50d7dc15c8' THEN 'Aortic valve'
+                ELSE 'Other' END AS procedure_group,
            proc_concept.uuid AS procedure_uuid,
            type_concept.uuid AS procedure_type_uuid,
            COALESCE(urg_name.name, 'Not given') AS urgency,
@@ -111,13 +117,14 @@ open_recommendation AS (
                  OR (later.encounter_datetime = r.encounter_datetime AND later.encounter_id > r.encounter_id))
       )
 ),
--- open: one row per open recommendation, of @procedure and @urgency when set; total: one row per patient waiting;
+-- open: one row per open recommendation, of @procedure's group and @urgency when set, naming its own procedure; total:
+-- one row per patient waiting;
 -- performed: one row per recommendation completed in the 365 days to the end date, of @procedure when set
 figure AS (
     SELECT patient_id, CONCAT(procedure_name, ', ', urgency) AS value, encounter_datetime AS date
     FROM open_recommendation
     WHERE COALESCE(NULLIF(@breakdown, ''), 'open') = 'open'
-      AND (@procedure IS NULL OR @procedure = '' OR procedure_name = @procedure)
+      AND (@procedure IS NULL OR @procedure = '' OR procedure_group = @procedure)
       AND (@urgency IS NULL OR @urgency = '' OR urgency = @urgency)
     UNION ALL
     SELECT patient_id, GROUP_CONCAT(procedure_name ORDER BY procedure_name SEPARATOR ', '), MIN(encounter_datetime)

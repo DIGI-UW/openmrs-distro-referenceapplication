@@ -89,7 +89,7 @@ latest_diagnosis AS (
                       WHERE later.person_id = d.person_id
                         AND (later.obs_datetime > d.obs_datetime OR (later.obs_datetime = d.obs_datetime AND later.obs_id > d.obs_id)))
 ),
--- The category, and for Rheumatic Heart Disease/Rheumatic Fever its details in name order, as the registry splits it.
+-- The category, and for Rheumatic Heart Disease/Rheumatic Fever its details in name order, one label per patient.
 disease AS (
     SELECT a.patient_id,
            CASE
@@ -105,6 +105,10 @@ disease AS (
                                             (SELECT concept_id FROM concept WHERE uuid = 'd3f6e1a2-9c5b-5e84-8f2d-1a6c7b9e0d4f'),
                                             (SELECT concept_id FROM concept WHERE uuid = 'b7a2c4d8-5e91-5f3a-8c6d-2b9e4f7a1c0d'),
                                             (SELECT concept_id FROM concept WHERE uuid = 'e9f3a5c7-6b82-5d4e-9f1a-3c7d8e2b5f4a'))
+                     -- Acute rheumatic fever beside an RHD stage counts under the stage.
+                     AND NOT (det.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'cbfcf051-bee3-549d-b233-e5be0e7d691a')
+                              AND EXISTS (SELECT 1 FROM obs stage WHERE stage.obs_group_id = det.obs_group_id AND stage.voided = 0
+                                          AND stage.concept_id = det.concept_id AND stage.value_coded <> det.value_coded))
                ), 'RHD, details not recorded')
            END AS label
     FROM active a
