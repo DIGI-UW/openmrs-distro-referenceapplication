@@ -28,6 +28,10 @@ def privilege_of(descriptor):
     return match.group(1) if match else None
 
 
+def sql_without_comments(path):
+    return re.sub(r'/\*.*?\*/|--[^\n]*', '', path.read_text(), flags=re.S)
+
+
 def declared_privileges():
     with open(CONFIGURATION / 'privileges' / 'rhd_privileges.csv', newline='') as handle:
         return {row['Privilege name'] for row in csv.DictReader(handle)}
@@ -77,14 +81,15 @@ class ReportPrivileges(unittest.TestCase):
                 continue
             self.assertTrue(declares, '%s declares no clinics parameter, so ACT Core cannot hold a limited user to their clinics' % key)
 
-    def test_the_sql_of_every_report_that_takes_clinics_reads_them(self):
+    def test_the_sql_of_every_report_that_takes_clinics_limits_its_patients_by_them(self):
         for descriptor in DESCRIPTORS:
             text = descriptor.read_text()
             if re.search(r'^\s+- key: clinics\s*$', text, re.M) is None:
                 continue
-            sql = descriptor.parent / re.search(r'config:\s*"(sql/[^"]+\.sql)"', text).group(1)
-            self.assertIn('@clinics', sql.read_text(), '%s takes clinics but %s never reads @clinics' % (descriptor.name, sql.name))
-
+            for path in re.findall(r'config:\s*"(sql/[^"]+\.sql)"', text):
+                sql = sql_without_comments(descriptor.parent / path)
+                self.assertRegex(sql, re.compile(r'@clinics\s+IS\s+NULL', re.I), '%s takes clinics but %s has no @clinics IS NULL case outside comments' % (descriptor.name, path))
+                self.assertRegex(sql, re.compile(r'FIND_IN_SET\s*\([^;]*?,\s*@clinics\s*\)', re.I), '%s takes clinics but %s never calls FIND_IN_SET(..., @clinics) outside comments' % (descriptor.name, path))
 
 if __name__ == '__main__':
     unittest.main()
