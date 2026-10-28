@@ -80,7 +80,9 @@
           "immunization-summary-dashboard",
           "procedures-summary-dashboard",
           "conditions-summary-dashboard",
-          "medications-summary-dashboard"
+          "medications-summary-dashboard",
+          "allergies-summary-dashboard",
+          "growth-chart-dashboard-link"
         ],
         "order": [
           "charts-summary-dashboard",
@@ -93,9 +95,7 @@
           "test-results-summary-dashboard",
           "act-research-dashboard-link",
           "results-summary-dashboard",
-          "allergies-summary-dashboard",
           "programs-summary-dashboard",
-          "growth-chart-dashboard-link",
           "act-clinicians-only-note"
         ],
         "configure": {
