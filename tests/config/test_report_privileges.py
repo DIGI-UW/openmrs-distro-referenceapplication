@@ -98,7 +98,7 @@ class JobRoles(unittest.TestCase):
         # through that report's own privilege instead, so a role holding them would still run every report.
         granted = granted_privileges()
         for privilege in ('View Reports', 'Run Reports'):
-            self.assertNotIn(privilege, granted, 'a role still grants %s' % privilege)
+            self.assertTrue(privilege not in granted, 'a role still grants %s' % privilege)
 
 
 if __name__ == '__main__':
