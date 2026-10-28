@@ -29,7 +29,7 @@ e688aa98-d50a-461e-968e-88cf349316ea,,Task: act.dismissFlags,"Dismiss a patient'
 afe864ac-2b08-41cd-945a-57db92bc3a23,,Task: act.sendReferral,"Send a patient's referral to a clinician from Next steps: the edit privilege of the RHD Referral encounter type"
 6666f0e4-83cc-4190-ab01-d699e2dfaefc,,App: act.screeningCounts,"Open Screening counts in the Admin section: each clinic's monthly screening counts"
 02f87214-68c8-422a-a4a7-c11c5d6ebe75,,Task: act.enterScreeningCounts,"Enter and save a clinic's monthly screening counts; a site administrator, for the clinics on their account"
-b973178e-206c-4c8b-9786-bd48004f80a6,,Task: act.report.dashboard,"Run the Dashboard's reports: its registrant, waitlist, screening and medical optimisation figures and the patients behind each, and the care and screening cascades"
+b973178e-206c-4c8b-9786-bd48004f80a6,,Task: act.report.dashboard,"Run the Dashboard's reports: its registrant, waitlist, screening and medical optimisation figures and the patients behind each, and the care and screening cascades, including the Home care cascade widget and the Reports page cascade card"
 3d7c5241-4937-40e2-b0f7-a477a0046a4c,,Task: act.report.patientList,"Run the patient list the registry, the worklists and Enter prophylaxis read"
 f66b08de-a757-4ef6-8e8e-a769bd49cc48,,Task: act.report.waitingList,"Run the procedural waiting list report"
 ae3eb6db-1ecb-4a24-b74c-4f96ec2087b8,,Task: act.report.screenPositive,"Run the screen positive, pending confirmation report"

@@ -18,6 +18,10 @@ PREFIX = 'Task: act.report.'
 # Instance wide counts with no patient in them: nothing for a clinic to limit
 INSTANCE_WIDE = {'rhdInstanceKpis', 'rhdRunChartMetrics'}
 
+# Report privileges no role is granted, on purpose: ACT Core runs the report only in its scheduler task and
+# snapshot thread, where the check is skipped, and no screen runs it as a user. Administrators and super users hold it.
+ADMIN_ONLY = {PREFIX + 'runChartMetrics'}
+
 
 def privilege_of(descriptor):
     match = re.search(r'^config:\s*\n\s+privilege:\s*"([^"]+)"\s*$', descriptor.read_text(), re.M)
@@ -55,7 +59,10 @@ class ReportPrivileges(unittest.TestCase):
         granted = granted_privileges()
         for privilege in sorted(p for p in declared_privileges() if p.startswith(PREFIX)):
             self.assertIn(privilege, named, '%s guards no report' % privilege)
-            self.assertIn(privilege, granted, '%s is granted to no role' % privilege)
+            if privilege in ADMIN_ONLY:
+                self.assertNotIn(privilege, granted, '%s is listed as admin only but a role grants it' % privilege)
+            else:
+                self.assertIn(privilege, granted, '%s is granted to no role' % privilege)
 
     def test_no_role_grants_a_report_privilege_that_is_not_defined(self):
         defined = declared_privileges()
@@ -69,6 +76,14 @@ class ReportPrivileges(unittest.TestCase):
             if key in INSTANCE_WIDE:
                 continue
             self.assertTrue(declares, '%s declares no clinics parameter, so ACT Core cannot hold a limited user to their clinics' % key)
+
+    def test_the_sql_of_every_report_that_takes_clinics_reads_them(self):
+        for descriptor in DESCRIPTORS:
+            text = descriptor.read_text()
+            if re.search(r'^\s+- key: clinics\s*$', text, re.M) is None:
+                continue
+            sql = descriptor.parent / re.search(r'config:\s*"(sql/[^"]+\.sql)"', text).group(1)
+            self.assertIn('@clinics', sql.read_text(), '%s takes clinics but %s never reads @clinics' % (descriptor.name, sql.name))
 
 
 if __name__ == '__main__':
