@@ -1,3 +1,0 @@
-uuid,entity name,name,description,min occurs,max occurs,datatype classname,datatype config,void/retire
-88c16130-30c9-5977-b84f-6f11c65616ae,Location,Clinic Designation,Ownership designation of the clinic,0,1,org.openmrs.customdatatype.datatype.FreeTextDatatype,,
-7840ba5d-d927-52d6-907b-dd070bea6626,Program,Study Participant ID,"The participant's ID in a research study, as ACT 2.0's Study ID",0,1,org.openmrs.customdatatype.datatype.FreeTextDatatype,,

@@ -1,9 +1,0 @@
-<config>
-    <!-- Overrides the showcase content's 50; sorted after it by path, so keep it under globalproperties/rhd. -->
-    <globalProperties>
-        <globalProperty>
-            <property>referencedemodata.createDemoPatientsOnNextStartup</property>
-            <value>0</value>
-        </globalProperty>
-    </globalProperties>
-</config>
