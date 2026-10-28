@@ -91,5 +91,15 @@ class ReportPrivileges(unittest.TestCase):
                 self.assertRegex(sql, re.compile(r'@clinics\s+IS\s+NULL', re.I), '%s takes clinics but %s has no @clinics IS NULL case outside comments' % (descriptor.name, path))
                 self.assertRegex(sql, re.compile(r'FIND_IN_SET\s*\([^;]*?,\s*@clinics\s*\)', re.I), '%s takes clinics but %s never calls FIND_IN_SET(..., @clinics) outside comments' % (descriptor.name, path))
 
+class JobRoles(unittest.TestCase):
+
+    def test_no_role_holds_the_generic_report_privileges(self):
+        # OpenMRS's View Reports and Run Reports let a role run any report; ACT Core lets a role run an ACT report
+        # through that report's own privilege instead, so a role holding them would still run every report.
+        granted = granted_privileges()
+        for privilege in ('View Reports', 'Run Reports'):
+            self.assertNotIn(privilege, granted, 'a role still grants %s' % privilege)
+
+
 if __name__ == '__main__':
     unittest.main()
