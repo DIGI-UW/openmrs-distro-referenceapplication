@@ -9,9 +9,15 @@ parameters:
   - key: endDate
     type: java.util.Date
     label: "End Date"
+  - key: clinics
+    type: java.lang.String
+    label: "Either clinic among these (location uuids separated by commas, no spaces)"
+    required: false
 datasets:
   - key: visitsData
     type: sql
     config: "sql/rhd_visits.sql"
 designs:
   - type: csv
+config:
+  privilege: "Task: act.report.visits"

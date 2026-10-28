@@ -33,6 +33,9 @@ jobs:
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
 
+      - name: Check the report privileges
+        run: python3 -m unittest discover -s tests/config
+
       - name: Build and Test
         run: mvn --batch-mode --update-snapshots --activate-profiles distro,validator clean verify
         env:
