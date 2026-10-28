@@ -37,11 +37,15 @@ def declared_privileges():
         return {row['Privilege name'] for row in csv.DictReader(handle)}
 
 
+def names(cell):
+    return [name.strip() for name in cell.split(';') if name.strip()]
+
+
 def granted_privileges():
     granted = set()
     with open(CONFIGURATION / 'roles' / 'act_roles.csv', newline='') as handle:
         for row in csv.DictReader(handle):
-            granted.update(name for name in row['Privileges'].split(';') if name)
+            granted.update(names(row['Privileges']))
     return granted
 
 
@@ -93,12 +97,21 @@ class ReportPrivileges(unittest.TestCase):
 
 class JobRoles(unittest.TestCase):
 
+    def test_every_inherited_role_is_defined_in_the_file(self):
+        with open(CONFIGURATION / 'roles' / 'act_roles.csv', newline='') as handle:
+            rows = list(csv.DictReader(handle))
+        defined = {row['Role name'].strip() for row in rows}
+        for row in rows:
+            for inherited in names(row['Inherited roles']):
+                self.assertIn(inherited, defined, '%s inherits %s, which the file does not define' % (row['Role name'], inherited))
+
     def test_no_role_holds_the_generic_report_privileges(self):
         # OpenMRS's View Reports and Run Reports let a role run any report; ACT Core lets a role run an ACT report
         # through that report's own privilege instead, so a role holding them would still run every report.
-        granted = granted_privileges()
+        # MySQL looks a privilege up by name without regard to case, so the names are compared that way.
+        granted = {name.casefold() for name in granted_privileges()}
         for privilege in ('View Reports', 'Run Reports'):
-            self.assertTrue(privilege not in granted, 'a role still grants %s' % privilege)
+            self.assertTrue(privilege.casefold() not in granted, 'a role still grants %s' % privilege)
 
 
 if __name__ == '__main__':
