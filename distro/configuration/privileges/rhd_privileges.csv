@@ -40,4 +40,4 @@ df25895b-4570-4984-9272-2d9e4e08d0ef,,Task: act.report.studyParticipants,"Run th
 96e5601b-9389-4631-8aed-e1eba3ba3091,,Task: act.report.encounters,"Run the encounters export on the Reports page"
 2bb1d091-55f0-4aa9-8aca-c5d5ff86e7ae,,Task: act.report.inrMonitoring,"Run the INR monitoring export on the Reports page"
 fa56b258-387b-4117-b83c-3a964e9f04a8,,Task: act.report.instanceKpis,"Run the instance KPIs report on the Instance dashboard"
-850d48c5-75d7-4081-8936-c8a82a1c89f2,,Task: act.report.runChartMetrics,"Run the run chart metrics report that ACT Core's nightly snapshot reads"
+850d48c5-75d7-4081-8936-c8a82a1c89f2,,Task: act.report.runChartMetrics,"Run the run chart metrics reports the run charts are calculated from"
