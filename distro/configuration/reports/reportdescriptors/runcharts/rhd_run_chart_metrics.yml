@@ -18,5 +18,3 @@ datasets:
     config: "sql/rhd_run_chart_metrics.sql"
 designs:
   - type: csv
-config:
-  privilege: "Task: act.report.runChartMetrics"

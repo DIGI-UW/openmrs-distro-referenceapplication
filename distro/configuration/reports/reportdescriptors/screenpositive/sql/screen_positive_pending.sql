@@ -82,15 +82,6 @@ LEFT JOIN location cardiac_loc ON cardiac_loc.location_id = pa_cardiac.value
 LEFT JOIN location primary_loc ON primary_loc.location_id = pa_primary.value
 
 WHERE scr.voided = 0
-    -- A user limited to their clinics is given only the patients of those clinics: ACT Core sets @clinics
-    AND (@clinics IS NULL OR @clinics = '' OR EXISTS (
-        SELECT 1 FROM person_attribute pa_c
-        JOIN location l_c ON l_c.location_id = pa_c.value AND FIND_IN_SET(l_c.uuid, @clinics) > 0
-        WHERE pa_c.person_id = p.person_id AND pa_c.voided = 0
-          AND pa_c.person_attribute_type_id IN (SELECT person_attribute_type_id FROM person_attribute_type
-                                                 WHERE uuid IN ('fe261119-2911-5b36-be40-8f9827826987',
-                                                                '695f2990-236f-5d7c-b8aa-ddbdb22400f4'))
-    ))
     AND scr.concept_id = (SELECT concept_id FROM concept WHERE uuid = '82a5fbb5-038d-57b8-82d1-3fd0ac95673d')
     AND scr.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
     -- The patient's latest Screen + answer

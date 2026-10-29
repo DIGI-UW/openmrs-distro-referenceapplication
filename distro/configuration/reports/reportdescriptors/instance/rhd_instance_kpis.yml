@@ -15,5 +15,3 @@ datasets:
     config: "sql/rhd_instance_kpis.sql"
 designs:
   - type: csv
-config:
-  privilege: "Task: act.report.instanceKpis"
