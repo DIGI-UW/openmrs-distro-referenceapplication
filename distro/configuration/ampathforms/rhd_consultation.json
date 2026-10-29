@@ -16,6 +16,20 @@
           "isExpanded": "true",
           "questions": [
             {
+              "label": "Current allergies",
+              "id": "current_allergies",
+              "type": "obs",
+              "readonly": true,
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "f27f6ed2-48db-5be7-91da-3e2483915462",
+                "isTransient": true,
+                "calculate": {
+                  "calculateExpression": "actAllergies(patient.id)"
+                }
+              }
+            },
+            {
               "label": "Date of Consultation Visit",
               "id": "date_of_review",
               "type": "obs",
