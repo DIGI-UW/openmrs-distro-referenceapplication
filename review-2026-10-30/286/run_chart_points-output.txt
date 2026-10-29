@@ -1,0 +1,6 @@
+day 2026-10-09..2026-10-29: ACT Core answered 21 points of every metric in 0.31s
+week 2025-10-29..2026-10-29: ACT Core answered 53 points of every metric in 0.50s
+month 2024-10-29..2026-10-29: ACT Core answered 25 points of every metric in 0.18s
+week 2026-09-27..2026-10-25: ACT Core answered 5 points of every metric in 0.10s
+month 2026-06-01..2026-09-30: ACT Core answered 4 points of every metric in 0.09s
+all run chart checks passed
