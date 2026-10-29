@@ -1,7 +1,7 @@
 key: rhdRunChartMetricsAsOf
 uuid: "4f2c9d8e-1b7a-4e36-9c05-7d3a8b2e6f41"
 name: "RHD Run Chart Metrics (as of a date)"
-description: "ACT 2.0's run chart metrics as of one date, one row per clinic and one for every clinic: the single-date form of RHD Run Chart Metrics, which the run charts check against"
+description: "ACT 2.0's run chart metrics as of one date, one row per clinic and one for every clinic: the single-date form of RHD Run Chart Metrics, kept so the one-pass report can be checked against it (tests/reports/run_chart_points.py)"
 parameters:
   - key: endDate
     type: java.util.Date

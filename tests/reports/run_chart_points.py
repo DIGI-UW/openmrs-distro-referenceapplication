@@ -35,7 +35,9 @@ PERCENT_OF = {'active_registrants_seen_last_7_months': 'active_registrants',
               'active_registrants_adherent': 'active_registrants',
               'consultation_visits_with_echocardiogram_resulted': 'consultation_visit_total',
               'consultation_visits_with_intervention': 'consultation_visit_total'}
-METRICS = COUNTS[:4] + ['active_registrants_adherent'] + COUNTS[5:]
+# The eight charted metrics: the counts less consultation_visit_total, which is only a denominator, plus adherent
+METRICS = [c for c in COUNTS if c != 'consultation_visit_total']
+METRICS.insert(4, 'active_registrants_adherent')
 
 
 class Stack:
@@ -123,8 +125,10 @@ def check_range(stack, start, end, points):
                 continue
             for column in COUNTS:
                 check(f'{label} {day} {clinic or "all clinics"} {column}', int(row[column]), int(reference[column]))
-            check(f'{label} {day} {clinic or "all clinics"} bpg_patient_ids', len(ids_of(row['bpg_patient_ids'])),
+            check(f'{label} {day} {clinic or "all clinics"} active_registrants_on_bpg', int(row['active_registrants_on_bpg']),
                   int(reference['active_registrants_on_bpg']))
+            check(f'{label} {day} {clinic or "all clinics"} bpg_patient_ids', len(ids_of(row['bpg_patient_ids'])),
+                  int(row['active_registrants_on_bpg']))
     return by_date
 
 
@@ -159,8 +163,11 @@ def check_endpoint(stack, start, end, points, by_date):
                           (value, numerator, total))
                 else:
                     check(f'{label} {metric} {point["date"]} total', point['total'], total)
-                    check(f'{label} {metric} {point["date"]} count within the BPG list', point['count'] <= len(
-                        ids_of(row['bpg_patient_ids'])) if row else point['count'] == 0, True)
+                    if row:
+                        check(f'{label} {metric} {point["date"]} adherent within the BPG count',
+                              point['count'] <= int(row['active_registrants_on_bpg']), True)
+                    else:
+                        check(f'{label} {metric} {point["date"]} adherent of nobody', point['count'], 0)
     return answer
 
 

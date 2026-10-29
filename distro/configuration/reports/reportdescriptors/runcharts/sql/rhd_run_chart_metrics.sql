@@ -6,8 +6,8 @@
 -- A point is the figure as of the last day of its period, the last point as of the end date: the end, then a day back,
 -- or the Sunday before, or the last day of the month before, while the day is not before the start.
 -- Adherence is not counted here: bpg_patient_ids lists the active patients on an in-force BPG regimen as of the point,
--- and ACT Core replays each one's dose history to that day.
--- No line ends with a semicolon, which the report runner would read as the end of a statement.
+-- active_registrants_on_bpg counts them (so a cut-short list can be told from a whole one), and ACT Core replays each
+-- one's dose history to that day.
 -- =============================================================================
 WITH RECURSIVE point AS (
     SELECT DATE(@endDate) AS d
@@ -105,17 +105,17 @@ sap_in_force AS (
     WHERE NOT EXISTS (SELECT 1 FROM obs st WHERE st.obs_group_id = o.obs_group_id AND st.voided = 0
                         AND st.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'd75edc42-3213-5a06-9228-4e5735b9594b'))
 ),
-prescribed AS (
-    SELECT DISTINCT d, person_id FROM sap_in_force
-    WHERE regimen_uuid IN ('50be4b26-6c5b-5aaa-9254-3bfd313b4522','2f3ee632-dd14-51b0-a4ec-de10e7958019',
-                           '91230c88-6a90-5d45-af50-fa6155fe5dd7','b9884219-358a-594b-94f5-f8a8863a25f3',
-                           'f2e06eb2-5c25-5e53-9e01-246112d05976','fb8b6676-689b-5daa-83f7-1456210c587f',
-                           'f6f25d63-bd1a-51cb-9596-e74a19759429','1af922b8-acee-56c8-b184-eaef4e58e23a')
-),
-bpg AS (
-    SELECT DISTINCT d, person_id FROM sap_in_force
-    WHERE regimen_uuid IN ('50be4b26-6c5b-5aaa-9254-3bfd313b4522','2f3ee632-dd14-51b0-a4ec-de10e7958019',
-                           '91230c88-6a90-5d45-af50-fa6155fe5dd7')
+-- Each patient's regimens as of each point, once: whether any is prophylaxis, and whether any is BPG
+regimen AS (
+    SELECT d, person_id,
+           MAX(regimen_uuid IN ('50be4b26-6c5b-5aaa-9254-3bfd313b4522','2f3ee632-dd14-51b0-a4ec-de10e7958019',
+                                '91230c88-6a90-5d45-af50-fa6155fe5dd7','b9884219-358a-594b-94f5-f8a8863a25f3',
+                                'f2e06eb2-5c25-5e53-9e01-246112d05976','fb8b6676-689b-5daa-83f7-1456210c587f',
+                                'f6f25d63-bd1a-51cb-9596-e74a19759429','1af922b8-acee-56c8-b184-eaef4e58e23a')) AS prescribed,
+           MAX(regimen_uuid IN ('50be4b26-6c5b-5aaa-9254-3bfd313b4522','2f3ee632-dd14-51b0-a4ec-de10e7958019',
+                                '91230c88-6a90-5d45-af50-fa6155fe5dd7')) AS on_bpg
+    FROM sap_in_force
+    GROUP BY d, person_id
 ),
 -- Each interventional recommendation a consultation records, as rhd_medical_optimisation.sql counts it, with
 -- whether it was marked completed with the consultation; a Procedure Type of None records that none is recommended
@@ -210,13 +210,12 @@ completed AS (
 measure AS (
     SELECT r.d, r.patient_id, r.active,
            (sn.patient_id IS NOT NULL) AS seen,
-           (pr.person_id IS NOT NULL) AS prescribed,
-           (b.person_id IS NOT NULL) AS on_bpg,
+           COALESCE(rg.prescribed, 0) AS prescribed,
+           COALESCE(rg.on_bpg, 0) AS on_bpg,
            COALESCE(cm.recommendations, 0) AS completed
     FROM registrant r
     LEFT JOIN seen sn ON sn.d = r.d AND sn.patient_id = r.patient_id
-    LEFT JOIN prescribed pr ON pr.d = r.d AND pr.person_id = r.patient_id
-    LEFT JOIN bpg b ON b.d = r.d AND b.person_id = r.patient_id
+    LEFT JOIN regimen rg ON rg.d = r.d AND rg.person_id = r.patient_id
     LEFT JOIN completed cm ON cm.d = r.d AND cm.patient_id = r.patient_id
 ),
 visits AS (
@@ -233,6 +232,7 @@ SELECT cp.d                                     AS point_date,
        COALESCE(SUM(v.with_echo), 0)           AS consultation_visits_with_echocardiogram_resulted,
        COALESCE(SUM(v.with_recommendation), 0) AS consultation_visits_with_intervention,
        SUM(m.completed)                        AS interventions_completed,
+       SUM(m.on_bpg)                           AS active_registrants_on_bpg,
        GROUP_CONCAT(DISTINCT CASE WHEN m.on_bpg THEN m.patient_id END ORDER BY m.patient_id SEPARATOR ',') AS bpg_patient_ids
 FROM clinic_patient cp
 JOIN measure m ON m.d = cp.d AND m.patient_id = cp.patient_id

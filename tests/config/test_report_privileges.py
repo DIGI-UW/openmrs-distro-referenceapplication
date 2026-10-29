@@ -16,10 +16,10 @@ DESCRIPTORS = sorted((CONFIGURATION / 'reports' / 'reportdescriptors').glob('*/*
 PREFIX = 'Task: act.report.'
 
 # Instance wide counts with no patient in them: nothing for a clinic to limit
-INSTANCE_WIDE = {'rhdInstanceKpis', 'rhdRunChartMetrics'}
+INSTANCE_WIDE = {'rhdInstanceKpis', 'rhdRunChartMetrics', 'rhdRunChartMetricsAsOf'}
 
-# Report privileges no role is granted, on purpose: ACT Core runs the report only in its scheduler task and
-# snapshot thread, where the check is skipped, and no screen runs it as a user. Administrators and super users hold it.
+# Report privileges no role is granted, on purpose: ACT Core evaluates the run chart reports as the daemon user when a
+# chart is viewed, where the check is skipped, and no screen runs them as a user. Administrators and super users hold it.
 ADMIN_ONLY = {PREFIX + 'runChartMetrics'}
 
 
