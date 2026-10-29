@@ -28,5 +28,3 @@ datasets:
     config: "sql/rhd_care_cascade_patients.sql"
 designs:
   - type: csv
-config:
-  privilege: "Task: act.report.dashboard"

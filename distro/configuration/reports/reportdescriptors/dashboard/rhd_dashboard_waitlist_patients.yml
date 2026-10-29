@@ -36,5 +36,3 @@ datasets:
     config: "sql/rhd_dashboard_waitlist_patients.sql"
 designs:
   - type: csv
-config:
-  privilege: "Task: act.report.dashboard"

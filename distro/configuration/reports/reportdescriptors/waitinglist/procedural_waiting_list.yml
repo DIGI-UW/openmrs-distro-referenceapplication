@@ -2,16 +2,9 @@ key: proceduralWaitingList
 uuid: "5b0f1c2e-9d3a-4c1b-8f6e-2a7d9e4b3c10"
 name: "Procedural Waiting List"
 description: "Open interventional recommendations from each RHD Registry patient's latest consultation"
-parameters:
-  - key: clinics
-    type: java.lang.String
-    label: "Either clinic among these (location uuids separated by commas, no spaces)"
-    required: false
 datasets:
   - key: waitingListData
     type: sql
     config: "sql/procedural_waiting_list.sql"
 designs:
   - type: csv
-config:
-  privilege: "Task: act.report.waitingList"
