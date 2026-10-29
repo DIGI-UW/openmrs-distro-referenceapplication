@@ -1,0 +1,75 @@
+1
+00:00:00,500 --> 00:00:04,970
+This video shows the INR trend in the R H D consultation form.
+
+2
+00:00:05,670 --> 00:00:11,548
+It runs on one test stack. Both changes are open as drafts. Neither is released yet.
+
+3
+00:00:13,148 --> 00:00:22,240
+Juliet Otim has three INR results. In her chart, under Consultation visits, Start consultation opens the R H D Consultation Visit form.
+
+4
+00:00:23,348 --> 00:00:29,561
+At the top, the Current allergies line shows what the chart holds. For Juliet, allergies are not recorded.
+
+5
+00:00:30,388 --> 00:00:38,865
+I maximize the workspace and scroll to Cardiac medications. The Latest INR line reads 1.7, on the sixteenth of October.
+
+6
+00:00:40,028 --> 00:00:51,351
+Under it is the new chart, INR over time, with the target range. The shaded band runs from 2.0 to 3.0. No target is recorded for her, so it is the standard range.
+
+7
+00:00:52,468 --> 00:01:00,782
+This is the ACT 2.0 INR monitoring chart, now in the form. The clinician sees the trend during every consultation, without leaving it.
+
+8
+00:01:01,588 --> 00:01:06,396
+Nothing is saved. Cancel closes the form, and the consultation is not recorded.
+
+9
+00:01:08,396 --> 00:01:11,809
+Tumushabe Opio is on warfarin, and has no INR yet.
+
+10
+00:01:14,436 --> 00:01:18,314
+I open her consultation form, and scroll to Cardiac medications.
+
+11
+00:01:26,556 --> 00:01:28,797
+The section shows No INR recorded.
+
+12
+00:01:30,797 --> 00:01:36,708
+Abebe Zeleke is not on warfarin, and has no INR. His chart lists no active medications.
+
+13
+00:01:37,757 --> 00:01:41,170
+I open his consultation form, and scroll to the same place.
+
+14
+00:01:49,997 --> 00:01:55,792
+Here nothing is shown under Cardiac medications. The form goes straight on to Plan and follow-up.
+
+15
+00:01:57,792 --> 00:01:58,906
+What it does not do.
+
+16
+00:01:59,606 --> 00:02:08,457
+It saves nothing for the chart. The trend is not a form answer. If the INRs cannot be loaded, the form shows a short message and still works.
+
+17
+00:02:09,157 --> 00:02:19,329
+The band is the target recorded with each INR, and the standard range when none is recorded. The agreed target range for warfarin patients is still a decision for the clinical lead.
+
+18
+00:02:20,929 --> 00:02:31,590
+Two changes make this. First the ACT app, pull request 224, which holds the chart. Then the distro, pull request 300, which adds it to the form.
+
+19
+00:02:32,290 --> 00:02:39,710
+Both are open, and still drafts. The agreed warfarin target range, A R 124, is still open.
