@@ -90,6 +90,8 @@ C=dict(diagGroup="594b4495-36dc-52a6-9810-15a9e2e2dcb9", category="1a5aa050-661d
  procDate="6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a", discharge="d4317b82-5d37-5b59-ac32-4922f18cd65b", surgGroup="46f4af80-b783-59f4-beb1-81144ccf3084", mvrSurg="7af8595d-407e-5705-bd8a-812735e2f188", avr="cd9c582a-71f9-5441-97a8-6d50d7dc15c8", procOutcome="7a54d2d6-0d34-5e5d-b8e7-84a3cf7e9dca", dischargeHome="98ea6c57-5f77-549b-97ca-32604c5b9220", inHospDeath="2567da9f-864e-5408-b5ae-6686f80d0a99", dateOfDeath="07534416-c1c2-5772-83d8-76a429986ec0", perfusion="1c14c3f1-1532-51b0-8680-d761e7f25ad5", siteInf="15e033f6-704e-5bde-ac1d-b401294f416c", sepsis="86c4348a-1ec0-5ca2-a9a6-15f0f282cb95",
  echoDate="911be530-9457-54be-8515-4bbcdb832ccb", mr="d6ab05e2-1ece-5f8f-893d-74739aa66ce5", moderate="1499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", severe="1500AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", ef="ed630fda-8451-53c0-929e-40eafd9bca9b", suitRepair="8d6e9ea5-aa27-57d6-bf43-198aca63a951",
  pregDate="f287af86-af54-5c49-b716-9737c4f022b1", edd="3ad5133c-80d0-5007-ba1a-c5be27cbb10c", gravidity="06ffd716-291b-5aa2-bb50-b029e58cdcae",
+ chronic="d80478b2-4ed2-5d93-a604-6b5b50dab441", allergy="cd73e118-64ee-5855-b276-f7cb44fdcf7e", complication="a04d2268-a7de-589f-b4b6-92c47c13e342", dateAdded="b8514967-2259-5a4d-9ac5-b9319144b8dc",
+ penAllergy="149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", arf="cbfcf051-bee3-549d-b233-e5be0e7d691a", hypertension="117399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", afib="148203AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
  admitDate="c437c2be-0520-5920-9bd7-26104bc229a4", admitReason="e60fcf3b-1057-5d1f-a8be-679411b48ba9", rhdHF="27f70da6-ee9e-5919-8b68-9977312f9ada", admitOutcome="ae69bb65-cd0a-5035-aee5-ba5521e7b889", dischargeDate="f17fbfad-6208-53ee-a97a-17583d2f6259")
 
 def check():
@@ -105,6 +107,14 @@ def obs(c,v): return {"concept":C.get(c,c),"value":(C.get(v,v) if isinstance(v,s
 def dobs(c,d): return {"concept":C[c],"value":iso(d)}
 def tobs(c,text): return {"concept":C.get(c,c),"value":text}
 def grp(c,members): return {"concept":C[c],"groupMembers":members}
+# The consultation form's fields for each repeated list: its group, the item and its Date Added. The three Date
+# Added share one concept, so the form can only tell them apart by their form field paths.
+LISTED=dict(chronic=("chronicHealthConditionEntry","chronicHealthCondition","dateAdded_chronic"), allergy=("allergyEntry","allergy","dateAdded_allergy"),
+            complication=("rhdComplicationsEntry","rhdComplications","dateAdded_rhdComplications"))
+def field(o, fid): return {**o,"formFieldNamespace":"rfe-forms","formFieldPath":f"rfe-forms-{fid}"}
+def listed(kind, answer, day):
+    group, item, added = LISTED[kind]
+    return field(grp(kind,[field(obs(kind,answer),item),field(dobs("dateAdded",day),added)]),group)
 def enc(pat, kind, day, obsl, loc=ACIMI):
     # One visit per patient and day: OpenMRS refuses overlapping visits.
     visit=VISITS.get((pat,day))
@@ -158,7 +168,7 @@ def oral(pat, day, est=100, basis=("patientReport",), loc=ACIMI):
 def echo(pat, day, mrv="moderate", ef=60, repair=YES): return enc(pat,"echo",day,[dobs("echoDate",day),obs("mr",mrv),obs("ef",ef),obs("suitRepair",repair)],UHI)
 
 def seed():
-    p=patient("abebe","Abebe","Okot","M","2010-05-01",phone="+256772000101",guardian="Rose Okot",rel=GUARDIAN); PI(p,D(100)); consult(p,D(90)); echo(p,D(90)); [bpg(p,D(n)) for n in (90,62,40)]
+    p=patient("abebe","Abebe","Okot","M","2010-05-01",phone="+256772000101",guardian="Rose Okot",rel=GUARDIAN); PI(p,D(100)); consult(p,D(90),extra=[listed("allergy","penAllergy",D(400)),listed("complication","arf",D(120))]); echo(p,D(90)); [bpg(p,D(n)) for n in (90,62,40)]
     p=patient("grace","Grace","Akello","F","2012-03-02",pcc=AKUNA); consult(p,D(60)); [bpg(p,D(n),AKUNA) for n in (60,36)]
     p=patient("sarah","Sarah","Apio","F","2008-07-07"); PI(p,D(130)); consult(p,D(120),"oralPenV"); oral(p,D(90),90); oral(p,D(60),50)
     p=patient("faith","Faith","Auma","F","2011-01-15",phone="+256701000104",rel=GUARDIAN,guardian="Mary Auma"); PI(p,D(70)); consult(p,D(60)); bpg(p,D(58)); bpg_anaph(p,D(2))
@@ -186,7 +196,7 @@ def seed():
     for n,why in ((190,None),(160,"transport"),(130,"stockout"),(95,"transport"),(60,None),(30,"transport"),(8,None)): bpg(p,D(n),late=why)
     p=patient("agnes","Agnes","Achola","F","1997-01-30",optIn=YES,phone="+256772000118",nationalId="CF970130ACHOLA"); PI(p,D(150),details="rhdA"); consult(p,D(140),"q14"); [bpg(p,D(n)) for n in range(140,8,-14)]
     p=patient("brian","Brian","Oyet","M","2006-06-16",optIn=YES); PI(p,D(120)); consult(p,D(110)); [bpg(p,D(n)) for n in (110,82,54,26)]
-    p=patient("isaac","Isaac","Okumu","M","1980-03-03"); PI(p,D(200),details="rhdCD"); consult(p,D(190),nyha="nyha3",extra=[grp("rec",[obs("procType","surgery"),obs("rec","mvr"),obs("urgency","emergent"),obs("completed",YES)])]); bpg(p,D(190))
+    p=patient("isaac","Isaac","Okumu","M","1980-03-03"); PI(p,D(200),details="rhdCD"); consult(p,D(190),nyha="nyha3",extra=[listed("chronic","hypertension",D(900)),listed("complication","afib",D(200)),grp("rec",[obs("procType","surgery"),obs("rec","mvr"),obs("urgency","emergent"),obs("completed",YES)])]); bpg(p,D(190))
     enc(p,"proc",D(100),[dobs("procDate",D(100)),grp("surgGroup",[obs("surgGroup","avr")]),obs("procOutcome","inHospDeath"),dobs("dateOfDeath",D(98)),obs("perfusion",YES),obs("siteInf",NO),obs("sepsis",YES)],UHI)
     p=patient("rose","Rose","Atim","F","1975-07-07",optIn=YES,cardiac=GULU); PI(p,D(300),details="rhdCD"); consult(p,D(290),nyha="nyha3",loc=GULU); [bpg(p,D(n)) for n in (290,262,234)]
     p=patient("christine","Christine","Lamaro","F","2002-09-09",phone="+256701000122"); PI(p,D(260)); consult(p,D(250)); [bpg(p,D(n)) for n in range(250,0,-28)]
@@ -236,6 +246,13 @@ PROCEDURES = [("surgery", "7af8595d-407e-5705-bd8a-812735e2f188", "7af8595d-407e
               ("surgery", "cd9c582a-71f9-5441-97a8-6d50d7dc15c8", "cd9c582a-71f9-5441-97a8-6d50d7dc15c8")]   # aortic valve repair/replacement
 LATE = ["56fb6a9e-a90e-5bad-b701-88199d74f7a9", "1e628c9a-0f9c-56ba-a7f8-61da24a538e8", "63dc954c-a3ab-58ec-96fc-c1801ef8aca2",
         "2cfca4a1-4985-5da9-91cb-e9478497e927", "76cd4ace-1a6f-5e2c-b69f-d9dfc157afa2"]
+# The consultation's repeated lists, each answer with its share of the population: a chronic health condition,
+# an allergy, and an RHD complication.
+CHRONIC = [("dfb474c5-1fa7-5c27-85eb-48642d0dcbaa", 3), ("16449d48-575e-5898-b015-8b52c60c048c", 3), ("117399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 2),
+           ("121375AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 2), ("155AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 1), ("119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 1)]
+ALLERGIES = [("149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 3), ("b4e6c064-ab4f-5ee4-9837-094731ee23d4", 1)]
+COMPLICATIONS = [("cbfcf051-bee3-549d-b233-e5be0e7d691a", 4), ("65c796e5-bd32-51c6-93f7-991ff3add2ef", 3), ("148203AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 2),
+                 ("b3a93528-7fed-5050-bce3-85ca4d7a4ee4", 1), ("41b1a801-9d9d-5687-9de5-39e89c73c8c7", 1)]
 INR_TARGETS = [("d894d89a-04bd-5fc0-91a0-5dc3ddd8802b", 2.0, 3.0), ("ea841a3a-f9cb-5761-aac6-939ffb158d94", 2.5, 3.5)]
 DETECTED_CONCEPT = "955632a1-82f7-5b84-a341-de85f95588d1"
 REGISTRY = "7d73e143-a550-5a9d-aecd-dd771add098d"
@@ -346,6 +363,13 @@ def seed_care(pat, p, rng, reg, status):
     on_warfarin = done and procedure[2] is not None
     if on_warfarin:
         extra.append(grp("med", [obs("med", "warfarin"), tobs("dosing", rng.choice(["2.5 mg daily", "5 mg daily", "7.5 mg daily"])), dobs("dateStarted", first)]))
+    # About one patient in five each has a chronic condition or an RHD complication, and one in ten an allergy,
+    # dated a little before the consultation that records it. From a generator of their own, so the rest of the
+    # person's care is what earlier runs seeded.
+    lists = random.Random(f"{p['rng_seed']}-lists")
+    for kind, answers, share in (("chronic", CHRONIC, 0.2), ("allergy", ALLERGIES, 0.1), ("complication", COMPLICATIONS, 0.2)):
+        if lists.random() < share:
+            extra.append(listed(kind, weighted(lists, answers), first - datetime.timedelta(days=lists.randint(0, 400))))
     months = rng.choice([3, 6, 6, 12])
     consult(pat, first, regimen=regimen, extra=extra, nextMonths=months, loc=p["cardiac"], nyha=None, nyha_concept=nyha)
     # Follow-up consultations for some, so reviews are on time, due or overdue.
