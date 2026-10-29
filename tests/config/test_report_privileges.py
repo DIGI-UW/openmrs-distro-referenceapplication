@@ -114,5 +114,16 @@ class JobRoles(unittest.TestCase):
             self.assertTrue(privilege.casefold() not in granted, 'a role still grants %s' % privilege)
 
 
+    def test_every_role_that_manages_forms_can_read_the_encounter_roles_the_form_builder_asks_for(self):
+        # The form builder reads GET /ws/rest/v1/encounterrole on every create and edit page; without Get Encounter Roles
+        # that call is refused with a 403, though saving and publishing still work.
+        with open(CONFIGURATION / 'roles' / 'act_roles.csv', newline='') as handle:
+            rows = list(csv.DictReader(handle))
+        managers = [row for row in rows if 'Manage Forms' in names(row['Privileges'])]
+        self.assertTrue(any(row['Role name'] == 'Organizational: ACT Instance Administrator' for row in managers))
+        for row in managers:
+            self.assertIn('Get Encounter Roles', names(row['Privileges']), '%s manages forms but cannot get encounter roles' % row['Role name'])
+
+
 if __name__ == '__main__':
     unittest.main()
