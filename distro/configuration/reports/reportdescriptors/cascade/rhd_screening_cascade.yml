@@ -14,9 +14,15 @@ parameters:
     type: java.lang.String
     label: "Primary care clinic (location uuid)"
     required: false
+  - key: clinics
+    type: java.lang.String
+    label: "Either clinic among these (location uuids separated by commas, no spaces)"
+    required: false
 datasets:
   - key: screeningCascadeData
     type: sql
     config: "sql/rhd_screening_cascade.sql"
 designs:
   - type: csv
+config:
+  privilege: "Task: act.report.dashboard"

@@ -77,6 +77,8 @@ JOIN encounter_type et ON et.encounter_type_id = e.encounter_type AND et.retired
 
 WHERE
     v.voided = 0
+    -- A user limited to their clinics is given only the visits or encounters at those clinics: ACT Core sets @clinics
+    AND (@clinics IS NULL OR @clinics = '' OR FIND_IN_SET(l.uuid, @clinics) > 0)
     AND DATE(v.date_started) >= @startDate
     AND DATE(v.date_started) <= @endDate
 
