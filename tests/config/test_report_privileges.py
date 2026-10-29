@@ -37,11 +37,15 @@ def declared_privileges():
         return {row['Privilege name'] for row in csv.DictReader(handle)}
 
 
+def names(cell):
+    return [name.strip() for name in cell.split(';') if name.strip()]
+
+
 def granted_privileges():
     granted = set()
     with open(CONFIGURATION / 'roles' / 'act_roles.csv', newline='') as handle:
         for row in csv.DictReader(handle):
-            granted.update(name for name in row['Privileges'].split(';') if name)
+            granted.update(names(row['Privileges']))
     return granted
 
 
@@ -90,6 +94,36 @@ class ReportPrivileges(unittest.TestCase):
                 sql = sql_without_comments(descriptor.parent / path)
                 self.assertRegex(sql, re.compile(r'@clinics\s+IS\s+NULL', re.I), '%s takes clinics but %s has no @clinics IS NULL case outside comments' % (descriptor.name, path))
                 self.assertRegex(sql, re.compile(r'FIND_IN_SET\s*\([^;]*?,\s*@clinics\s*\)', re.I), '%s takes clinics but %s never calls FIND_IN_SET(..., @clinics) outside comments' % (descriptor.name, path))
+
+class JobRoles(unittest.TestCase):
+
+    def test_every_inherited_role_is_defined_in_the_file(self):
+        with open(CONFIGURATION / 'roles' / 'act_roles.csv', newline='') as handle:
+            rows = list(csv.DictReader(handle))
+        defined = {row['Role name'].strip() for row in rows}
+        for row in rows:
+            for inherited in names(row['Inherited roles']):
+                self.assertIn(inherited, defined, '%s inherits %s, which the file does not define' % (row['Role name'], inherited))
+
+    def test_no_role_holds_the_generic_report_privileges(self):
+        # OpenMRS's View Reports and Run Reports let a role run any report; ACT Core lets a role run an ACT report
+        # through that report's own privilege instead, so a role holding them would still run every report.
+        # MySQL looks a privilege up by name without regard to case, so the names are compared that way.
+        granted = {name.casefold() for name in granted_privileges()}
+        for privilege in ('View Reports', 'Run Reports'):
+            self.assertTrue(privilege.casefold() not in granted, 'a role still grants %s' % privilege)
+
+
+    def test_every_role_that_manages_forms_can_read_the_encounter_roles_the_form_builder_asks_for(self):
+        # The form builder reads GET /ws/rest/v1/encounterrole on every create and edit page; without Get Encounter Roles
+        # that call is refused with a 403, though saving and publishing still work.
+        with open(CONFIGURATION / 'roles' / 'act_roles.csv', newline='') as handle:
+            rows = list(csv.DictReader(handle))
+        managers = [row for row in rows if 'Manage Forms' in names(row['Privileges'])]
+        self.assertTrue(any(row['Role name'] == 'Organizational: ACT Instance Administrator' for row in managers))
+        for row in managers:
+            self.assertIn('Get Encounter Roles', names(row['Privileges']), '%s manages forms but cannot get encounter roles' % row['Role name'])
+
 
 if __name__ == '__main__':
     unittest.main()
