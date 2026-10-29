@@ -1113,6 +1113,14 @@
               "hide": {
                 "hideWhenExpression": "isEmpty(latest_inr)"
               }
+            },
+            {
+              "label": "INR trend",
+              "id": "inr_trend",
+              "type": "control",
+              "questionOptions": {
+                "rendering": "act-inr-chart"
+              }
             }
           ]
         },
