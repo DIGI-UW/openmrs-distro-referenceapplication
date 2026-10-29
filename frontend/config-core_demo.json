@@ -80,11 +80,12 @@
           "immunization-summary-dashboard",
           "procedures-summary-dashboard",
           "conditions-summary-dashboard",
-          "medications-summary-dashboard"
+          "medications-summary-dashboard",
+          "allergies-summary-dashboard",
+          "growth-chart-dashboard-link"
         ],
         "order": [
           "charts-summary-dashboard",
-          "allergies-summary-dashboard",
           "results-summary-dashboard",
           "act-cardiac-tests-dashboard-link",
           "act-consultations-dashboard-link",
@@ -95,7 +96,6 @@
           "encounters-summary-dashboard",
           "act-research-dashboard-link",
           "programs-summary-dashboard",
-          "growth-chart-dashboard-link",
           "act-clinicians-only-note"
         ],
         "configure": {

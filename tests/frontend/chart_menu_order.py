@@ -13,7 +13,6 @@ CONFIG = pathlib.Path(__file__).resolve().parents[2] / 'frontend' / 'config-core
 
 CLINICIAN_ORDER = [
     'charts-summary-dashboard',  # Patient summary
-    'allergies-summary-dashboard',  # Allergies
     'results-summary-dashboard',  # Vitals & Biometrics (the id upstream gives its link)
     'act-cardiac-tests-dashboard-link',  # Cardiac tests
     'act-consultations-dashboard-link',  # Consultation visits
@@ -22,7 +21,6 @@ CLINICIAN_ORDER = [
     'encounters-summary-dashboard',  # Visits
     'act-research-dashboard-link',  # Research participation
     'programs-summary-dashboard',  # Programs
-    'growth-chart-dashboard-link',  # Growth chart
 ]
 
 
@@ -35,6 +33,11 @@ class ChartMenuOrder(unittest.TestCase):
     def test_follows_the_clinicians_visit_workflow(self):
         order = slot()['order']
         self.assertEqual([i for i in order if i in CLINICIAN_ORDER], CLINICIAN_ORDER)
+
+    def test_hides_allergies_and_growth_chart_and_leaves_them_out_of_the_order(self):
+        for link in ('allergies-summary-dashboard', 'growth-chart-dashboard-link'):
+            self.assertIn(link, slot()['remove'])
+            self.assertNotIn(link, slot()['order'])
 
     def test_lists_every_added_link(self):
         self.assertLessEqual(set(slot()['add']), set(slot()['order']))
