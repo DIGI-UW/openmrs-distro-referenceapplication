@@ -1,0 +1,87 @@
+1
+00:00:00,500 --> 00:00:06,050
+This video shows how a clinician edits the INR in place, inside the consultation form.
+
+2
+00:00:06,750 --> 00:00:14,553
+In ACT 2.0, a button under the chart opened the INR monitoring form. Here the clinician edits it without leaving the consultation.
+
+3
+00:00:16,153 --> 00:00:25,965
+This test patient has three INR results and an active visit. Under Consultation visits, Start consultation opens the RHD Consultation Visit form.
+
+4
+00:00:27,273 --> 00:00:40,140
+I maximize the workspace and scroll to Cardiac medications. The latest INR is 2.6, on the twelfth of October. Under the chart are two buttons, Edit INR monitoring and Record new INR.
+
+5
+00:00:41,553 --> 00:00:46,373
+First I type a sentence into Interval History. That is the consultation's own text.
+
+6
+00:00:47,113 --> 00:00:54,849
+Now I click Edit INR monitoring. The panel opens under the chart. The consultation, and the text I typed, stay where they are.
+
+7
+00:00:55,993 --> 00:01:02,181
+The panel holds the date tested, the INR value, the dose change, the target, and the next INR date.
+
+8
+00:01:03,753 --> 00:01:12,044
+I change the INR value from 2.6 to 3.1, and press Save. The chart updates at once, and the typed text is still there.
+
+9
+00:01:14,553 --> 00:01:22,078
+This edit is saved straight away, apart from the consultation's own Save. So I cancel the consultation, and the edit stays.
+
+10
+00:01:24,078 --> 00:01:30,804
+Here is a new consultation for the same patient. The edit survived. The latest INR now reads 3.1.
+
+11
+00:01:39,398 --> 00:01:46,286
+Now Record new INR. The same panel opens in a second mode. The target is taken from the latest entry.
+
+12
+00:01:47,598 --> 00:01:54,717
+I enter an INR of 2.4, and press Save. This saves a new INR Monitoring record, and the chart gains a point.
+
+13
+00:01:56,717 --> 00:02:01,757
+Now the checks. I open Edit INR monitoring and type an INR of 100.
+
+14
+00:02:10,077 --> 00:02:16,524
+Save shows a message. It asks for an INR above 0, and up to 99. Nothing is written.
+
+15
+00:02:17,517 --> 00:02:21,826
+Cancel closes the panel without writing anything. Escape does the same.
+
+16
+00:02:23,957 --> 00:02:34,305
+Pressing Enter in the panel does not save the consultation. I press Enter in the INR field. The panel stays open, the consultation form is still open, and nothing was saved.
+
+17
+00:02:36,305 --> 00:02:42,496
+It writes the whole entry. The form engine's own edit lost the date tested. This editor avoids that.
+
+18
+00:02:43,196 --> 00:02:48,490
+An entry that shares its target and next INR date with earlier entries shows them read only.
+
+19
+00:02:49,190 --> 00:02:57,052
+The clinician and the site administrator see it. It needs the INR chart, pull request 224, first.
+
+20
+00:02:57,752 --> 00:03:02,709
+The agreed warfarin target range, A R 124, is still open.
+
+21
+00:03:04,309 --> 00:03:13,959
+Three pull requests, in order. ACT app 224, the chart. ACT app 227, this editor. And distro 300, the form question.
+
+22
+00:03:14,659 --> 00:03:19,582
+The old button, pull request 225, is closed in favour of this editor.
