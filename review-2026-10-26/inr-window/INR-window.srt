@@ -1,0 +1,91 @@
+1
+00:00:00,500 --> 00:00:04,378
+This video shows the INR trend sitting beside the consultation.
+
+2
+00:00:05,078 --> 00:00:08,572
+And when a clinician edits an INR, they never lose what they have typed.
+
+3
+00:00:10,172 --> 00:00:19,485
+This patient takes warfarin and has four INR results. The patient summary has an INR review card, with a chart and the target range as a shaded band.
+
+4
+00:00:20,612 --> 00:00:28,985
+On the card are two buttons, one to edit the last INR, and one to record a new INR. On the right is the new INR trend button.
+
+5
+00:00:30,985 --> 00:00:35,898
+Now I start a consultation. Under Consultation visits, Start consultation.
+
+6
+00:00:37,025 --> 00:00:39,393
+I type a sentence into Interval History.
+
+7
+00:00:40,665 --> 00:00:50,489
+Then I make the workspace bigger, and click the INR trend button. The trend opens beside the consultation, my sentence is still there, and nothing asked me to discard it.
+
+8
+00:00:52,489 --> 00:00:59,723
+With a sentence typed, I click Edit INR in the trend. The editor opens in its own window, and the consultation stays open.
+
+9
+00:01:00,649 --> 00:01:04,178
+I change the INR value to 2.9, and press Save.
+
+10
+00:01:06,409 --> 00:01:09,694
+The chart shows the new value, and my sentence is still there.
+
+11
+00:01:10,849 --> 00:01:13,263
+Then I cancel the consultation, and discard it.
+
+12
+00:01:15,289 --> 00:01:18,330
+Back on the summary, the card shows the new value too.
+
+13
+00:01:20,330 --> 00:01:28,656
+With a sentence typed, I click Record INR on the card. The standard INR Monitoring form opens in its own window, with no discard prompt.
+
+14
+00:01:29,610 --> 00:01:33,418
+I choose the indication and the target range, and fill in the date tested.
+
+15
+00:01:34,970 --> 00:01:39,754
+I enter an INR value of 3.1, and answer No to the dose change.
+
+16
+00:01:41,010 --> 00:01:46,910
+I press Save. The consultation is still there with my sentence, and the card and the chart show the new point.
+
+17
+00:01:48,910 --> 00:01:58,037
+This second patient has only one INR, and a chart needs two points. So the card shows one line: the value, the date, and the target range.
+
+18
+00:02:00,037 --> 00:02:06,900
+A community clinician sees the same card and chart, but read only. There is no Edit button, and no Record button.
+
+19
+00:02:08,900 --> 00:02:13,846
+The INR trend is in the patient chart, and in a window docked beside the consultation.
+
+20
+00:02:14,546 --> 00:02:18,261
+Edit INR opens in its own window, and keeps the whole entry.
+
+21
+00:02:18,961 --> 00:02:23,164
+Record new INR uses the standard form, also in its own window.
+
+22
+00:02:23,864 --> 00:02:26,674
+The consultation form itself has nothing new in it.
+
+23
+00:02:27,374 --> 00:02:36,197
+One pull request, 228, replaces the earlier 224, 227 and distro 300.
