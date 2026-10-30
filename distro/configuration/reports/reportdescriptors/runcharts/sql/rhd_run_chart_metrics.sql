@@ -4,7 +4,10 @@
 -- For each point: one row per clinic, a patient counting at both their clinics, and one row with no clinic_uuid counting each patient once.
 -- Parameters: @startDate and @endDate, and @points (day, week or month).
 -- A point is the figure as of the last day of its period, the last point as of the end date: the end, then a day back,
--- or the Sunday before, or the last day of the month before, while the day is not before the start.
+-- or the Sunday before, or the last day of the month before, while the day is not before the start. Any other @points
+-- value gives the end date's point alone. At most 1001 points, the end and 1000 steps back: MariaDB's
+-- max_recursive_iterations (1000) ends the recursion there with a warning the report does not surface, so a longer
+-- range loses its earliest points without an error. ACT Core checks the range and the points value before asking.
 -- Adherence is not counted here: bpg_patient_ids lists the active patients on an in-force BPG regimen as of the point,
 -- active_registrants_on_bpg counts them (so a cut-short list can be told from a whole one), and ACT Core replays each
 -- one's dose history to that day.
@@ -14,14 +17,14 @@ WITH RECURSIVE point AS (
     UNION ALL
     SELECT CASE @points
                WHEN 'day' THEN d - INTERVAL 1 DAY
+               WHEN 'week' THEN d - INTERVAL (WEEKDAY(d) + 1) DAY
                WHEN 'month' THEN LAST_DAY(d - INTERVAL 1 MONTH)
-               ELSE d - INTERVAL (WEEKDAY(d) + 1) DAY
            END
     FROM point
     WHERE CASE @points
                WHEN 'day' THEN d - INTERVAL 1 DAY
+               WHEN 'week' THEN d - INTERVAL (WEEKDAY(d) + 1) DAY
                WHEN 'month' THEN LAST_DAY(d - INTERVAL 1 MONTH)
-               ELSE d - INTERVAL (WEEKDAY(d) + 1) DAY
            END >= DATE(@startDate)
 ),
 -- Each RHD Registry enrolment with the one after it, so the latest by a day is the one the next is after

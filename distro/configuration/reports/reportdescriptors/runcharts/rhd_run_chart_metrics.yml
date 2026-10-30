@@ -1,7 +1,7 @@
 key: rhdRunChartMetrics
 uuid: "ba3371da-3c6c-4fb2-bf47-0c3fcfe9dce1"
 name: "RHD Run Chart Metrics"
-description: "ACT 2.0's run chart metrics as of every point of a range, one row per point and clinic and one per point for every clinic, which ACT Core's run charts are calculated from when viewed"
+description: "ACT 2.0's run chart metrics as of every point of a range, one row per point and clinic and one per point for every clinic, which ACT Core's run charts are calculated from when viewed. Points is day, week or month; any other value gives the end date's point alone. At most 1001 points: a longer range loses its earliest points without an error"
 parameters:
   - key: startDate
     type: java.util.Date
