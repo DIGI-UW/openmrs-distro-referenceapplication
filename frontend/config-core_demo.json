@@ -545,7 +545,8 @@
       "riskFlags": [
         "RHD prophylaxis overdue",
         "RHD oral prophylaxis overdue",
-        "RHD lost to follow-up"
+        "RHD lost to follow-up",
+        "RHD penicillin allergy on BPG"
       ],
       "earlyWarningFlags": [
         "RHD cardiology follow-up due",

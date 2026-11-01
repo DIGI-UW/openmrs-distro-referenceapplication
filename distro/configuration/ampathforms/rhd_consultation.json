@@ -627,6 +627,40 @@
                   }
                 },
                 {
+                  "label": "Penicillin allergy warning",
+                  "id": "penicillin_bpg_warning",
+                  "type": "markdown",
+                  "questionOptions": {
+                    "rendering": "markdown"
+                  },
+                  "value": [
+                    "**Penicillin allergy recorded.** BPG is benzathine penicillin. Check the allergy with the patient before prescribing it, or choose a prophylaxis that is not a penicillin, such as oral erythromycin or azithromycin. To prescribe BPG anyway, confirm below."
+                  ],
+                  "hide": {
+                    "hideWhenExpression": "!([\"50be4b26-6c5b-5aaa-9254-3bfd313b4522\", \"2f3ee632-dd14-51b0-a4ec-de10e7958019\", \"91230c88-6a90-5d45-af50-fa6155fe5dd7\"].includes(secondary_antibiotic_prophylaxis) && ([current_allergies].join('').includes('PENICILLIN ALLERGY') || [allergy, allergy_1, allergy_2, allergy_3, allergy_4, allergy_5, allergy_6, allergy_7, allergy_8, allergy_9, allergy_10, allergy_11, allergy_12, allergy_13, allergy_14, allergy_15, allergy_16, allergy_17, allergy_18, allergy_19].some(a => [\"149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\", \"b4e6c064-ab4f-5ee4-9837-094731ee23d4\"].includes(a))))"
+                  }
+                },
+                {
+                  "label": "I have checked the penicillin allergy and prescribe BPG anyway",
+                  "id": "penicillin_allergy_acknowledged",
+                  "type": "obs",
+                  "questionOptions": {
+                    "rendering": "radio",
+                    "concept": "83ab9ae1-aec7-5f30-9273-6d7fd855594e",
+                    "answers": [
+                      {
+                        "label": "Yes",
+                        "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                        "conceptMappings": []
+                      }
+                    ]
+                  },
+                  "required": true,
+                  "hide": {
+                    "hideWhenExpression": "!([\"50be4b26-6c5b-5aaa-9254-3bfd313b4522\", \"2f3ee632-dd14-51b0-a4ec-de10e7958019\", \"91230c88-6a90-5d45-af50-fa6155fe5dd7\"].includes(secondary_antibiotic_prophylaxis) && ([current_allergies].join('').includes('PENICILLIN ALLERGY') || [allergy, allergy_1, allergy_2, allergy_3, allergy_4, allergy_5, allergy_6, allergy_7, allergy_8, allergy_9, allergy_10, allergy_11, allergy_12, allergy_13, allergy_14, allergy_15, allergy_16, allergy_17, allergy_18, allergy_19].some(a => [\"149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\", \"b4e6c064-ab4f-5ee4-9837-094731ee23d4\"].includes(a))))"
+                  }
+                },
+                {
                   "label": "Date Started",
                   "id": "sap_date_started",
                   "type": "obs",
