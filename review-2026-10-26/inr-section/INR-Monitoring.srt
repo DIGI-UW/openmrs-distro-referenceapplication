@@ -1,0 +1,67 @@
+1
+00:00:00,500 --> 00:00:04,424
+This video shows the new INR Monitoring section in the patient summary.
+
+2
+00:00:05,124 --> 00:00:13,019
+Patience asked to see the INR trend during a consultation, as in ACT 2.0, and the consultation form itself is left untouched.
+
+3
+00:00:14,619 --> 00:00:31,550
+A clinician opens the patient summary of a patient on warfarin. The INR Monitoring section starts collapsed, and the patient banner already flags the latest INR. The section still shows the indication, the INR target, the next INR due date and the warfarin dose.
+
+4
+00:00:33,139 --> 00:00:42,289
+Show readings opens the chart. Green is the target, 2.0 to 3.0 here, orange is just outside it, and red is further out.
+
+5
+00:00:43,459 --> 00:00:52,865
+Each reading in the table has a coloured dot and a word, in range, above target or below target, with its dose change beside it. Hide readings collapses the section again.
+
+6
+00:00:54,865 --> 00:01:01,798
+To correct a reading, I open Show readings and click Edit on the latest row. The editor opens in a panel beside the summary.
+
+7
+00:01:03,825 --> 00:01:07,563
+I change the INR value to 4.4 and press Save.
+
+8
+00:01:10,065 --> 00:01:16,427
+The row now reads 4.4, above target, the chart point has moved, and the patient banner shows the new value.
+
+9
+00:01:18,427 --> 00:01:22,502
+Now I start a consultation and type a sentence into Interval History.
+
+10
+00:01:29,107 --> 00:01:37,375
+I click Record INR in the collapsed section. The INR form opens in its own window, and nothing asks me to discard the consultation.
+
+11
+00:01:38,387 --> 00:01:46,189
+I choose the indication and the target, enter the date and an INR of 3.4, answer No to dose change, and press Save.
+
+12
+00:01:48,027 --> 00:01:54,877
+The consultation window comes back with my sentence still in Interval History, and Show readings reveals the new reading.
+
+13
+00:01:56,877 --> 00:02:04,530
+This patient's own target is 2.5 to 3.5. The chart keeps its standard bands and draws that target as a dashed box.
+
+14
+00:02:06,397 --> 00:02:12,945
+When there are more than five readings, See all opens the INR reviews page, with the same chart above its table.
+
+15
+00:02:14,945 --> 00:02:16,477
+Two things are left for later.
+
+16
+00:02:17,177 --> 00:02:22,866
+The agreed target range, ticket AR-124, is still open with the clinical lead.
+
+17
+00:02:23,566 --> 00:02:25,482
+The Results tab is unchanged.
