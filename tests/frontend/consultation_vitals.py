@@ -49,7 +49,8 @@ class ConsultationVitals(unittest.TestCase):
     def test_offers_the_vitals_form_only_when_the_visit_has_none(self):
         button = questions()[2]
         self.assertEqual(button['questionOptions']['rendering'], 'workspace-launcher')
-        self.assertEqual(button['questionOptions']['workspaceName'], 'patient-vitals-biometrics-form-workspace')
+        # The ACT app's window for it, beside the consultation; the vitals app's own window would close the consultation.
+        self.assertEqual(button['questionOptions']['workspaceName'], 'act-vitals-form-workspace')
         # The text the helper returns when the visit has no vitals.
         self.assertEqual(
             button['hide']['hideWhenExpression'], "current_vitals !== 'Vitals not recorded at this visit'"
