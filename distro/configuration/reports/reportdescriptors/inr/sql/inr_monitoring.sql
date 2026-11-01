@@ -118,8 +118,6 @@ LEFT JOIN obs inr_value_obs
 
 WHERE
     e.voided = 0
-    -- A user limited to their clinics is given only the visits or encounters at those clinics: ACT Core sets @clinics
-    AND (@clinics IS NULL OR @clinics = '' OR FIND_IN_SET(l.uuid, @clinics) > 0)
     AND e.encounter_datetime >= @startDate
     AND e.encounter_datetime < DATE_ADD(@endDate, INTERVAL 1 DAY)
 

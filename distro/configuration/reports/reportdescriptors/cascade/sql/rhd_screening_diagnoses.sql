@@ -34,15 +34,6 @@ WITH scr_active AS (
             AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type
                                                 WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')
       ))
-      -- A user limited to their clinics is given only the patients of those clinics: ACT Core sets @clinics
-      AND (@clinics IS NULL OR @clinics = '' OR EXISTS (
-          SELECT 1 FROM person_attribute pa_c
-          JOIN location l_c ON l_c.location_id = pa_c.value AND FIND_IN_SET(l_c.uuid, @clinics) > 0
-          WHERE pa_c.person_id = pp.patient_id AND pa_c.voided = 0
-            AND pa_c.person_attribute_type_id IN (SELECT person_attribute_type_id FROM person_attribute_type
-                                                   WHERE uuid IN ('fe261119-2911-5b36-be40-8f9827826987',
-                                                                  '695f2990-236f-5d7c-b8aa-ddbdb22400f4'))
-      ))
 ),
 -- Each patient's latest Diagnosis group by the end date with a Category and not answered inactive or secondary, as ACT 2.0
 -- took the active primary diagnosis (unanswered counts, as those questions did not load before 2026-10-07).

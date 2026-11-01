@@ -32,5 +32,3 @@ datasets:
     config: "sql/rhd_dashboard_registrant_patients.sql"
 designs:
   - type: csv
-config:
-  privilege: "Task: act.report.dashboard"
