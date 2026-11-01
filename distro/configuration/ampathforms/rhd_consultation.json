@@ -30,6 +30,33 @@
               }
             },
             {
+              "label": "Vitals at this visit",
+              "id": "current_vitals",
+              "type": "obs",
+              "readonly": true,
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "f27f6ed2-48db-5be7-91da-3e2483915462",
+                "isTransient": true,
+                "calculate": {
+                  "calculateExpression": "actVisitVitals(patient.id, visit.uuid)"
+                }
+              }
+            },
+            {
+              "label": "",
+              "id": "record_vitals",
+              "type": "control",
+              "questionOptions": {
+                "rendering": "workspace-launcher",
+                "workspaceName": "act-vitals-form-workspace",
+                "buttonLabel": "Record vitals"
+              },
+              "hide": {
+                "hideWhenExpression": "current_vitals !== 'Vitals not recorded at this visit'"
+              }
+            },
+            {
               "label": "Date of Consultation Visit",
               "id": "date_of_review",
               "type": "obs",
