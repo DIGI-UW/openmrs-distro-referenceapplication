@@ -136,7 +136,7 @@
                     "concept": "1a5aa050-661d-5e89-95d7-c1eba476df22",
                     "answers": [
                       {
-                        "label": "Rheumatic Heart Disease/Rheumatic Fever",
+                        "label": "Rheumatic fever or rheumatic heart disease",
                         "concept": "4e529463-2036-5327-ad69-7cbd39df86a1",
                         "conceptMappings": []
                       },
@@ -159,30 +159,35 @@
                   }
                 },
                 {
-                  "label": "Diagnosis Details",
+                  "label": "Diagnosis",
                   "id": "diagnosis_details_rhd",
                   "type": "obs",
                   "questionOptions": {
-                    "rendering": "checkbox",
+                    "rendering": "radio",
                     "concept": "cfe17bb5-4a76-5f3a-9e1c-7b1e9b84a8e3",
                     "answers": [
                       {
-                        "label": "Acute Rheumatic Fever",
+                        "label": "Acute rheumatic fever",
                         "concept": "cbfcf051-bee3-549d-b233-e5be0e7d691a",
                         "conceptMappings": []
                       },
                       {
-                        "label": "RHD A",
+                        "label": "Rheumatic heart disease, stage not recorded",
+                        "concept": "ddfb315f-650a-510a-94a1-f6f5439cfba4",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Rheumatic heart disease, stage A",
                         "concept": "1c4a12e2-1f80-5176-bd8f-0e3a0154ce0b",
                         "conceptMappings": []
                       },
                       {
-                        "label": "RHD B",
+                        "label": "Rheumatic heart disease, stage B",
                         "concept": "5e019f88-6b33-5749-8804-d9686ae680d5",
                         "conceptMappings": []
                       },
                       {
-                        "label": "RHD C/RHD D",
+                        "label": "Rheumatic heart disease, stage C/D",
                         "concept": "8c2f337a-99b3-5f76-8312-1cee4336309c",
                         "conceptMappings": []
                       }
