@@ -149,11 +149,13 @@ def PI(pat, day, details="rhdB", cat="catRHD", screen=None, loc=ACIMI):
     o=[]
     if screen:
         o+=[obs("screenPos",YES),dobs("screenDate",screen),tobs("screenSite","Gulu Primary School"),obs("screenFU","echoBooked")]
+    pi=enc(pat,"pi",day,o,loc)
+    # The diagnosis is recorded on a consultation (AR-167): one on the same day, with nothing else on it.
     if cat:
         m=[obs("category",cat),obs("active",YES),dobs("started",day)]
         if details: m.append(obs("detailsRHD",details))
-        o.append(grp("diagGroup",m))
-    return enc(pat,"pi",day,o,loc)
+        enc(pat,"consult",day,[grp("diagGroup",m)],loc)
+    return pi
 def consult(pat, day, regimen="q28", start=None, extra=None, nextMonths=6, loc=UHI, nyha="nyha1", nyha_concept=None):
     o=[dobs("consultDate",day),obs("nyha",nyha_concept or nyha),obs("nextAmt",nextMonths),obs("nextPeriod","months")]
     if regimen: o.append(grp("sap",[obs("sap",regimen),dobs("dateStarted",start or day)]))
@@ -323,8 +325,11 @@ def seed_person(p):
     if p["diagnosis"]:
         concept, answers = DETAILS[p["diagnosis"]]
         detail = answers[p["stage"]] if p["diagnosis"] == "rhd" else rng.choice(answers)
-        pi.append(grp("diagGroup", [obs("category", CAT[p["diagnosis"]]), obs("active", YES), dobs("started", reg), {"concept": concept, "value": detail}]))
+        diagnosis = grp("diagGroup", [obs("category", CAT[p["diagnosis"]]), obs("active", YES), dobs("started", reg), {"concept": concept, "value": detail}])
     enc(pat, "pi", reg, pi, p["pcc"])
+    if p["diagnosis"]:
+        # The diagnosis is recorded on a consultation (AR-167), here one on the registration day.
+        enc(pat, "consult", reg, [diagnosis], p["pcc"])
     if p["diagnosis"] in ("rhd", "chd", "other"):
         echo(pat, reg + datetime.timedelta(days=rng.randint(0, 25)), ["moderate", "moderate", "severe"][min(p["stage"], 2)] if p["diagnosis"] == "rhd" else "moderate",
              rng.randint(35, 68), YES if p["stage"] == 2 else NO)
