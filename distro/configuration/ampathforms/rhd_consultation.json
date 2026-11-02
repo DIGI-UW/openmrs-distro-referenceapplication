@@ -483,42 +483,6 @@
           "isExpanded": "true",
           "questions": [
             {
-              "label": "Last echocardiogram",
-              "id": "last_echocardiogram",
-              "type": "obs",
-              "readonly": true,
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "ad533240-b503-5b82-a2fd-c7b69868d632",
-                "isTransient": true,
-                "calculate": {
-                  "calculateExpression": "resolve(api.getPreviousEncounter(patient.id, '730f5ec2-7102-55d0-8602-2d792844f245')).then(e => !e ? 'None recorded' : [((e.obs.filter(o => !o.voided && o.concept.uuid === '911be530-9457-54be-8515-4bbcdb832ccb').map(o => o.value && o.value.name ? o.value.name.name : o.value)[0] || e.encounterDatetime) + '').slice(0, 10)].concat(e.obs.filter(o => !o.voided && o.concept.uuid === 'd6ab05e2-1ece-5f8f-893d-74739aa66ce5').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'MR ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === 'ed209fc3-0138-516c-a0bd-bcd3b2697a87').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'MS ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === '0bbc510f-1e95-5c74-bbe3-8896907fd6c1').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'AR ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === '7586c9a6-73db-5ab2-8f23-71a3cc4bae62').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'AS ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === 'ed630fda-8451-53c0-929e-40eafd9bca9b').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'EF ' + x + '%')).join(', '))"
-                }
-              }
-            },
-            {
-              "label": "",
-              "id": "record_echocardiogram",
-              "type": "control",
-              "questionOptions": {
-                "rendering": "workspace-launcher",
-                "workspaceName": "act-cardiac-test-form-entry-workspace",
-                "buttonLabel": "Record echocardiogram",
-                "workspaceProps": {
-                  "workspaceTitle": "RHD Echocardiogram",
-                  "form": {
-                    "uuid": "88e54fb0-1243-3f7a-b925-f64648ca6635",
-                    "display": "RHD Echocardiogram"
-                  },
-                  "encounterUuid": "",
-                  "additionalProps": {
-                    "mode": "enter",
-                    "openClinicalFormsWorkspaceOnFormClose": false
-                  }
-                }
-              }
-            },
-            {
               "label": "Last electrocardiogram",
               "id": "last_electrocardiogram",
               "type": "obs",
@@ -545,6 +509,42 @@
                   "form": {
                     "uuid": "3776bb8d-4741-3741-aeef-d5b760443569",
                     "display": "RHD Electrocardiogram"
+                  },
+                  "encounterUuid": "",
+                  "additionalProps": {
+                    "mode": "enter",
+                    "openClinicalFormsWorkspaceOnFormClose": false
+                  }
+                }
+              }
+            },
+            {
+              "label": "Last echocardiogram",
+              "id": "last_echocardiogram",
+              "type": "obs",
+              "readonly": true,
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "ad533240-b503-5b82-a2fd-c7b69868d632",
+                "isTransient": true,
+                "calculate": {
+                  "calculateExpression": "resolve(api.getPreviousEncounter(patient.id, '730f5ec2-7102-55d0-8602-2d792844f245')).then(e => !e ? 'None recorded' : [((e.obs.filter(o => !o.voided && o.concept.uuid === '911be530-9457-54be-8515-4bbcdb832ccb').map(o => o.value && o.value.name ? o.value.name.name : o.value)[0] || e.encounterDatetime) + '').slice(0, 10)].concat(e.obs.filter(o => !o.voided && o.concept.uuid === 'd6ab05e2-1ece-5f8f-893d-74739aa66ce5').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'MR ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === 'ed209fc3-0138-516c-a0bd-bcd3b2697a87').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'MS ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === '0bbc510f-1e95-5c74-bbe3-8896907fd6c1').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'AR ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === '7586c9a6-73db-5ab2-8f23-71a3cc4bae62').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'AS ' + x), e.obs.filter(o => !o.voided && o.concept.uuid === 'ed630fda-8451-53c0-929e-40eafd9bca9b').map(o => o.value && o.value.name ? o.value.name.name : o.value).map(x => 'EF ' + x + '%')).join(', '))"
+                }
+              }
+            },
+            {
+              "label": "",
+              "id": "record_echocardiogram",
+              "type": "control",
+              "questionOptions": {
+                "rendering": "workspace-launcher",
+                "workspaceName": "act-cardiac-test-form-entry-workspace",
+                "buttonLabel": "Record echocardiogram",
+                "workspaceProps": {
+                  "workspaceTitle": "RHD Echocardiogram",
+                  "form": {
+                    "uuid": "88e54fb0-1243-3f7a-b925-f64648ca6635",
+                    "display": "RHD Echocardiogram"
                   },
                   "encounterUuid": "",
                   "additionalProps": {
