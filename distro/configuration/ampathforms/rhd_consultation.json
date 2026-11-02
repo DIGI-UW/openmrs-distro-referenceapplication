@@ -907,6 +907,42 @@
           "isExpanded": "true",
           "questions": [
             {
+              "label": "Last electrocardiogram",
+              "id": "last_electrocardiogram",
+              "type": "obs",
+              "readonly": true,
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "67d65827-eea5-57ac-ae8b-77f91d128063",
+                "isTransient": true,
+                "calculate": {
+                  "calculateExpression": "resolve(api.getPreviousEncounter(patient.id, '64c3f35f-a3ec-59d6-8178-0ca9f068cda8')).then(e => !e ? 'None recorded' : [((e.obs.filter(o => !o.voided && o.concept.uuid === 'a85d4e63-500f-5af9-8ebd-9e1db5ddc3ed').map(o => o.value && o.value.name ? o.value.name.name : o.value)[0] || e.encounterDatetime) + '').slice(0, 10)].concat(e.obs.filter(o => !o.voided && o.concept.uuid === '1c5476e4-ff12-5fbd-b2ad-53f66f9006a0').map(o => o.value && o.value.name ? o.value.name.name : o.value), e.obs.filter(o => !o.voided && o.concept.uuid === '67d65827-eea5-57ac-ae8b-77f91d128063').map(o => o.value && o.value.name ? o.value.name.name : o.value)).join(', '))"
+                }
+              }
+            },
+            {
+              "label": "",
+              "id": "record_electrocardiogram",
+              "type": "control",
+              "questionOptions": {
+                "rendering": "workspace-launcher",
+                "workspaceName": "act-cardiac-test-form-entry-workspace",
+                "buttonLabel": "Record ECG",
+                "workspaceProps": {
+                  "workspaceTitle": "RHD Electrocardiogram",
+                  "form": {
+                    "uuid": "3776bb8d-4741-3741-aeef-d5b760443569",
+                    "display": "RHD Electrocardiogram"
+                  },
+                  "encounterUuid": "",
+                  "additionalProps": {
+                    "mode": "enter",
+                    "openClinicalFormsWorkspaceOnFormClose": false
+                  }
+                }
+              }
+            },
+            {
               "label": "Last echocardiogram",
               "id": "last_echocardiogram",
               "type": "obs",
@@ -921,16 +957,24 @@
               }
             },
             {
-              "label": "Last electrocardiogram",
-              "id": "last_electrocardiogram",
-              "type": "obs",
-              "readonly": true,
+              "label": "",
+              "id": "record_echocardiogram",
+              "type": "control",
               "questionOptions": {
-                "rendering": "text",
-                "concept": "67d65827-eea5-57ac-ae8b-77f91d128063",
-                "isTransient": true,
-                "calculate": {
-                  "calculateExpression": "resolve(api.getPreviousEncounter(patient.id, '64c3f35f-a3ec-59d6-8178-0ca9f068cda8')).then(e => !e ? 'None recorded' : [((e.obs.filter(o => !o.voided && o.concept.uuid === 'a85d4e63-500f-5af9-8ebd-9e1db5ddc3ed').map(o => o.value && o.value.name ? o.value.name.name : o.value)[0] || e.encounterDatetime) + '').slice(0, 10)].concat(e.obs.filter(o => !o.voided && o.concept.uuid === '1c5476e4-ff12-5fbd-b2ad-53f66f9006a0').map(o => o.value && o.value.name ? o.value.name.name : o.value), e.obs.filter(o => !o.voided && o.concept.uuid === '67d65827-eea5-57ac-ae8b-77f91d128063').map(o => o.value && o.value.name ? o.value.name.name : o.value)).join(', '))"
+                "rendering": "workspace-launcher",
+                "workspaceName": "act-cardiac-test-form-entry-workspace",
+                "buttonLabel": "Record echocardiogram",
+                "workspaceProps": {
+                  "workspaceTitle": "RHD Echocardiogram",
+                  "form": {
+                    "uuid": "88e54fb0-1243-3f7a-b925-f64648ca6635",
+                    "display": "RHD Echocardiogram"
+                  },
+                  "encounterUuid": "",
+                  "additionalProps": {
+                    "mode": "enter",
+                    "openClinicalFormsWorkspaceOnFormClose": false
+                  }
                 }
               }
             },
