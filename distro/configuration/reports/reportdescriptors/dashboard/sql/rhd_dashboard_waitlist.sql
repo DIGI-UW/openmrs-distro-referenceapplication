@@ -2,9 +2,10 @@
 -- RHD Dashboard Waitlist
 -- The Dashboard's procedural waitlist and the procedures performed in the year to the end date, as counts.
 -- Rows: breakdown, procedure, urgency, patients, recommendations.
---   open: the recommendations not yet completed on the end date by procedure and urgency, from the latest consultation
---         by then of each patient alive and enrolled then, each counted once under its own procedure; on today's date,
---         the Procedural Waiting List
+--   open: the recommendations not yet completed on the end date by procedure group and urgency, from the latest
+--         consultation by then of each patient alive and enrolled then, each counted once under its procedure's group;
+--         on today's date, the Procedural Waiting List. The groups: Balloon valvuloplasty (mitral, aortic or pulmonary),
+--         Mitral valve, Aortic valve (each repair/replacement) and Other
 --   total: procedure 'All', the patients waiting and their open recommendations
 --   performed: recommendations completed in the 365 days to the end date, as Mitral balloon valvuloplasty (mitral
 --              balloon valvuloplasty or mitral valvuloplasty) or Surgery (procedure type Surgery), including those of
@@ -85,6 +86,12 @@ completed_yes AS (
 recommendation AS (
     SELECT c.encounter_id, c.patient_id, c.encounter_datetime, g.obs_id,
            COALESCE(proc_name.name, 'Not given') AS procedure_name,
+           CASE WHEN proc_concept.uuid IN ('af9429ff-1b76-55f3-81ca-a9f775d93fb4', 'aca1be99-d090-5078-be63-81353ae89195',
+                                           '69678122-dc66-5b8a-93bc-3358d241ad1b', '36b3cc68-c53f-5a23-8380-24dbaf9c88fb')
+                THEN 'Balloon valvuloplasty'
+                WHEN proc_concept.uuid = '7af8595d-407e-5705-bd8a-812735e2f188' THEN 'Mitral valve'
+                WHEN proc_concept.uuid = 'cd9c582a-71f9-5441-97a8-6d50d7dc15c8' THEN 'Aortic valve'
+                ELSE 'Other' END AS procedure_group,
            proc_concept.uuid AS procedure_uuid,
            type_concept.uuid AS procedure_type_uuid,
            COALESCE(urg_name.name, 'Not given') AS urgency,
@@ -122,10 +129,10 @@ open_recommendation AS (
                  OR (later.encounter_datetime = r.encounter_datetime AND later.encounter_id > r.encounter_id))
       )
 )
-SELECT 'open' AS breakdown, procedure_name AS `procedure`, urgency,
+SELECT 'open' AS breakdown, procedure_group AS `procedure`, urgency,
        COUNT(DISTINCT patient_id) AS patients, COUNT(*) AS recommendations
 FROM open_recommendation
-GROUP BY procedure_name, urgency
+GROUP BY procedure_group, urgency
 UNION ALL
 SELECT 'total', 'All', NULL, COUNT(DISTINCT patient_id), COUNT(*)
 FROM open_recommendation

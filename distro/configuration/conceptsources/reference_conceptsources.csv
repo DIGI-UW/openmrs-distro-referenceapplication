@@ -1,2 +1,5 @@
 Uuid,Void/Retire,Name,Description,Hl7 Code
 4e9d2d90-c0d6-5671-96ff-e41edf7f1bf2,,SNOMED CT,"Space-variant alias of SNOMED-CT -- added because this OpenMRS core version seeds the concept source as SNOMED-CT (hyphen), but the bundled reference-application-demo concept CSVs (e.g. findings-core_demo.csv) map to SNOMED CT (space), causing those concepts (including Oxygen Saturation, BP, Pulse, MUAC, Respiratory rate) to fail ConceptMap validation and be silently skipped on every fresh seed",
+14ADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD,,SNOMED MVP,MVP Namespace Identifier extensions to SNOMED CT,
+4faa9f66-d80f-4685-9645-af206fce7fa5,,ICD-10,"International Classification of Diseases, 10th Revision (ICD-10)",ICD-10
+50ef5518-f4e3-4c49-9352-0002202005e9,,ANCDAK,WHO SMART Guideline Data Elements,

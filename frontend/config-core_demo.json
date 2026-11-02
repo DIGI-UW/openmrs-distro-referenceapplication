@@ -68,6 +68,7 @@
           "act-cardiac-tests-dashboard-link",
           "act-research-dashboard-link",
           "act-consultations-dashboard-link",
+          "act-medications-dashboard-link",
           "act-inr-reviews-dashboard-link",
           "act-clinicians-only-note"
         ],
@@ -79,21 +80,22 @@
           "immunization-summary-dashboard",
           "procedures-summary-dashboard",
           "conditions-summary-dashboard",
-          "medications-summary-dashboard"
+          "medications-summary-dashboard",
+          "allergies-summary-dashboard",
+          "growth-chart-dashboard-link"
         ],
         "order": [
           "charts-summary-dashboard",
-          "act-prophylaxis-dashboard-link",
-          "act-consultations-dashboard-link",
-          "act-inr-reviews-dashboard-link",
-          "encounters-summary-dashboard",
-          "act-cardiac-tests-dashboard-link",
-          "test-results-summary-dashboard",
-          "act-research-dashboard-link",
           "results-summary-dashboard",
-          "allergies-summary-dashboard",
+          "act-cardiac-tests-dashboard-link",
+          "act-consultations-dashboard-link",
+          "act-prophylaxis-dashboard-link",
+          "act-medications-dashboard-link",
+          "act-inr-reviews-dashboard-link",
+          "test-results-summary-dashboard",
+          "encounters-summary-dashboard",
+          "act-research-dashboard-link",
           "programs-summary-dashboard",
-          "growth-chart-dashboard-link",
           "act-clinicians-only-note"
         ],
         "configure": {
@@ -131,7 +133,10 @@
         "remove": [
           "active-medications-widget",
           "future-medications-widget",
-          "past-medications-widget"
+          "past-medications-widget",
+          "vitals-overview-widget",
+          "biometrics-overview-widget",
+          "conditions-overview-widget"
         ],
         "order": [
           "patient-flags-list",
@@ -139,24 +144,17 @@
           "act-prophylaxis-card",
           "act-consultation-card",
           "act-inr-card",
-          "act-contact-card",
-          "conditions-overview-widget"
-        ],
-        "configure": {
-          "conditions-overview-widget": {
-            "Display conditions": {
-              "privileges": [
-                "Task: act.enterClinicalForms"
-              ]
-            }
-          }
-        }
+          "act-medications-card"
+        ]
       },
       "patient-banner-tags-slot": {
         "remove": [
           "queue-patient-info-queue-entry-status",
           "patient-banner-billing-tags",
           "patient-banner-payment-status-tag"
+        ],
+        "order": [
+          "act-anaphylaxis-alert"
         ]
       },
       "visit-form-top-slot": {
@@ -540,6 +538,9 @@
     ]
   },
   "@act-registry/esm-act-app": {
+    "helpMenu": {
+      "contactUrl": "mailto:McCall.Miller@cchmc.org"
+    },
     "registry": {
       "showBpgColumns": true
     },
@@ -547,7 +548,8 @@
       "riskFlags": [
         "RHD prophylaxis overdue",
         "RHD oral prophylaxis overdue",
-        "RHD lost to follow-up"
+        "RHD lost to follow-up",
+        "RHD penicillin allergy on BPG"
       ],
       "earlyWarningFlags": [
         "RHD cardiology follow-up due",
@@ -658,5 +660,23 @@
         ]
       }
     }
+  },
+  "@openmrs/esm-help-menu-app": {
+    "extensionSlots": {
+      "help-menu-slot": {
+        "remove": [
+          "contact-us",
+          "docs",
+          "release-notes",
+          "tutorials"
+        ]
+      }
+    }
+  },
+  "@openmrs/esm-patient-banner-app": {
+    "contactAttributeTypes": [
+      "542c6fd2-05ca-53e3-a4f5-cd23bc1abd8f",
+      "ea3cb7ae-ffbe-5aee-8343-44977898f675"
+    ]
   }
 }

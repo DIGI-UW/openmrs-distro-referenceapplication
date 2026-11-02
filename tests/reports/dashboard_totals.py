@@ -5,7 +5,7 @@ Checks the Dashboard's count reports against the lists they summarise, on a runn
 It seeds a new test clinic with seven registrants (an enrolment ended in a terminal state, an active patient with no
 birth date, an active patient whose latest diagnosis is RHD with no details and who has one open recommendation and two
 completed with the consultation, a patient whose surgery recommended 400 days ago is completed by a later edit of that
-consultation, a patient whose balloon valvuloplasty completed 400 days ago has its consultation moved a day, a
+consultation and whose diagnosis is RHD B with acute rheumatic fever, a patient whose balloon valvuloplasty completed 400 days ago has its consultation moved a day, a
 patient with a surgery completed and a balloon valvuloplasty open whose enrolment then ended, and a patient registered
 at 19 who is 20 now and whose Screen + changed from No to core's True), some with Patient Information encounters, then
 asserts the counts at that clinic today and yesterday and, for every clinic, that rhd_dashboard_registrants,
@@ -68,6 +68,9 @@ CORE_TRUE = 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'
 AORTIC_VALVE = 'cd9c582a-71f9-5441-97a8-6d50d7dc15c8'
 MITRAL_BALLOON = 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'
 PULMONARY_VALVULOPLASTY = '36b3cc68-c53f-5a23-8380-24dbaf9c88fb'
+RHD_DETAILS = 'cfe17bb5-4a76-5f3a-9e1c-7b1e9b84a8e3'
+ACUTE_RHEUMATIC_FEVER = 'cbfcf051-bee3-549d-b233-e5be0e7d691a'
+RHD_B = '5e019f88-6b33-5749-8804-d9686ae680d5'
 
 
 class Stack:
@@ -243,6 +246,9 @@ def main():
     edited = registrant(stack, clinic, f'{stamp} completed later', birthdate='1990-03-15')
     enrol(stack, edited, day(500))
     edited_consultation = consultation(stack, edited, clinic, day(400) + 'T10:00:00', [
+        {'concept': DIAGNOSIS, 'groupMembers': [{'concept': DIAGNOSIS_CATEGORY, 'value': RHD},
+                                                {'concept': RHD_DETAILS, 'value': ACUTE_RHEUMATIC_FEVER},
+                                                {'concept': RHD_DETAILS, 'value': RHD_B}]},
         recommendation(SURGERY, AORTIC_VALVE, {'concept': URGENCY, 'value': URGENT}),
     ])
     operated_then_ended = registrant(stack, clinic, f'{stamp} operated then ended', birthdate='1990-03-15')
@@ -274,8 +280,9 @@ def main():
     at_clinic = stack.rows(REGISTRANTS, endDate=end, cardiacClinic=clinic)
     check('status at the test clinic', by(at_clinic, 'status'), {'Active': 5, terminal_name: 2})
     check('age at the test clinic', by(at_clinic, 'age'), {'20-39': 4, 'Age unknown': 1})
+    # Acute rheumatic fever beside RHD B counts under RHD B alone.
     check('disease at the test clinic', by(at_clinic, 'disease'),
-          {'RHD, details not recorded': 1, 'No diagnosis yet': 4})
+          {'RHD, details not recorded': 1, 'RHD B': 1, 'No diagnosis yet': 3})
     check('sex at the test clinic', by(at_clinic, 'sex'), {'Female': 4, 'Male': 1})
 
     waitlist = stack.rows(WAITLIST, endDate=end, cardiacClinic=clinic)
@@ -285,7 +292,7 @@ def main():
     open_rows = [row for row in waitlist if row['breakdown'] == 'open']
     check('open recommendations at the test clinic',
           [(row['procedure'], row['urgency'], int(row['patients']), int(row['recommendations'])) for row in open_rows],
-          [('Aortic valve repair/replacement', '2: urgent (60 days/2 months)', 1, 1)])
+          [('Aortic valve', '2: urgent (60 days/2 months)', 1, 1)])
     check('total waiting at the test clinic', by(waitlist, 'total', 'procedure', 'patients'), {'All': 1})
     check('performed at the test clinic', by(waitlist, 'performed', 'procedure', 'recommendations'),
           {'Mitral balloon valvuloplasty': 1, 'Surgery': 2})
@@ -294,7 +301,7 @@ def main():
     check('open at the test clinic before the later completion',
           [(row['procedure'], row['urgency'], int(row['patients']), int(row['recommendations']))
            for row in yesterday if row['breakdown'] == 'open'],
-          [('Aortic valve repair/replacement', '2: urgent (60 days/2 months)', 2, 2)])
+          [('Aortic valve', '2: urgent (60 days/2 months)', 2, 2)])
     check('performed at the test clinic before the later completion',
           by(yesterday, 'performed', 'procedure', 'recommendations'),
           {'Mitral balloon valvuloplasty': 1, 'Surgery': 1})
