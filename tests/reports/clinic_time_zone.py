@@ -62,8 +62,9 @@ def main():
 
     if args.db_container:
         query = 'SELECT TIMESTAMPDIFF(MINUTE, UTC_TIMESTAMP(), NOW())'
-        minutes = subprocess.run(['docker', 'exec', args.db_container, 'mysql', '-N', '-uopenmrs', '-popenmrs',
-                                  'openmrs', '-e', query], capture_output=True, text=True, check=True).stdout.strip()
+        mysql = 'mysql -N -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -e "$1"'
+        minutes = subprocess.run(['docker', 'exec', args.db_container, 'sh', '-c', mysql, 'sh', query],
+                                 capture_output=True, text=True, check=True).stdout.strip()
         expected = round(datetime.datetime.now(zone).utcoffset().total_seconds() / 60)
         if abs(int(minutes) - expected) > 1:
             failures.append(f'database NOW() is UTC{int(minutes):+d} minutes, expected {expected:+d}')
