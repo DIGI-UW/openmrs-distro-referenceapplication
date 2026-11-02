@@ -17,8 +17,15 @@ SELECT
         WHERE d.encounter_id = scr.encounter_id AND d.voided = 0
           AND d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '96d6d328-87ba-5a2e-bb71-2d1cd73b3e90')
     ), scr.obs_datetime))                                           AS screen_date,
-    -- Recorded with the Screen + answer; a school screening's School Name stands in for a site left blank
+    -- Where the patient was screened: Case Detected By, recorded with the Screen + answer (AR-167); before that the
+    -- Screening site text, or a school screening's School Name
     COALESCE((
+        SELECT cn.name FROM obs cd
+        JOIN concept_name cn ON cn.concept_id = cd.value_coded AND cn.locale = 'en' AND cn.locale_preferred = 1 AND cn.voided = 0
+        WHERE cd.encounter_id = scr.encounter_id AND cd.voided = 0
+          AND cd.concept_id = (SELECT concept_id FROM concept WHERE uuid = '955632a1-82f7-5b84-a341-de85f95588d1')
+        ORDER BY cd.obs_id DESC LIMIT 1
+    ), (
         SELECT s.value_text FROM obs s
         WHERE s.encounter_id = scr.encounter_id AND s.voided = 0
           AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'a5be20e6-88c0-42b0-9557-54771e06e644')
@@ -29,6 +36,7 @@ SELECT
           AND s.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'cfd8f77a-a2b5-5836-96c1-d3e5fdd48e02')
         ORDER BY s.obs_id DESC LIMIT 1
     ))                                                              AS screening_site,
+    -- The follow-up status, recorded until AR-167 took it off the form; blank for patients screened after that
     (
         SELECT CASE c.uuid WHEN '1035a94f-d8c1-4f0c-b376-5f6c5976b737' THEN 'Not contacted'
                            WHEN '6bcba113-f828-4635-9c47-bcf14b605532' THEN 'Echo booked'
