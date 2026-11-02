@@ -364,7 +364,7 @@
               ]
             },
             {
-              "label": "RHD Complications",
+              "label": "Complication",
               "id": "rhdComplicationsEntry",
               "type": "obsGroup",
               "questionOptions": {
@@ -376,7 +376,7 @@
               },
               "questions": [
                 {
-                  "label": "RHD Complications",
+                  "label": "Complication",
                   "id": "rhdComplications",
                   "type": "obs",
                   "questionOptions": {
@@ -712,6 +712,11 @@
                         "conceptMappings": []
                       },
                       {
+                        "label": "Tetralogy of Fallot",
+                        "concept": "124944AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                        "conceptMappings": []
+                      },
+                      {
                         "label": "Total Anomalous Pulmonary Vein Return",
                         "concept": "033d2bde-3bb1-560e-b363-4fa3f4429ffa",
                         "conceptMappings": []
@@ -979,7 +984,7 @@
               }
             },
             {
-              "label": "Key Findings/Recommendations from this Visit",
+              "label": "Key Findings/Recommendations",
               "id": "key_findings_recommendations",
               "type": "obs",
               "questionOptions": {
@@ -1030,27 +1035,27 @@
                         "conceptMappings": []
                       },
                       {
-                        "label": "Oral penicillin V",
+                        "label": "Oral Penicillin V",
                         "concept": "b9884219-358a-594b-94f5-f8a8863a25f3",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Oral sulfadiazine",
+                        "label": "Oral Sulfadiazine",
                         "concept": "f2e06eb2-5c25-5e53-9e01-246112d05976",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Oral erythromycin",
+                        "label": "Oral Erythromycin",
                         "concept": "fb8b6676-689b-5daa-83f7-1456210c587f",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Oral clarithromycin",
+                        "label": "Oral Clarithromycin",
                         "concept": "f6f25d63-bd1a-51cb-9596-e74a19759429",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Oral azithromycin",
+                        "label": "Oral Azithromycin",
                         "concept": "1af922b8-acee-56c8-b184-eaef4e58e23a",
                         "conceptMappings": []
                       },
@@ -1140,12 +1145,12 @@
                         "conceptMappings": []
                       },
                       {
-                        "label": "Provider stopped",
+                        "label": "Provider Stopped",
                         "concept": "eaf16fa9-03d7-5846-94c3-b02805889ed9",
                         "conceptMappings": []
                       },
                       {
-                        "label": "Patient preference",
+                        "label": "Patient Preference",
                         "concept": "39af49bd-5dd0-5acd-8ffb-260bc83dbfd7",
                         "conceptMappings": []
                       },
@@ -1178,7 +1183,7 @@
                     "conceptMappings": []
                   },
                   {
-                    "label": "Patient preference",
+                    "label": "Patient Preference",
                     "concept": "39af49bd-5dd0-5acd-8ffb-260bc83dbfd7",
                     "conceptMappings": []
                   },
@@ -1271,7 +1276,7 @@
           "isExpanded": "true",
           "questions": [
             {
-              "label": "Cardiac Medication",
+              "label": "Medication",
               "id": "cardiacMedicationEntry",
               "type": "obsGroup",
               "questionOptions": {
@@ -1283,7 +1288,7 @@
               },
               "questions": [
                 {
-                  "label": "Cardiac Medication",
+                  "label": "Medication",
                   "id": "cardiac_medication",
                   "type": "obs",
                   "questionOptions": {
@@ -1540,7 +1545,7 @@
                   }
                 },
                 {
-                  "label": "Dosing (Consultation Visit)",
+                  "label": "Dose",
                   "id": "dosing_consultation_visit",
                   "type": "obs",
                   "questionOptions": {
@@ -1631,7 +1636,7 @@
           "isExpanded": "true",
           "questions": [
             {
-              "label": "Is Endocarditis Prophylaxis Recommended",
+              "label": "Is endocarditis prophylaxis recommended",
               "id": "sbe_prophylaxis_indicated",
               "type": "obs",
               "questionOptions": {

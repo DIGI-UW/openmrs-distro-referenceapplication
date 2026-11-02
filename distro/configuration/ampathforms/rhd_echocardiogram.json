@@ -56,42 +56,6 @@
               }
             },
             {
-              "label": "Is patient suitable for mitral valve repair",
-              "id": "is_patient_suitable_for_mitral_valve_repair",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "select",
-                "concept": "8d6e9ea5-aa27-57d6-bf43-198aca63a951",
-                "answers": [
-                  {
-                    "label": "Yes",
-                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "No",
-                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  }
-                ]
-              },
-              "hide": {
-                "hideWhenExpression": "isEmpty(mitral_regurgitation) || mitral_regurgitation === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
-              }
-            },
-            {
-              "label": "Reasoning",
-              "id": "mitral_valve_repair_reasoning",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "53c3d6ce-6468-5533-848a-1c1e21057b64"
-              },
-              "hide": {
-                "hideWhenExpression": "isEmpty(mitral_regurgitation) || mitral_regurgitation === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
-              }
-            },
-            {
               "label": "Mitral Stenosis",
               "id": "mitral_stenosis_severity",
               "type": "obs",
@@ -120,42 +84,6 @@
                     "conceptMappings": []
                   }
                 ]
-              }
-            },
-            {
-              "label": "Is patient suitable for BAV?",
-              "id": "is_patient_suitable_for_bav",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "select",
-                "concept": "3f82e07f-a760-54b1-94d1-84793cea53b3",
-                "answers": [
-                  {
-                    "label": "Yes",
-                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  },
-                  {
-                    "label": "No",
-                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "conceptMappings": []
-                  }
-                ]
-              },
-              "hide": {
-                "hideWhenExpression": "isEmpty(mitral_stenosis_severity) || mitral_stenosis_severity === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
-              }
-            },
-            {
-              "label": "Reasoning",
-              "id": "if_no_why",
-              "type": "obs",
-              "questionOptions": {
-                "rendering": "text",
-                "concept": "06898c35-63d1-5b2c-8f61-d3c972b252f5"
-              },
-              "hide": {
-                "hideWhenExpression": "isEmpty(mitral_stenosis_severity) || mitral_stenosis_severity === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
               }
             },
             {
@@ -491,6 +419,78 @@
                     "conceptMappings": []
                   }
                 ]
+              },
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_stenosis_severity) || mitral_stenosis_severity === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            },
+            {
+              "label": "Is patient suitable for mitral valve repair",
+              "id": "is_patient_suitable_for_mitral_valve_repair",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "8d6e9ea5-aa27-57d6-bf43-198aca63a951",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_regurgitation) || mitral_regurgitation === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            },
+            {
+              "label": "Reasoning",
+              "id": "mitral_valve_repair_reasoning",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "53c3d6ce-6468-5533-848a-1c1e21057b64"
+              },
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_regurgitation) || mitral_regurgitation === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            },
+            {
+              "label": "Is patient suitable for BAV?",
+              "id": "is_patient_suitable_for_bav",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "3f82e07f-a760-54b1-94d1-84793cea53b3",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "hide": {
+                "hideWhenExpression": "isEmpty(mitral_stenosis_severity) || mitral_stenosis_severity === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            },
+            {
+              "label": "Reasoning",
+              "id": "if_no_why",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "06898c35-63d1-5b2c-8f61-d3c972b252f5"
               },
               "hide": {
                 "hideWhenExpression": "isEmpty(mitral_stenosis_severity) || mitral_stenosis_severity === '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
