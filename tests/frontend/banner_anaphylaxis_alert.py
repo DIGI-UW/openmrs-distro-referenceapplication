@@ -18,6 +18,7 @@ class BannerAnaphylaxisAlert(unittest.TestCase):
             'patient-banner-tags-slot'
         ]
         self.assertEqual(slot['order'][0], 'act-anaphylaxis-alert')
+        self.assertNotIn('act-anaphylaxis-alert', slot.get('remove', []))
 
 
 if __name__ == '__main__':
