@@ -203,7 +203,7 @@ SELECT
         -- ACT 2.0's BPG status chip counted whole days to a due date at midnight, so 7 days out is approaching.
         WHEN MAX(adh.injection_interval_days) > 0 AND MAX(adh.next_due) IS NOT NULL THEN
             CASE WHEN DATEDIFF(MAX(adh.next_due), CURDATE()) < 0 THEN 'Not covered'
-                 -- Prescribed and never injected: the patient banner says Prescribed, first dose due
+                 -- After Not covered, so a first dose past its due date stays Not covered
                  WHEN MAX(adh.last_given) IS NULL THEN 'First dose due'
                  WHEN DATEDIFF(MAX(adh.next_due), CURDATE()) <= 7 THEN 'Deadline approaching'
                  ELSE 'Covered' END
