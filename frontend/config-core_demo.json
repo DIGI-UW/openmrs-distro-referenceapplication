@@ -152,6 +152,9 @@
           "queue-patient-info-queue-entry-status",
           "patient-banner-billing-tags",
           "patient-banner-payment-status-tag"
+        ],
+        "order": [
+          "act-anaphylaxis-alert"
         ]
       },
       "visit-form-top-slot": {
