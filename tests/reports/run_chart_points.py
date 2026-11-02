@@ -222,14 +222,10 @@ def check_range(stack, start, end, points):
     for row in rows:
         by_date.setdefault(day_of(row['point_date']), {})[row['clinic_uuid']] = row
     expected = [d.isoformat() for d in point_dates(start, end, points)]
-    check(f'{label}: point dates', sorted(by_date), [d for d in expected if d in by_date])
+    check(f'{label}: point dates', sorted(by_date), expected)
     for day in expected:
         as_of = {row['clinic_uuid']: row for row in stack.rows(AS_OF, endDate=day)}
-        clinics = by_date.get(day)
-        if clinics is None:
-            # No row for the day means nobody was registered by it, which the as-of report says with a row of zeros
-            check(f'{label} {day}: nobody registered', int(as_of[None]['total_registrants']), 0)
-            continue
+        clinics = by_date.get(day, {})
         check(f'{label} {day}: clinics', sorted(clinics, key=str), sorted(as_of, key=str))
         for clinic, row in clinics.items():
             reference = as_of.get(clinic)
