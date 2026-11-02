@@ -1,0 +1,620 @@
+ACT Core PR #142 (AR-180) runtime evidence, head 978184a, stack act-pr201 (127.0.0.1:8302), test patient Juliet Amony rhd00089
+
+UnreviewedAnaphylaxis.class sha256
+built  (actcore-978184a.omod lib/actcore-api-1.0.0-SNAPSHOT.jar): f137e6c5cb92e20217cb470ccf6f29cb0133dffc31b5d35c8dd6d90c3824fe3f
+loaded (act-pr201-backend-1 /openmrs/data/.openmrs-lib-cache/actcore/lib/actcore-api-1.0.0-SNAPSHOT.jar): f137e6c5cb92e20217cb470ccf6f29cb0133dffc31b5d35c8dd6d90c3824fe3f
+omod sha256 2893811496a3f34a80166e47b1bbd9bdfa13f841e4abb71e1c7ffc5b8a07a7a6
+
+===== 03-prophylaxis-before
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/prophylaxis?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user admin)
+
+response:
+{
+    "regimen": "Q28 day BPG",
+    "type": "BPG",
+    "intervalDays": 28,
+    "lastGiven": "2026-10-07",
+    "nextDue": "2026-11-04",
+    "status": "dueSoon",
+    "onTime": {
+        "given": 5,
+        "total": 6,
+        "months": 6
+    },
+    "adherence": 0.9939759036144579,
+    "injections": [
+        {
+            "date": "2026-10-07",
+            "onTime": true
+        },
+        {
+            "date": "2026-09-09",
+            "onTime": true
+        },
+        {
+            "date": "2026-08-13",
+            "onTime": true
+        },
+        {
+            "date": "2026-07-17",
+            "onTime": true
+        },
+        {
+            "date": "2026-06-20",
+            "onTime": false
+        },
+        {
+            "date": "2026-05-22",
+            "onTime": true
+        }
+    ],
+    "bpgOnHold": false
+}
+
+
+===== 04-nextsteps-before
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/nextsteps?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user admin)
+
+response:
+{
+    "steps": [
+        {
+            "key": "bpg",
+            "form": "0119d2e6-e2e1-391c-9b88-d59a10b0780d",
+            "title": "Give BPG injection",
+            "reason": "Due in 2 days",
+            "isNew": false,
+            "done": false,
+            "onHold": false,
+            "referralType": null,
+            "alert": false
+        },
+        {
+            "key": "echo",
+            "form": "88e54fb0-1243-3f7a-b925-f64648ca6635",
+            "title": "Echocardiogram",
+            "reason": "No echocardiogram recorded",
+            "isNew": false,
+            "done": false,
+            "onHold": false,
+            "referralType": null,
+            "alert": false
+        }
+    ]
+}
+
+
+===== 06-save-bpg-anaphylaxis
+POST http://127.0.0.1:8302/openmrs/ws/rest/v1/encounter (user admin)
+
+body:
+{"patient":"71fa3416-8bae-4f0a-95f6-c0ca53e662d1","encounterType":"04cf03db-3b8e-5020-84b0-50b06338767a","location":"9f5230c6-e16c-5170-9039-6c5ff2c64ab0","encounterDatetime":"2026-11-02T03:19:38.000+0000",
+ "obs":[{"person":"71fa3416-8bae-4f0a-95f6-c0ca53e662d1","concept":"9684b2da-a340-5a70-b8c5-114ba0b1ebcc","value":"148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","obsDatetime":"2026-11-02T03:19:38.000+0000"}]}
+
+response:
+{
+    "uuid": "dff846a1-f774-4480-bd79-a5ad2f6b5a86",
+    "encounterDatetime": "2026-11-02T03:19:38.000+0000",
+    "encounterType": {
+        "display": "RHD BPG Delivery",
+        "resourceVersion": "1.8"
+    },
+    "location": {
+        "display": "Mella HCIII",
+        "resourceVersion": "2.0"
+    },
+    "obs": [
+        {
+            "concept": {
+                "display": "Injection Tolerance",
+                "resourceVersion": "2.0"
+            },
+            "value": {
+                "uuid": "148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "display": "Anaphylaxis",
+                "resourceVersion": "2.0"
+            },
+            "resourceVersion": "2.7"
+        }
+    ],
+    "resourceVersion": "2.2"
+}
+
+
+===== 07-prophylaxis-after-anaphylaxis-admin
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/prophylaxis?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user admin)
+
+response:
+{
+    "regimen": "Q28 day BPG",
+    "type": "BPG",
+    "intervalDays": 28,
+    "lastGiven": "2026-10-07",
+    "nextDue": "2026-11-04",
+    "status": "dueSoon",
+    "onTime": {
+        "given": 5,
+        "total": 6,
+        "months": 6
+    },
+    "adherence": 0.9939759036144579,
+    "injections": [
+        {
+            "date": "2026-10-07",
+            "onTime": true
+        },
+        {
+            "date": "2026-09-09",
+            "onTime": true
+        },
+        {
+            "date": "2026-08-13",
+            "onTime": true
+        },
+        {
+            "date": "2026-07-17",
+            "onTime": true
+        },
+        {
+            "date": "2026-06-20",
+            "onTime": false
+        },
+        {
+            "date": "2026-05-22",
+            "onTime": true
+        }
+    ],
+    "bpgOnHold": true
+}
+
+
+===== 08-nextsteps-after-anaphylaxis-admin
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/nextsteps?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user admin)
+
+response:
+{
+    "steps": [
+        {
+            "key": "consult",
+            "form": "4b063fc7-996f-3001-8500-8940e201be8f",
+            "title": "Consultation visit",
+            "reason": "Anaphylaxis reported after BPG: review before the next dose",
+            "isNew": true,
+            "done": false,
+            "onHold": false,
+            "referralType": null,
+            "alert": true
+        },
+        {
+            "key": "bpg",
+            "form": null,
+            "title": "Give BPG injection",
+            "reason": "On hold: complete the consultation before giving BPG",
+            "isNew": false,
+            "done": false,
+            "onHold": true,
+            "referralType": null,
+            "alert": true
+        },
+        {
+            "key": "echo",
+            "form": "88e54fb0-1243-3f7a-b925-f64648ca6635",
+            "title": "Echocardiogram",
+            "reason": "No echocardiogram recorded",
+            "isNew": false,
+            "done": false,
+            "onHold": false,
+            "referralType": null,
+            "alert": false
+        }
+    ]
+}
+
+
+===== 09-prophylaxis-after-anaphylaxis-dataClerk
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/prophylaxis?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user dataClerk)
+
+response:
+{
+    "regimen": "Q28 day BPG",
+    "type": "BPG",
+    "intervalDays": 28,
+    "lastGiven": "2026-10-07",
+    "nextDue": "2026-11-04",
+    "status": "dueSoon",
+    "onTime": {
+        "given": 5,
+        "total": 6,
+        "months": 6
+    },
+    "adherence": 0.9939759036144579,
+    "injections": [
+        {
+            "date": "2026-10-07",
+            "onTime": true
+        },
+        {
+            "date": "2026-09-09",
+            "onTime": true
+        },
+        {
+            "date": "2026-08-13",
+            "onTime": true
+        },
+        {
+            "date": "2026-07-17",
+            "onTime": true
+        },
+        {
+            "date": "2026-06-20",
+            "onTime": false
+        },
+        {
+            "date": "2026-05-22",
+            "onTime": true
+        }
+    ],
+    "bpgOnHold": true
+}
+
+
+===== 09b-nextsteps-after-anaphylaxis-dataClerk
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/nextsteps?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user dataClerk)
+
+response:
+{
+    "steps": [
+        {
+            "key": "refer",
+            "form": null,
+            "title": "Refer to clinician",
+            "reason": "Anaphylaxis reported: a clinician must review before the next dose",
+            "isNew": true,
+            "done": false,
+            "onHold": false,
+            "referralType": "f423ba04-0f7a-414e-98c7-6b4d5ba0d93a",
+            "alert": true
+        },
+        {
+            "key": "bpg",
+            "form": null,
+            "title": "Give BPG injection",
+            "reason": "On hold: a clinician must review before the next dose",
+            "isNew": false,
+            "done": false,
+            "onHold": true,
+            "referralType": null,
+            "alert": true
+        }
+    ]
+}
+
+
+===== 10-prophylaxis-after-anaphylaxis-clinician
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/prophylaxis?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user clinician)
+
+response:
+{
+    "regimen": "Q28 day BPG",
+    "type": "BPG",
+    "intervalDays": 28,
+    "lastGiven": "2026-10-07",
+    "nextDue": "2026-11-04",
+    "status": "dueSoon",
+    "onTime": {
+        "given": 5,
+        "total": 6,
+        "months": 6
+    },
+    "adherence": 0.9939759036144579,
+    "injections": [
+        {
+            "date": "2026-10-07",
+            "onTime": true
+        },
+        {
+            "date": "2026-09-09",
+            "onTime": true
+        },
+        {
+            "date": "2026-08-13",
+            "onTime": true
+        },
+        {
+            "date": "2026-07-17",
+            "onTime": true
+        },
+        {
+            "date": "2026-06-20",
+            "onTime": false
+        },
+        {
+            "date": "2026-05-22",
+            "onTime": true
+        }
+    ],
+    "bpgOnHold": true
+}
+
+
+===== 10b-nextsteps-after-anaphylaxis-clinician
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/nextsteps?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user clinician)
+
+response:
+{
+    "steps": [
+        {
+            "key": "consult",
+            "form": "4b063fc7-996f-3001-8500-8940e201be8f",
+            "title": "Consultation visit",
+            "reason": "Anaphylaxis reported after BPG: review before the next dose",
+            "isNew": true,
+            "done": false,
+            "onHold": false,
+            "referralType": null,
+            "alert": true
+        },
+        {
+            "key": "bpg",
+            "form": null,
+            "title": "Give BPG injection",
+            "reason": "On hold: complete the consultation before giving BPG",
+            "isNew": false,
+            "done": false,
+            "onHold": true,
+            "referralType": null,
+            "alert": true
+        },
+        {
+            "key": "echo",
+            "form": "88e54fb0-1243-3f7a-b925-f64648ca6635",
+            "title": "Echocardiogram",
+            "reason": "No echocardiogram recorded",
+            "isNew": false,
+            "done": false,
+            "onHold": false,
+            "referralType": null,
+            "alert": false
+        }
+    ]
+}
+
+
+===== 11-save-consultation
+POST http://127.0.0.1:8302/openmrs/ws/rest/v1/encounter (user admin)
+
+body:
+{"patient":"71fa3416-8bae-4f0a-95f6-c0ca53e662d1","encounterType":"c2503561-c00d-5460-8157-43d594472b4a","location":"9f5230c6-e16c-5170-9039-6c5ff2c64ab0","encounterDatetime":"2026-11-02T03:21:07.000+0000"}
+
+response:
+{
+    "uuid": "7c39b99e-758b-4c5b-ae27-99f0520f49e3",
+    "encounterDatetime": "2026-11-02T03:21:07.000+0000",
+    "encounterType": {
+        "display": "RHD Consultation Visit",
+        "resourceVersion": "1.8"
+    },
+    "location": {
+        "display": "Mella HCIII",
+        "resourceVersion": "2.0"
+    },
+    "resourceVersion": "2.2"
+}
+
+
+===== 12-prophylaxis-after-consultation-admin
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/prophylaxis?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user admin)
+
+response:
+{
+    "regimen": "Q28 day BPG",
+    "type": "BPG",
+    "intervalDays": 28,
+    "lastGiven": "2026-10-07",
+    "nextDue": "2026-11-04",
+    "status": "dueSoon",
+    "onTime": {
+        "given": 5,
+        "total": 6,
+        "months": 6
+    },
+    "adherence": 0.9939759036144579,
+    "injections": [
+        {
+            "date": "2026-10-07",
+            "onTime": true
+        },
+        {
+            "date": "2026-09-09",
+            "onTime": true
+        },
+        {
+            "date": "2026-08-13",
+            "onTime": true
+        },
+        {
+            "date": "2026-07-17",
+            "onTime": true
+        },
+        {
+            "date": "2026-06-20",
+            "onTime": false
+        },
+        {
+            "date": "2026-05-22",
+            "onTime": true
+        }
+    ],
+    "bpgOnHold": false
+}
+
+
+===== 13-nextsteps-after-consultation-admin
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/nextsteps?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user admin)
+
+response:
+{
+    "steps": [
+        {
+            "key": "bpg",
+            "form": "0119d2e6-e2e1-391c-9b88-d59a10b0780d",
+            "title": "Give BPG injection",
+            "reason": "Due in 2 days",
+            "isNew": false,
+            "done": false,
+            "onHold": false,
+            "referralType": null,
+            "alert": false
+        },
+        {
+            "key": "echo",
+            "form": "88e54fb0-1243-3f7a-b925-f64648ca6635",
+            "title": "Echocardiogram",
+            "reason": "No echocardiogram recorded",
+            "isNew": false,
+            "done": false,
+            "onHold": false,
+            "referralType": null,
+            "alert": false
+        },
+        {
+            "key": "consult",
+            "form": "4b063fc7-996f-3001-8500-8940e201be8f",
+            "title": "Consultation visit",
+            "reason": "Anaphylaxis reported after BPG: review before the next dose",
+            "isNew": false,
+            "done": true,
+            "onHold": false,
+            "referralType": null,
+            "alert": false
+        }
+    ]
+}
+
+
+===== 14-prophylaxis-after-consultation-dataClerk
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/prophylaxis?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user dataClerk)
+
+response:
+{
+    "regimen": "Q28 day BPG",
+    "type": "BPG",
+    "intervalDays": 28,
+    "lastGiven": "2026-10-07",
+    "nextDue": "2026-11-04",
+    "status": "dueSoon",
+    "onTime": {
+        "given": 5,
+        "total": 6,
+        "months": 6
+    },
+    "adherence": 0.9939759036144579,
+    "injections": [
+        {
+            "date": "2026-10-07",
+            "onTime": true
+        },
+        {
+            "date": "2026-09-09",
+            "onTime": true
+        },
+        {
+            "date": "2026-08-13",
+            "onTime": true
+        },
+        {
+            "date": "2026-07-17",
+            "onTime": true
+        },
+        {
+            "date": "2026-06-20",
+            "onTime": false
+        },
+        {
+            "date": "2026-05-22",
+            "onTime": true
+        }
+    ],
+    "bpgOnHold": false
+}
+
+
+===== 14b-nextsteps-after-consultation-dataClerk
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/nextsteps?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user dataClerk)
+
+response:
+{
+    "steps": [
+        {
+            "key": "bpg",
+            "form": "0119d2e6-e2e1-391c-9b88-d59a10b0780d",
+            "title": "Give BPG injection",
+            "reason": "Due in 2 days",
+            "isNew": false,
+            "done": false,
+            "onHold": false,
+            "referralType": null,
+            "alert": false
+        },
+        {
+            "key": "refer",
+            "form": null,
+            "title": "Refer to clinician",
+            "reason": "Anaphylaxis reported: a clinician must review before the next dose",
+            "isNew": false,
+            "done": true,
+            "onHold": false,
+            "referralType": "f423ba04-0f7a-414e-98c7-6b4d5ba0d93a",
+            "alert": false
+        }
+    ]
+}
+
+
+===== 15-prophylaxis-after-consultation-clinician
+GET http://127.0.0.1:8302/openmrs/ws/rest/v1/actcore/prophylaxis?patient=71fa3416-8bae-4f0a-95f6-c0ca53e662d1 (user clinician)
+
+response:
+{
+    "regimen": "Q28 day BPG",
+    "type": "BPG",
+    "intervalDays": 28,
+    "lastGiven": "2026-10-07",
+    "nextDue": "2026-11-04",
+    "status": "dueSoon",
+    "onTime": {
+        "given": 5,
+        "total": 6,
+        "months": 6
+    },
+    "adherence": 0.9939759036144579,
+    "injections": [
+        {
+            "date": "2026-10-07",
+            "onTime": true
+        },
+        {
+            "date": "2026-09-09",
+            "onTime": true
+        },
+        {
+            "date": "2026-08-13",
+            "onTime": true
+        },
+        {
+            "date": "2026-07-17",
+            "onTime": true
+        },
+        {
+            "date": "2026-06-20",
+            "onTime": false
+        },
+        {
+            "date": "2026-05-22",
+            "onTime": true
+        }
+    ],
+    "bpgOnHold": false
+}
+
+
