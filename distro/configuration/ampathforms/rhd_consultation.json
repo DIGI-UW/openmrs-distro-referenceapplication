@@ -1020,7 +1020,8 @@
                         "concept": "1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                         "conceptMappings": []
                       }
-                    ]
+                    ],
+                    "enablePreviousValue": true
                   }
                 },
                 {
@@ -1063,7 +1064,8 @@
                   "type": "obs",
                   "questionOptions": {
                     "rendering": "date",
-                    "concept": "5bcc7d12-b279-5955-815c-090a1f392071"
+                    "concept": "5bcc7d12-b279-5955-815c-090a1f392071",
+                    "enablePreviousValue": true
                   }
                 },
                 {
@@ -1182,7 +1184,8 @@
                     "concept": "e13a5d80-2ba1-5927-b4e6-7369473222e1",
                     "conceptMappings": []
                   }
-                ]
+                ],
+                "enablePreviousValue": true
               }
             },
             {
@@ -1213,7 +1216,8 @@
                     "concept": "2e145a91-1967-537c-b957-730f005002b2",
                     "conceptMappings": []
                   }
-                ]
+                ],
+                "enablePreviousValue": true
               }
             }
           ]
@@ -1487,7 +1491,8 @@
                         "concept": "b9bc1cff-6970-50ff-9584-3451a0c7a1f9",
                         "conceptMappings": []
                       }
-                    ]
+                    ],
+                    "enablePreviousValue": true
                   }
                 },
                 {
@@ -1496,7 +1501,8 @@
                   "type": "obs",
                   "questionOptions": {
                     "rendering": "text",
-                    "concept": "8879385e-d35e-50a3-a3d0-4333d95d4878"
+                    "concept": "8879385e-d35e-50a3-a3d0-4333d95d4878",
+                    "enablePreviousValue": true
                   }
                 },
                 {
@@ -1532,7 +1538,8 @@
                         "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                         "conceptMappings": []
                       }
-                    ]
+                    ],
+                    "enablePreviousValue": true
                   }
                 },
                 {
@@ -1541,7 +1548,8 @@
                   "type": "obs",
                   "questionOptions": {
                     "rendering": "date",
-                    "concept": "5bcc7d12-b279-5955-815c-090a1f392071"
+                    "concept": "5bcc7d12-b279-5955-815c-090a1f392071",
+                    "enablePreviousValue": true
                   }
                 },
                 {
@@ -1596,7 +1604,8 @@
                     "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "conceptMappings": []
                   }
-                ]
+                ],
+                "enablePreviousValue": true
               }
             },
             {
