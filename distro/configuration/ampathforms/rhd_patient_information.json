@@ -122,7 +122,7 @@
                 "rendering": "number",
                 "concept": "9e8e8f30-069e-5af4-beef-20350748d65b",
                 "calculate": {
-                  "calculateExpression": "screen_positive_date && patient.birthDate ? Math.floor((new Date(screen_positive_date).getTime() - new Date(patient.birthDate).getTime()) / 31557600000) : null"
+                  "calculateExpression": "screen_positive_date && patient.birthDate ? new Date(screen_positive_date).getFullYear() - new Date(patient.birthDate).getFullYear() - (new Date(screen_positive_date).getTime() < new Date(new Date(screen_positive_date).getFullYear(), new Date(patient.birthDate).getMonth(), new Date(patient.birthDate).getDate()).getTime() ? 1 : 0) : null"
                 }
               },
               "hide": {
