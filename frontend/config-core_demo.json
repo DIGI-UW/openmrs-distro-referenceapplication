@@ -152,6 +152,9 @@
           "queue-patient-info-queue-entry-status",
           "patient-banner-billing-tags",
           "patient-banner-payment-status-tag"
+        ],
+        "order": [
+          "act-anaphylaxis-alert"
         ]
       },
       "visit-form-top-slot": {
@@ -545,7 +548,8 @@
       "riskFlags": [
         "RHD prophylaxis overdue",
         "RHD oral prophylaxis overdue",
-        "RHD lost to follow-up"
+        "RHD lost to follow-up",
+        "RHD penicillin allergy on BPG"
       ],
       "earlyWarningFlags": [
         "RHD cardiology follow-up due",
