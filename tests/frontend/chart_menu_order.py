@@ -13,7 +13,7 @@ CONFIG = pathlib.Path(__file__).resolve().parents[2] / 'frontend' / 'config-core
 
 CLINICIAN_ORDER = [
     'charts-summary-dashboard',  # Patient summary
-    'act-allergies-dashboard-link',  # Allergies, ACT's page (#319)
+    'act-allergies-dashboard-link',  # Allergies, ACT's page
     'results-summary-dashboard',  # Vitals & Biometrics (the id upstream gives its link)
     'act-cardiac-tests-dashboard-link',  # Cardiac tests
     'act-consultations-dashboard-link',  # Consultation visits

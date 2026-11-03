@@ -8,6 +8,7 @@ Usage: python3 tests/frontend/allergies_form.py
 """
 import csv
 import hashlib
+import re
 import json
 import pathlib
 import unittest
@@ -119,12 +120,17 @@ class ReportsCountTheForm(unittest.TestCase):
             sql = (CONFIG / 'reports' / 'reportdescriptors' / report).read_text()
             self.assertIn(f"'{ENCOUNTER_TYPE}'", sql, report)
 
-    def test_a_resolved_penicillin_allergy_is_not_counted(self):
+    def test_the_flag_and_the_report_skip_an_allergy_whose_latest_record_is_resolved(self):
         flag = next(row for row in csv.reader((CONFIG / 'flags' / 'rhd_flags.csv').open()) if row[1:2] == ['RHD penicillin allergy on BPG'])
         patients = (CONFIG / 'reports' / 'reportdescriptors' / 'patients' / 'sql' / 'rhd_patients.sql').read_text()
-        for name, sql in (('flag', flag[4]), ('rhd_patients.sql', patients)):
-            self.assertIn(DATE_RESOLVED, sql, name)
-        self.assertNotIn('recorded on a consultation', flag[2])
+        resolved = f"concept_id = (SELECT concept_id FROM concept WHERE uuid = '{DATE_RESOLVED}')"
+        for name, sql, alias in (('flag', flag[4], 'al'), ('rhd_patients.sql', patients, 'o_pen')):
+            sql = ' '.join(sql.split())
+            # No later record of the same allergy answer, and no Date Resolved in this record's group.
+            self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.person_id = {alias}\.person_id .*'
+                             rf'\w+\.value_coded = {alias}\.value_coded', name)
+            self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.obs_group_id = {alias}\.obs_group_id '
+                             rf'AND \w+\.voided = 0 AND \w+\.{re.escape(resolved)}\)', name)
 
 
 if __name__ == '__main__':
