@@ -1,0 +1,193 @@
+{
+  "name": "RHD Allergies",
+  "description": "ACT RHD registry: one of a patient's allergies, recorded or resolved without a consultation",
+  "version": "1",
+  "published": true,
+  "retired": false,
+  "encounter": "RHD Allergies",
+  "processor": "EncounterFormProcessor",
+  "referencedForms": [],
+  "pages": [
+    {
+      "label": "RHD Allergies",
+      "sections": [
+        {
+          "label": "Allergy",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Guidance",
+              "id": "allergies_guidance",
+              "type": "markdown",
+              "questionOptions": {
+                "rendering": "markdown"
+              },
+              "value": [
+                "Record one allergy. When the patient no longer has an allergy, use its Edit on the Allergies page and add the Date Resolved."
+              ]
+            },
+            {
+              "label": "Allergy",
+              "id": "allergyEntry",
+              "type": "obsGroup",
+              "questionOptions": {
+                "rendering": "group",
+                "concept": "cd73e118-64ee-5855-b276-f7cb44fdcf7e"
+              },
+              "questions": [
+                {
+                  "label": "Allergy Name",
+                  "id": "allergy",
+                  "type": "obs",
+                  "questionOptions": {
+                    "rendering": "select",
+                    "concept": "cd73e118-64ee-5855-b276-f7cb44fdcf7e",
+                    "answers": [
+                      {
+                        "label": "Penicillin (allergy)",
+                        "concept": "149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Penicillin (anaphylaxis)",
+                        "concept": "b4e6c064-ab4f-5ee4-9837-094731ee23d4",
+                        "conceptMappings": []
+                      },
+                      {
+                        "label": "Other",
+                        "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                        "conceptMappings": []
+                      }
+                    ]
+                  },
+                  "required": true
+                },
+                {
+                  "label": "Reaction (Allergies)",
+                  "id": "reaction_allergies_group",
+                  "type": "obsGroup",
+                  "questionOptions": {
+                    "rendering": "group",
+                    "concept": "8200713e-8647-52f0-b93d-841e4e9687b7"
+                  },
+                  "questions": [
+                    {
+                      "label": "Reaction",
+                      "id": "reaction_allergies",
+                      "type": "obs",
+                      "questionOptions": {
+                        "rendering": "checkbox",
+                        "concept": "8200713e-8647-52f0-b93d-841e4e9687b7",
+                        "answers": [
+                          {
+                            "label": "Anaphylaxis",
+                            "concept": "148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Chest tightness",
+                            "concept": "9df17a73-d1cc-5183-953e-557d6a87630a",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Diarrhea",
+                            "concept": "142412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Dizziness or lightheadedness",
+                            "concept": "628b4762-15e5-5e97-8705-3160ba5619b8",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Fever",
+                            "concept": "140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Hives (urticaria)",
+                            "concept": "7aad9074-12c7-569e-9ef2-7652a47997b9",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Mouth or throat swelling",
+                            "concept": "ed595b95-91cb-5a74-991b-18967bc628ab",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Nausea or vomiting",
+                            "concept": "354a5e2f-726f-5792-a780-55fdb440fbe1",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Rash (itchy or red)",
+                            "concept": "3f0a603a-5852-56a6-8a54-4d465e0df480",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Shortness of breath",
+                            "concept": "141600AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Swelling (angioedema)",
+                            "concept": "46ee4a83-a12d-5e44-ab05-23277c0914c7",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Wheezing",
+                            "concept": "122863AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                            "conceptMappings": []
+                          },
+                          {
+                            "label": "Other",
+                            "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                            "conceptMappings": []
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "label": "Date Added",
+                  "id": "dateAdded_allergy",
+                  "type": "obs",
+                  "questionOptions": {
+                    "rendering": "date",
+                    "concept": "b8514967-2259-5a4d-9ac5-b9319144b8dc",
+                    "calculate": {
+                      "calculateExpression": "mode === 'enter' ? today() : null"
+                    }
+                  },
+                  "required": true,
+                  "validators": [
+                    {
+                      "type": "date",
+                      "allowFutureDates": "false"
+                    }
+                  ]
+                },
+                {
+                  "label": "Date Resolved",
+                  "id": "dateResolved_allergy",
+                  "type": "obs",
+                  "questionOptions": {
+                    "rendering": "date",
+                    "concept": "8fbebbea-16dd-5dc5-98f0-c522cab26e19"
+                  },
+                  "validators": [
+                    {
+                      "type": "date",
+                      "allowFutureDates": "false"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
