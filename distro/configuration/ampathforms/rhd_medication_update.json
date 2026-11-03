@@ -39,7 +39,7 @@
               },
               "questions": [
                 {
-                  "label": "Cardiac Medication",
+                  "label": "Medication",
                   "id": "cardiac_medication",
                   "type": "obs",
                   "questionOptions": {

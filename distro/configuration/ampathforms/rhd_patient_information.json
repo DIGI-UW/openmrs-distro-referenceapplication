@@ -348,6 +348,31 @@
               "hide": {
                 "hideWhenExpression": "reason_inactive !== '159AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
               }
+            },
+            {
+              "label": "Pregnant or Postpartum at Death",
+              "id": "pregnant_or_postpartum_at_death",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "4e66ea66-6bac-5a83-93be-3c2c8aabf49f",
+                "answers": [
+                  {
+                    "label": "Yes",
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  },
+                  {
+                    "label": "No",
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "conceptMappings": []
+                  }
+                ]
+              },
+              "required": true,
+              "hide": {
+                "hideWhenExpression": "reason_inactive !== '159AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' || patient.gender !== 'female'"
+              }
             }
           ]
         },
@@ -376,7 +401,7 @@
               }
             },
             {
-              "label": "Village/Area of Residence",
+              "label": "District/Area of Residence",
               "id": "village_area_of_residence",
               "type": "obs",
               "questionOptions": {
@@ -385,7 +410,7 @@
               }
             },
             {
-              "label": "Additional information to help locate patient",
+              "label": "Additional Location Information",
               "id": "additional_information_to_help_locate_patient",
               "type": "obs",
               "questionOptions": {
