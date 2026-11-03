@@ -1,7 +1,8 @@
 -- =============================================================================
 -- RHD Run Chart Metrics
 -- ACT 2.0's runchart_record metrics (scheduled_record_calcs.py create_clinic_daily_record) as of every point of a range, in one pass.
--- For each point: one row per clinic, a patient counting at both their clinics, and one row with no clinic_uuid counting each patient once.
+-- For each point: one row per clinic, a patient counting at both their clinics, and one row with no clinic_uuid counting each patient once,
+-- of zeros when nobody is registered by the point, so ACT Core can refuse a report that leaves a point out.
 -- Parameters: @startDate and @endDate, and @points (day, week or month).
 -- A point is the figure as of the last day of its period, the last point as of the end date: the end, then a day back,
 -- or the Sunday before, or the last day of the month before, while the day is not before the start. Any other @points
@@ -241,4 +242,9 @@ FROM clinic_patient cp
 JOIN measure m ON m.d = cp.d AND m.patient_id = cp.patient_id
 LEFT JOIN visits v ON v.d = cp.d AND v.patient_id = cp.patient_id
 GROUP BY cp.d, cp.clinic_uuid
-ORDER BY cp.d, cp.clinic_uuid
+UNION ALL
+-- A point with nobody registered still gets its all-clinics row, of zeros
+SELECT pt.d, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL
+FROM point pt
+WHERE NOT EXISTS (SELECT 1 FROM registrant r WHERE r.d = pt.d)
+ORDER BY point_date, clinic_uuid
