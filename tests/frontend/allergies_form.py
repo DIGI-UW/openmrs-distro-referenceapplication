@@ -86,17 +86,10 @@ class AllergiesForm(unittest.TestCase):
         self.assertEqual(added['questionOptions']['calculate']['calculateExpression'], "mode === 'enter' ? today() : null")
         self.assertEqual(added['validators'], [{'type': 'date', 'allowFutureDates': 'false'}])
 
-    def test_date_resolved_is_not_in_the_future_nor_before_the_date_added(self):
+    def test_date_resolved_is_not_in_the_future_and_may_precede_the_date_added(self):
+        # Date Added defaults to today, and resolving a consultation's allergy records it anew with a past date.
         resolved = by_id(ALLERGIES)['dateResolved_allergy']
-        self.assertEqual(resolved['validators'], [
-            {'type': 'date', 'allowFutureDates': 'false'},
-            {
-                'type': 'js_expression',
-                'failsWhenExpression': '!isEmpty(myValue) && !isEmpty(dateAdded_allergy) '
-                                       '&& new Date(myValue) < new Date(dateAdded_allergy)',
-                'message': 'The date resolved cannot be before the date added',
-            },
-        ])
+        self.assertEqual(resolved['validators'], [{'type': 'date', 'allowFutureDates': 'false'}])
 
     def test_date_resolved_is_a_date_concept(self):
         concept = rows('concepts/rhd_questions_consultation.csv', 'Uuid')[DATE_RESOLVED]
@@ -143,6 +136,16 @@ class ReportsCountTheForm(unittest.TestCase):
                              rf'OR \(\w+\.obs_datetime = {alias}\.obs_datetime AND \w+\.obs_id > {alias}\.obs_id\)\)\)', name)
             self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.obs_group_id = {alias}\.obs_group_id '
                              rf'AND \w+\.voided = 0 AND \w+\.{re.escape(resolved)}\)', name)
+
+
+class FlagsFitTheirColumns(unittest.TestCase):
+    # Initializer drops a flag row whose text overflows a column of patientflags_flag.
+    LIMITS = {'name': 255, 'description': 255, 'criteria': 5000, 'message': 255}
+
+    def test_every_flag_fits(self):
+        for flag in rows('flags/rhd_flags.csv', 'uuid').values():
+            for column, limit in self.LIMITS.items():
+                self.assertLessEqual(len(flag[column]), limit, f"{flag['name']} {column}")
 
 
 if __name__ == '__main__':

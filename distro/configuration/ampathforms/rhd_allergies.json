@@ -180,11 +180,6 @@
                     {
                       "type": "date",
                       "allowFutureDates": "false"
-                    },
-                    {
-                      "type": "js_expression",
-                      "failsWhenExpression": "!isEmpty(myValue) && !isEmpty(dateAdded_allergy) && new Date(myValue) < new Date(dateAdded_allergy)",
-                      "message": "The date resolved cannot be before the date added"
                     }
                   ]
                 }
