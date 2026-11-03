@@ -18,6 +18,7 @@ be9041b1-3948-5de0-a8b1-974e84b95715,,ACT-RHD:q_consultation_visit_date_consulta
 b8514967-2259-5a4d-9ac5-b9319144b8dc,,ACT-RHD:q_date_added,Date Added,,,Question,Date,,,
 5bcc7d12-b279-5955-815c-090a1f392071,,ACT-RHD:q_date_started,Date Started,,,Question,Date,,,
 d75edc42-3213-5a06-9228-4e5735b9594b,,ACT-RHD:q_date_stopped,Date Stopped,,,Question,Date,,,
+8fbebbea-16dd-5dc5-98f0-c522cab26e19,,ACT-RHD:q_allergy_date_resolved,Date Resolved,,the day an allergy no longer applies; recorded on the RHD Allergies form (#319),Question,Date,,,
 d4334e8e-4f95-5c57-a268-a4b690540e5d,true,ACT-RHD:q_date_updated,Date Updated,,redundant with Date of Echocardiogram once split into its own form; fixed 2026-09-10,Question,Date,,,
 c3edefd2-5777-5084-b01e-fd4ca0e40162,,ACT-RHD:q_date_of_review,Date of Review,,,Question,Date,,,
 8879385e-d35e-50a3-a3d0-4333d95d4878,,ACT-RHD:q_consultation_visit_dosing_consultation_visit,Dose,,,Question,Text,,,

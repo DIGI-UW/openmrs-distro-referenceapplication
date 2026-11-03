@@ -2,8 +2,8 @@
 """
 Checks the RHD Consultation Visit form warns before a BPG regimen is prescribed to a patient with a penicillin allergy
 (AR-171): inside each Secondary Antibiotic Prophylaxis entry, after the regimen, a warning and a required confirmation
-show only when the regimen is one of the BPG injections and a penicillin allergy is recorded, either on an earlier
-consultation (the actAllergies line) or in this form's Allergy entries.
+show only when the regimen is one of the BPG injections and the patient's current allergies (the actAllergies line,
+which the RHD Allergies form records, #319) include a penicillin allergy.
 
 Usage: python3 tests/frontend/consultation_penicillin_warning.py
 """
@@ -20,10 +20,6 @@ BPG = {
     '50be4b26-6c5b-5aaa-9254-3bfd313b4522',  # Q28 day BPG
     '2f3ee632-dd14-51b0-a4ec-de10e7958019',  # Q21 day BPG
     '91230c88-6a90-5d45-af50-fa6155fe5dd7',  # Q14 day BPG
-}
-PENICILLIN = {
-    '149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',  # Penicillin (allergy)
-    'b4e6c064-ab4f-5ee4-9837-094731ee23d4',  # Penicillin (anaphylaxis)
 }
 ACKNOWLEDGED = '83ab9ae1-aec7-5f30-9273-6d7fd855594e'
 YES = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
@@ -56,13 +52,12 @@ class ConsultationPenicillinWarning(unittest.TestCase):
             expression = by_id(qid)['hide']['hideWhenExpression']
             self.assertTrue(expression.startswith('!('), qid)
             self.assertIn('.includes(secondary_antibiotic_prophylaxis)', expression)
-            for concept in BPG | PENICILLIN:
+            for concept in BPG:
                 self.assertIn(concept, expression, qid)
-            # An allergy saved on an earlier consultation, as the actAllergies line reports it.
             self.assertIn("[current_allergies].join('').includes('PENICILLIN ALLERGY')", expression)
-            # An allergy entered in this form: its repeat's instances are allergy, allergy_1 ... allergy_19.
-            self.assertIn('[allergy, allergy_1, ', expression)
-            self.assertIn('allergy_19]', expression)
+            # The consultation no longer has Allergy entries to read.
+            self.assertNotIn('allergy_1', expression, qid)
+            self.assertNotIn('[allergy,', expression, qid)
 
     def test_the_regimen_select_offers_the_three_bpg_answers(self):
         answers = {a['concept'] for a in by_id('secondary_antibiotic_prophylaxis')['questionOptions']['answers']}

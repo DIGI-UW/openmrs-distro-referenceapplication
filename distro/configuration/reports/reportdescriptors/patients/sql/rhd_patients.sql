@@ -98,7 +98,8 @@ SELECT
         ORDER BY det_obs.obs_datetime ASC LIMIT 1
     )                                                               AS case_detected_by,
 
-    -- Penicillin allergy: the latest Penicillin (allergy) or Penicillin (anaphylaxis) recorded as a consultation's Allergy
+    -- Penicillin allergy: the latest Penicillin (allergy) or Penicillin (anaphylaxis) still current, whose own latest
+    -- record, on a consultation or an RHD Allergies form, has no Date Resolved
     (
         SELECT cn_pen.name
         FROM obs o_pen
@@ -108,6 +109,12 @@ SELECT
           AND o_pen.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'cd73e118-64ee-5855-b276-f7cb44fdcf7e')
           AND o_pen.value_coded IN ((SELECT concept_id FROM concept WHERE uuid = '149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),
                                     (SELECT concept_id FROM concept WHERE uuid = 'b4e6c064-ab4f-5ee4-9837-094731ee23d4'))
+          AND NOT EXISTS (SELECT 1 FROM obs o_later WHERE o_later.person_id = o_pen.person_id AND o_later.voided = 0
+                            AND o_later.concept_id = o_pen.concept_id AND o_later.value_coded = o_pen.value_coded
+                            AND (o_later.obs_datetime > o_pen.obs_datetime
+                                 OR (o_later.obs_datetime = o_pen.obs_datetime AND o_later.obs_id > o_pen.obs_id)))
+          AND NOT EXISTS (SELECT 1 FROM obs o_res WHERE o_res.obs_group_id = o_pen.obs_group_id AND o_res.voided = 0
+                            AND o_res.concept_id = (SELECT concept_id FROM concept WHERE uuid = '8fbebbea-16dd-5dc5-98f0-c522cab26e19'))
         ORDER BY o_pen.obs_datetime DESC, o_pen.obs_id DESC LIMIT 1
     )                                                               AS penicillin_allergy,
 

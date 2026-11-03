@@ -64,6 +64,7 @@
       },
       "patient-chart-dashboard-slot": {
         "add": [
+          "act-allergies-dashboard-link",
           "act-prophylaxis-dashboard-link",
           "act-cardiac-tests-dashboard-link",
           "act-research-dashboard-link",
@@ -86,6 +87,7 @@
         ],
         "order": [
           "charts-summary-dashboard",
+          "act-allergies-dashboard-link",
           "results-summary-dashboard",
           "act-cardiac-tests-dashboard-link",
           "act-consultations-dashboard-link",
