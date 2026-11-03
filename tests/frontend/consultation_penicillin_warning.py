@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
-Checks the RHD Consultation Visit form warns before a BPG regimen is prescribed to a patient with a penicillin allergy
-(AR-171): inside each Secondary Antibiotic Prophylaxis entry, after the regimen, a warning and a required confirmation
-show only when the regimen is one of the BPG injections and the patient's current allergies (the actAllergies line,
-which reads the consultations' and RHD Allergies' records) include a penicillin allergy.
+Checks the RHD Consultation Visit form warns and asks for confirmation before a BPG regimen is prescribed (AR-171)
+when the patient's current allergies (the actAllergies line) include penicillin.
 
 Usage: python3 tests/frontend/consultation_penicillin_warning.py
 """

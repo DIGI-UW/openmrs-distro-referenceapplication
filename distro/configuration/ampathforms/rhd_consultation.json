@@ -51,7 +51,7 @@
                 }
               },
               "hide": {
-                "hideWhenExpression": "mode !== 'enter'"
+                "hideWhenExpression": "mode !== 'enter' || !!visit.stopDatetime"
               }
             },
             {

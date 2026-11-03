@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
-Checks the RHD Consultation Visit form opens with the patient's current allergies: a read-only, unsaved line first in
-the form, filled by the actAllergies helper the ACT app registers with the form engine and kept up to date by its
-act-current-allergies control; then an Add allergy button opening the RHD Allergies form beside a consultation being
-entered.
+Checks the RHD Consultation Visit form opens with the patient's current allergies, a read-only unsaved line the ACT
+app's actAllergies helper and act-current-allergies control fill, then an Add allergy button.
 
 Usage: python3 tests/frontend/consultation_allergies.py
 """
@@ -40,14 +38,13 @@ class ConsultationAllergies(unittest.TestCase):
         options = button['questionOptions']
         self.assertEqual(options['rendering'], 'workspace-launcher')
         self.assertEqual(options['buttonLabel'], 'Add allergy')
-        # The ACT app's window for it, beside the consultation, which stays open.
+        # The ACT app's own workspace, so the consultation stays open beside it.
         self.assertEqual(options['workspaceName'], 'act-allergy-form-entry-workspace')
         props = options['workspaceProps']
         self.assertEqual(props['form']['display'], 'RHD Allergies')
         self.assertEqual(props['additionalProps'], {'mode': 'enter', 'openClinicalFormsWorkspaceOnFormClose': False})
-        # Reopened for edit, a consultation may sit in a closed visit, where an allergy recorded from it would be
-        # dated into that visit and outranked by any later record; the Allergies page records it then.
-        self.assertEqual(button['hide'], {'hideWhenExpression': "mode !== 'enter'"})
+        # Hidden on edits and past visits, where a new allergy would be dated before records that outrank it.
+        self.assertEqual(button['hide'], {'hideWhenExpression': "mode !== 'enter' || !!visit.stopDatetime"})
 
     def test_reads_like_the_other_unsaved_lines(self):
         by_id = {q['id']: q for q in questions() if 'id' in q}

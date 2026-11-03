@@ -98,8 +98,7 @@ SELECT
         ORDER BY det_obs.obs_datetime ASC LIMIT 1
     )                                                               AS case_detected_by,
 
-    -- Penicillin allergy: the latest Penicillin (allergy) or Penicillin (anaphylaxis) still current, whose own latest
-    -- record, on a consultation or an RHD Allergies form, has no Date Resolved
+    -- Penicillin allergy: one whose latest record, on a consultation or RHD Allergies, has no Date Resolved
     (
         SELECT cn_pen.name
         FROM obs o_pen

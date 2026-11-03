@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-Checks allergies are recorded on an RHD Allergies form of their own: one allergy per save, with the consultation's
-questions and concepts plus a Date Resolved, recorded by the clinician and the community clinician, counted by the
-reports, and not asked for on the consultation.
+Checks allergies are recorded on an RHD Allergies form of their own, by the clinician and the community clinician,
+counted by the reports and not asked for on the consultation.
 
 Usage: python3 tests/frontend/allergies_form.py
 """
@@ -126,7 +125,6 @@ class ReportsCountTheForm(unittest.TestCase):
         resolved = f"concept_id = (SELECT concept_id FROM concept WHERE uuid = '{DATE_RESOLVED}')"
         for name, sql, alias in (('flag', flag[4], 'al'), ('rhd_patients.sql', patients, 'o_pen')):
             sql = ' '.join(sql.split())
-            # No later record of the same allergy answer, and no Date Resolved in this record's group.
             self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.person_id = {alias}\.person_id .*'
                              rf'\w+\.value_coded = {alias}\.value_coded', name)
             self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.obs_group_id = {alias}\.obs_group_id '
