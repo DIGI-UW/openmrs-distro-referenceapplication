@@ -12,6 +12,7 @@ The seeded patient and clinic are left on the stack; run it against a test stack
 """
 import argparse
 import datetime
+import re
 import subprocess
 import sys
 from zoneinfo import ZoneInfo
@@ -23,6 +24,16 @@ def report_day(value):
     if isinstance(value, list):
         return datetime.date(*value[:3]).isoformat()
     return str(value)[:10] if value else None
+
+
+def same_wall_clock(returned, expected):
+    """Whether a REST datetime is the expected time at the expected offset, in whichever ISO form the server writes.
+    The offset is compared too: a server on UTC returns 21:30+0000, the same instant as 00:30+0300."""
+    try:
+        parsed = datetime.datetime.fromisoformat(re.sub(r'([+-]\d\d)(\d\d)$', r'\1:\2', returned))
+    except (TypeError, ValueError):
+        return False
+    return parsed == expected and parsed.utcoffset() == expected.utcoffset()
 
 
 def main():
@@ -49,8 +60,8 @@ def main():
     encounter = consultation(stack, patient, clinic, seen.isoformat(), [])
 
     returned = stack.call('GET', f'/encounter/{encounter}?v=custom:(encounterDatetime)')['encounterDatetime']
-    if returned != f'{yesterday.isoformat()}T00:30:00.000{offset}':
-        failures.append(f'REST encounterDatetime: expected {yesterday}T00:30:00.000{offset}, got {returned}')
+    if not same_wall_clock(returned, seen):
+        failures.append(f'REST encounterDatetime: expected {yesterday}T00:30 at {offset}, got {returned}')
 
     rows = stack.rows(REGISTRY, startDate='1900-01-01', endDate=today.isoformat())
     row = next((row for row in rows if row.get('patient_uuid') == patient), None)
@@ -63,11 +74,17 @@ def main():
     if args.db_container:
         query = 'SELECT TIMESTAMPDIFF(MINUTE, UTC_TIMESTAMP(), NOW())'
         mysql = 'mysql -N -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -e "$1"'
-        minutes = subprocess.run(['docker', 'exec', args.db_container, 'sh', '-c', mysql, 'sh', query],
-                                 capture_output=True, text=True, check=True).stdout.strip()
         expected = round(datetime.datetime.now(zone).utcoffset().total_seconds() / 60)
-        if abs(int(minutes) - expected) > 1:
-            failures.append(f'database NOW() is UTC{int(minutes):+d} minutes, expected {expected:+d}')
+        try:
+            result = subprocess.run(['docker', 'exec', args.db_container, 'sh', '-c', mysql, 'sh', query],
+                                    capture_output=True, text=True)
+            minutes = int(result.stdout.strip())
+        except (OSError, ValueError) as error:
+            detail = (result.stderr or result.stdout).strip() if isinstance(error, ValueError) else str(error)
+            failures.append(f'database NOW() could not be read from {args.db_container}: {detail or "no output"}')
+        else:
+            if abs(minutes - expected) > 1:
+                failures.append(f'database NOW() is UTC{minutes:+d} minutes, expected {expected:+d}')
 
     if failures:
         sys.exit('FAIL\n' + '\n'.join(failures))
