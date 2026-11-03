@@ -49,6 +49,9 @@
                     "openClinicalFormsWorkspaceOnFormClose": false
                   }
                 }
+              },
+              "hide": {
+                "hideWhenExpression": "mode !== 'enter'"
               }
             },
             {

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Checks allergies are recorded on an RHD Allergies form of their own (#319): one allergy per save, with the
-consultation's questions and concepts plus a Date Resolved, recorded by the clinician and the community clinician,
-counted by the reports, and no longer asked for on the consultation.
+Checks allergies are recorded on an RHD Allergies form of their own: one allergy per save, with the consultation's
+questions and concepts plus a Date Resolved, recorded by the clinician and the community clinician, counted by the
+reports, and not asked for on the consultation.
 
 Usage: python3 tests/frontend/allergies_form.py
 """
@@ -105,7 +105,7 @@ class WhoRecordsAllergies(unittest.TestCase):
         self.assertIn('Task: act.enterAllergies', privileges)
 
 
-class ConsultationNoLongerRecordsAllergies(unittest.TestCase):
+class ConsultationAsksNoAllergy(unittest.TestCase):
     def test_no_saved_question_asks_for_an_allergy(self):
         saved = [
             q for q in questions(CONSULTATION)

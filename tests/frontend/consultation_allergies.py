@@ -2,8 +2,8 @@
 """
 Checks the RHD Consultation Visit form opens with the patient's current allergies: a read-only, unsaved line first in
 the form, filled by the actAllergies helper the ACT app registers with the form engine and kept up to date by its
-act-current-allergies control; then an Add allergy button opening the RHD Allergies form beside the consultation
-(#319).
+act-current-allergies control; then an Add allergy button opening the RHD Allergies form beside a consultation being
+entered.
 
 Usage: python3 tests/frontend/consultation_allergies.py
 """
@@ -45,7 +45,9 @@ class ConsultationAllergies(unittest.TestCase):
         props = options['workspaceProps']
         self.assertEqual(props['form']['display'], 'RHD Allergies')
         self.assertEqual(props['additionalProps'], {'mode': 'enter', 'openClinicalFormsWorkspaceOnFormClose': False})
-        self.assertNotIn('hide', button)
+        # Reopened for edit, a consultation may sit in a closed visit, where an allergy recorded from it would be
+        # dated into that visit and outranked by any later record; the Allergies page records it then.
+        self.assertEqual(button['hide'], {'hideWhenExpression': "mode !== 'enter'"})
 
     def test_reads_like_the_other_unsaved_lines(self):
         by_id = {q['id']: q for q in questions() if 'id' in q}
