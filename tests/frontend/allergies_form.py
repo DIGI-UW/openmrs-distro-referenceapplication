@@ -23,6 +23,8 @@ REACTION = '8200713e-8647-52f0-b93d-841e4e9687b7'
 DATE_ADDED = 'b8514967-2259-5a4d-9ac5-b9319144b8dc'
 DATE_RESOLVED = '8fbebbea-16dd-5dc5-98f0-c522cab26e19'
 ENCOUNTER_TYPE = '8a687651-3554-4255-941c-812d7a21312e'
+# CIEL's No known allergies, which the ACT app reads as no allergy.
+NO_KNOWN_ALLERGIES = '160557AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 PENICILLIN = {'149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'b4e6c064-ab4f-5ee4-9837-094731ee23d4'}
 # Initializer names an ampath form by this uuid, its name and its version.
 AMPATH_FORMS_UUID = '794c4598-ab82-47ca-8d18-483a8abe6f4f'
@@ -90,6 +92,12 @@ class AllergiesForm(unittest.TestCase):
         # Date Added defaults to today, and resolving a consultation's allergy records it anew with a past date.
         resolved = by_id(ALLERGIES)['dateResolved_allergy']
         self.assertEqual(resolved['validators'], [{'type': 'date', 'allowFutureDates': 'false'}])
+
+    def test_no_known_allergies_is_an_answer_without_reactions_or_a_date_resolved(self):
+        qs = {q['id']: q for q in questions(ALLERGIES)}
+        self.assertIn(NO_KNOWN_ALLERGIES, [a['concept'] for a in qs['allergy']['questionOptions']['answers']])
+        for hidden in ('reaction_allergies_group', 'dateResolved_allergy'):
+            self.assertEqual(qs[hidden].get('hide'), {'hideWhenExpression': f"allergy === '{NO_KNOWN_ALLERGIES}'"}, hidden)
 
     def test_date_resolved_is_a_date_concept(self):
         concept = rows('concepts/rhd_questions_consultation.csv', 'Uuid')[DATE_RESOLVED]
