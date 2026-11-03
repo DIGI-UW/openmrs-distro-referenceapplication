@@ -6,14 +6,15 @@ lost to follow-up, warfarin and INR, waiting list, screen positive, duplicates, 
 population of 180 more generated patients across eight health centres and four cardiac clinics, so the Dashboard
 and Reports have real distributions: registrations over 18 months, screening and how each case was found,
 diagnoses, statuses, prophylaxis adherence from good to stopped, procedures, warfarin and INR, pregnancies and
-admissions. The population comes from a fixed random seed, so every run makes the same people.
+admissions; and a cohort of 40 recommended a valve procedure over 18 months, mostly at Uganda Heart Institute, for the
+Interventions completed run chart. Both come from fixed random seeds, so every run makes the same people.
 
 Safe to run again. Dates are relative to the day it runs, so a fresh run gives the same scenarios.
 
   python3 scripts/seed_act_demo.py                 # seed http://localhost (skips if already seeded)
   python3 scripts/seed_act_demo.py --reset         # void the seeded patients, then seed afresh
   python3 scripts/seed_act_demo.py --reset-only    # only void the seeded patients
-  python3 scripts/seed_act_demo.py --population 0  # only the 26 scenarios (default --population 180)
+  python3 scripts/seed_act_demo.py --population 0  # only the 26 scenarios (default --population 180, and the cohort)
   python3 scripts/seed_act_demo.py --url https://demo.example.org --user admin --password ...
 
 Test users (password Act12345 unless --user-password): cc community clinician, dc data clerk,
@@ -506,6 +507,97 @@ def seed_population(n, workers):
           f" by registry status {dict(sorted(statuses.items()))}")
     return len(failed)
 
+# ---------------------------------------------------------------------------------------------------------------------
+# The procedures cohort: 40 patients with severe RHD, three in four at Uganda Heart Institute, each recommended a valve
+# procedure at a consultation in the last 18 months, so the Interventions completed run chart has a year of weekly points
+# to read. Procedures come faster in the last six months, as after a waiting list drive, so the chart shows a shift above
+# its median; a death after surgery, or a later consultation without the recommendation, takes a patient off the count.
+# From a random generator of its own, so the population's people and care stay as they were.
+# ---------------------------------------------------------------------------------------------------------------------
+COHORT_SEED = 2027
+COHORT_SIZE = 40
+COHORT_CLINICS = [(ACIMI, UHI, 4), (AKUNA, UHI, 2), ("0786e91b-a732-5f1d-a904-c7648430962d", GULU, 1), ("2b40aa4f-4482-5f6c-a36b-d4ceb8fcf160", GULU, 1)]
+COHORT_PROCEDURES = [(("surgery", "mvr"), 5), (("cath", "af9429ff-1b76-55f3-81ca-a9f775d93fb4"), 3), (("surgery", "avr"), 2)]
+
+def cohort_people():
+    rng = random.Random(COHORT_SEED)
+    taken = {(p["given"], p["family"]) for p in population_people(max(180, ARGS.population))} | {(g, f) for g, f, _ in SEEDED}
+    people = []
+    for i in range(COHORT_SIZE):
+        female = rng.random() < 0.6
+        while True:
+            given = rng.choice(GIVEN_F if female else GIVEN_M); family = rng.choice(FAMILY)
+            if (given, family) not in taken:
+                taken.add((given, family)); break
+        pcc, cardiac = weighted(rng, [((a, b), w) for a, b, w in COHORT_CLINICS])
+        recommended = rng.randint(30, 540)   # days ago
+        recent = recommended <= 200
+        done = rng.random() < (0.75 if recent else 0.6)
+        wait = rng.randint(14, 60) if recent else rng.randint(30, 150)
+        performed_on = recommended - wait if done and recommended - wait >= 2 else None
+        died = performed_on is not None and rng.random() < 0.08
+        people.append(dict(i=i, given=given, family=family, gender="F" if female else "M",
+                           birth=datetime.date(REFERENCE_YEAR - rng.randint(12, 45), rng.randint(1, 12), rng.randint(1, 28)),
+                           pcc=pcc, cardiac=cardiac, registered=recommended + rng.randint(15, 60), recommended=recommended,
+                           procedure=weighted(rng, COHORT_PROCEDURES), urgency=rng.choice(URGENCY), performed=performed_on, died=died,
+                           followed_up=performed_on is not None and not died and rng.random() < 0.15, rng_seed=rng.randint(0, 10**9)))
+    return people
+
+def seed_cohort_person(p):
+    rng = random.Random(p["rng_seed"])
+    reg, rec = D(p["registered"]), D(p["recommended"])
+    pat = patient(f"cohort{p['i']}", p["given"], p["family"], p["gender"], p["birth"].isoformat(), pcc=p["pcc"], cardiac=p["cardiac"],
+                  consentDate=reg, rel=GUARDIAN if TODAY.year - p["birth"].year < 18 else SELF, quiet=True)
+    enrolment = registry_enrolment(pat)
+    if enrolment:
+        must(call("POST", f"/programenrollment/{enrolment}?v=custom:(uuid)", {"dateEnrolled": iso(reg, 8)}), "registration date")
+    PI(pat, reg, details="rhdCD", screen=reg, loc=p["pcc"])
+    echo(pat, reg + datetime.timedelta(days=rng.randint(0, 10)), "severe", rng.randint(35, 55), YES)
+    ptype, procedure = p["procedure"]
+    consult(pat, rec, nyha="nyha3", extra=[recommendation(ptype, procedure, p["urgency"])], loc=p["cardiac"])
+    end = TODAY
+    if p["performed"] is not None:
+        day = D(p["performed"])
+        outcome = [obs("procOutcome", "inHospDeath"), at(dobs("dateOfDeath", day + datetime.timedelta(days=2)), "date_of_death")] if p["died"] \
+            else [obs("procOutcome", "dischargeHome"), dobs("discharge", day + datetime.timedelta(days=rng.randint(4, 12)))]
+        enc(pat, "proc", day, [dobs("procDate", day)] + performed(ptype, procedure) + outcome + [obs("siteInf", NO), obs("sepsis", NO)], UHI)
+        if p["died"]:
+            end = day + datetime.timedelta(days=2)
+            if enrolment:
+                must(call("POST", f"/programenrollment/{enrolment}?v=custom:(uuid)", {"dateCompleted": iso(end), "states": [{"state": STATE["Deceased"], "startDate": iso(end)}]}), "status Deceased")
+            must(call("POST", f"/person/{pat}?v=custom:(uuid)", {"dead": True, "deathDate": iso(end), "causeOfDeathNonCoded": "Complications after surgery"}), "death")
+        elif p["followed_up"]:
+            # A review after the procedure that records no recommendation: the patient's latest consultation no longer
+            # holds a completed one, so the run chart stops counting them, as ACT 2.0 did
+            later = day + datetime.timedelta(days=rng.randint(40, 120))
+            if later <= D(2):
+                consult(pat, later, regimen=None, nyha="nyha2", loc=p["cardiac"])
+    # Monthly BPG from the consultation, a day or two either side
+    day = rec
+    while day <= min(end, TODAY):
+        bpg(pat, day, p["pcc"])
+        day += datetime.timedelta(days=28 + rng.randint(-2, 2))
+
+def seed_cohort(workers):
+    """Seeds the procedures cohort and returns how many of its people failed."""
+    failed = []
+    def one(p):
+        try:
+            seed_cohort_person(p)
+        except SystemExit:
+            raise
+        except Exception as e:
+            print(f"  cohort patient {p['given']} {p['family']} failed: {e}")
+            with _lock:
+                failed.append(p)
+    people = cohort_people()
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        list(pool.map(one, people))
+    done = sum(1 for p in people if p["performed"] is not None)
+    print(f"procedures cohort: {len(people) - len(failed)} of {len(people)} patients seeded, {done} procedures performed,"
+          f" {sum(p['died'] for p in people)} died after surgery, {sum(p['followed_up'] for p in people)} reviewed since")
+    return len(failed)
+
 # The seeded patients, by name and birth date: how a rerun finds them to skip or void.
 SEEDED = [("Abebe","Okot","2010-05-01"),("Grace","Akello","2012-03-02"),("Sarah","Apio","2008-07-07"),("Faith","Auma","2011-01-15"),
           ("Samuel","Ocen","2013-09-09"),("Ruth","Lamwaka","1995-02-02"),("Joan","Adong","2000-04-04"),("Peter","Opio","2005-05-05"),
@@ -517,8 +609,10 @@ SEEDED = [("Abebe","Okot","2010-05-01"),("Grace","Akello","2012-03-02"),("Sarah"
 
 def seeded_patients():
     found = []
-    for given, family, birthdate in SEEDED + population_seeded_names(ARGS.population):
-        result = call("GET", f"/patient?q={urllib.request.quote(given + ' ' + family)}&v=custom:(uuid,person:(birthdate))&limit=50")
+    cohort = [(p["given"], p["family"], p["birth"].isoformat()) for p in cohort_people()]
+    for given, family, birthdate in SEEDED + population_seeded_names(ARGS.population) + cohort:
+        # Patient search leaves out the dead unless asked, so a reset would keep Rose and the others who died
+        result = call("GET", f"/patient?q={urllib.request.quote(given + ' ' + family)}&v=custom:(uuid,person:(birthdate))&limit=50&includeDead=true")
         for p in result.get("results", []):
             if (p["person"].get("birthdate") or "").startswith(birthdate):
                 found.append(p["uuid"])
@@ -630,6 +724,8 @@ def main():
     if ARGS.population:
         print(f"seeding a population of {ARGS.population} more patients across eight clinics ...")
         failed = seed_population(ARGS.population, ARGS.workers)
+        print(f"seeding a procedures cohort of {COHORT_SIZE} at the cardiac clinics ...")
+        failed += seed_cohort(ARGS.workers)
     if UNMAPPED:
         names = {u: k for k, u in C.items()}
         print("Seeded obs that no field of the current form takes, so the form will not show them:")
@@ -641,7 +737,7 @@ def main():
     for name, ident, uuid in LOG:
         print(f"  {ident}  {name}  {ARGS.url.rstrip('/')}/openmrs/spa/patient/{uuid}/chart")
     if failed:
-        print(f"{failed} population patients failed to seed; run again with --reset to seed them")
+        print(f"{failed} population or cohort patients failed to seed; run again with --reset to seed them")
         sys.exit(1)
 
 if __name__ == "__main__":
