@@ -75,46 +75,103 @@ ETYPE={}
 C=dict(diagGroup="594b4495-36dc-52a6-9810-15a9e2e2dcb9", category="1a5aa050-661d-5e89-95d7-c1eba476df22", catRHD="4e529463-2036-5327-ad69-7cbd39df86a1", catCHD="365e75bb-35bc-503f-b8db-53bea2528d1b",
  detailsRHD="cfe17bb5-4a76-5f3a-9e1c-7b1e9b84a8e3", rhdA="1c4a12e2-1f80-5176-bd8f-0e3a0154ce0b", rhdB="5e019f88-6b33-5749-8804-d9686ae680d5", rhdCD="8c2f337a-99b3-5f76-8312-1cee4336309c",
  active="b1b5d279-8013-5ae4-83a7-0f2bd9bc8457", started="62321320-695e-5319-a306-40dfd6ad94b7",
- screenPos="82a5fbb5-038d-57b8-82d1-3fd0ac95673d", screenDate="96d6d328-87ba-5a2e-bb71-2d1cd73b3e90", screenSite="a5be20e6-88c0-42b0-9557-54771e06e644", screenFU="c25c84d9-1f23-4426-8d43-ad1e3829cbb7", echoBooked="6bcba113-f828-4635-9c47-bcf14b605532",
+ screenPos="82a5fbb5-038d-57b8-82d1-3fd0ac95673d", screenDate="96d6d328-87ba-5a2e-bb71-2d1cd73b3e90", ageScreen="9e8e8f30-069e-5af4-beef-20350748d65b", detected="955632a1-82f7-5b84-a341-de85f95588d1",
  consultDate="c3edefd2-5777-5084-b01e-fd4ca0e40162", nyha="2f51b894-383c-53bb-9997-583e9761d132", nyha1="9b905331-5cd5-5624-9f02-a88efaf771d6", nyha2="e4a2da4b-cca3-5bd6-bfc6-8e206dc339e9", nyha3="fea16333-1c36-5478-9ebf-ca9f6201f753",
  sap="668e0221-8b41-5669-9ad8-78e193d42494", q28="50be4b26-6c5b-5aaa-9254-3bfd313b4522", q21="2f3ee632-dd14-51b0-a4ec-de10e7958019", q14="91230c88-6a90-5d45-af50-fa6155fe5dd7", oralPenV="b9884219-358a-594b-94f5-f8a8863a25f3", oralEry="fb8b6676-689b-5daa-83f7-1456210c587f",
  dateStarted="5bcc7d12-b279-5955-815c-090a1f392071", dateStopped="d75edc42-3213-5a06-9228-4e5735b9594b", reasonStopped="fa21e431-e64d-5493-b18c-9a1eaf7ee16a", anaph="148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
  med="0734567e-4f0a-5090-9d74-b953921a30e6", warfarin="5e97fe35-58df-4925-bba7-7c49d75268a1", aspirin="71617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", dosing="8879385e-d35e-50a3-a3d0-4333d95d4878",
- rec="ce93d393-1df5-587f-bf11-c373eac2ccf4", procType="3a576b80-744a-59ee-9515-d9fdca06f3d7", surgery="aa5fefb0-cf61-5f36-82e6-31dbbdf3f616", mvr="7af8595d-407e-5705-bd8a-812735e2f188",
- urgency="7b8eda07-34b6-55f2-ab6c-1b295f41918b", emergent="1fe15210-4490-58b0-a38c-bb0386e98482", urgent="33bf504a-15f2-5504-9bdc-ddded0b5eb00", completed="1632f8dc-195d-5d67-a52e-6c7a057cb536", contraMech="b393b00a-8641-5013-bcc7-dec1334a1252",
+ rec="ce93d393-1df5-587f-bf11-c373eac2ccf4", procType="3a576b80-744a-59ee-9515-d9fdca06f3d7", surgery="aa5fefb0-cf61-5f36-82e6-31dbbdf3f616", cath="91a4d13f-4bc8-54b0-a107-f4ab84cb7d60", mvr="7af8595d-407e-5705-bd8a-812735e2f188",
+ urgency="7b8eda07-34b6-55f2-ab6c-1b295f41918b", emergent="1fe15210-4490-58b0-a38c-bb0386e98482", urgent="33bf504a-15f2-5504-9bdc-ddded0b5eb00",
  nextAmt="ba4b8a87-2ce8-559e-9a30-45504a9b6c1f", nextPeriod="1732AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", months="1074AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
  injDate="183fb30e-b861-5b7c-806f-7118a40f2b51", dose="6a52b6aa-2427-4fa2-93cb-18956f50c16a", dose12="0cd38c13-17ac-48da-a946-1b21789e5027", tolerance="9684b2da-a340-5a70-b8c5-114ba0b1ebcc", tolerated="384326ed-1860-5756-b6d2-9c05b7952b32", bpgGiven="b3aad474-e04e-407c-9fbd-28e25a394f27",
- lateWhy="f7cbfcdc-58bb-5e85-86ab-ffce26a08615", transport="56fb6a9e-a90e-5bad-b701-88199d74f7a9", stockout="76cd4ace-1a6f-5e2c-b69f-d9dfc157afa2", facility="01e6dd39-b8ba-5b0a-bcd7-6b8d5973c1bc",
+ lateWhy="f7cbfcdc-58bb-5e85-86ab-ffce26a08615", transport="56fb6a9e-a90e-5bad-b701-88199d74f7a9", stockout="76cd4ace-1a6f-5e2c-b69f-d9dfc157afa2",
  adhDate="99512ab5-208e-5c37-8f7b-8f72abe2a0db", adhEst="8edff8dc-4af6-5d0f-bf1d-8e349c7a1b15", adhBasis="4313005d-d5b2-5d20-bf33-39aab1bf90c0", patientReport="1795c346-64df-54e3-aca1-a2855c8cc740", pillCount="204eaab6-8380-5d21-8b4a-a066eb17dcca", rxDur="cd03af00-de81-5c08-9a02-92f95c00e1ce", m1="87bdee8a-aaf8-56e7-9e34-2b668873787d",
  inrInd="6e8ed53f-15e6-5b00-9ed0-44b11bd2d638", mech="6f68aab6-4053-5476-9e12-b53b8709d87f", inrTarget="0778ce12-ddba-5e22-b5fd-92424e8747b4", t2535="ea841a3a-f9cb-5761-aac6-939ffb158d94", inrGroup="bd88ecf3-eac2-516a-8949-a93f90d6483b", inrDate="be9041b1-3948-5de0-a8b1-974e84b95715", inrVal="161482AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", nextInr="5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
- procDate="6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a", discharge="d4317b82-5d37-5b59-ac32-4922f18cd65b", surgGroup="46f4af80-b783-59f4-beb1-81144ccf3084", mvrSurg="7af8595d-407e-5705-bd8a-812735e2f188", avr="cd9c582a-71f9-5441-97a8-6d50d7dc15c8", procOutcome="7a54d2d6-0d34-5e5d-b8e7-84a3cf7e9dca", dischargeHome="98ea6c57-5f77-549b-97ca-32604c5b9220", inHospDeath="2567da9f-864e-5408-b5ae-6686f80d0a99", dateOfDeath="07534416-c1c2-5772-83d8-76a429986ec0", perfusion="1c14c3f1-1532-51b0-8680-d761e7f25ad5", siteInf="15e033f6-704e-5bde-ac1d-b401294f416c", sepsis="86c4348a-1ec0-5ca2-a9a6-15f0f282cb95",
+ procDate="6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a", discharge="d4317b82-5d37-5b59-ac32-4922f18cd65b", surgGroup="46f4af80-b783-59f4-beb1-81144ccf3084", cathGroup="bb4a77ee-836a-57e7-a262-632fa22288d2", mvrSurg="7af8595d-407e-5705-bd8a-812735e2f188", avr="cd9c582a-71f9-5441-97a8-6d50d7dc15c8", procOutcome="7a54d2d6-0d34-5e5d-b8e7-84a3cf7e9dca", dischargeHome="98ea6c57-5f77-549b-97ca-32604c5b9220", inHospDeath="2567da9f-864e-5408-b5ae-6686f80d0a99", dateOfDeath="07534416-c1c2-5772-83d8-76a429986ec0", perfusion="1c14c3f1-1532-51b0-8680-d761e7f25ad5", siteInf="15e033f6-704e-5bde-ac1d-b401294f416c", sepsis="86c4348a-1ec0-5ca2-a9a6-15f0f282cb95",
  echoDate="911be530-9457-54be-8515-4bbcdb832ccb", mr="d6ab05e2-1ece-5f8f-893d-74739aa66ce5", moderate="1499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", severe="1500AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", ef="ed630fda-8451-53c0-929e-40eafd9bca9b", suitRepair="8d6e9ea5-aa27-57d6-bf43-198aca63a951",
  pregDate="f287af86-af54-5c49-b716-9737c4f022b1", edd="3ad5133c-80d0-5007-ba1a-c5be27cbb10c", gravidity="06ffd716-291b-5aa2-bb50-b029e58cdcae",
  chronic="d80478b2-4ed2-5d93-a604-6b5b50dab441", allergy="cd73e118-64ee-5855-b276-f7cb44fdcf7e", complication="a04d2268-a7de-589f-b4b6-92c47c13e342", dateAdded="b8514967-2259-5a4d-9ac5-b9319144b8dc",
  penAllergy="149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", arf="cbfcf051-bee3-549d-b233-e5be0e7d691a", hypertension="117399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", afib="148203AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
  admitDate="c437c2be-0520-5920-9bd7-26104bc229a4", admitReason="e60fcf3b-1057-5d1f-a8be-679411b48ba9", rhdHF="27f70da6-ee9e-5919-8b68-9977312f9ada", admitOutcome="ae69bb65-cd0a-5035-aee5-ba5521e7b889", dischargeDate="f17fbfad-6208-53ee-a97a-17583d2f6259")
 
+# Each form's obs fields: by scope (None for the top level, else the obs group's field id), then by concept and whether
+# the field is a group; and the ids of its repeating groups.
+FIELDS={}
+def form_fields(schema):
+    scopes, repeating = {}, set()
+    def walk(questions, scope):
+        for q in questions:
+            concept=q.get("questionOptions",{}).get("concept")
+            if q.get("type") in ("obs","obsGroup") and concept:
+                scopes.setdefault(scope,{}).setdefault((concept,q["type"]=="obsGroup"),[]).append(q["id"])
+                if q["type"]=="obsGroup" and q.get("questionOptions",{}).get("rendering")=="repeating": repeating.add(q["id"])
+            if q.get("questions"): walk(q["questions"], q["id"] if q.get("type")=="obsGroup" else scope)
+    for page in schema.get("pages",[]):
+        for section in page.get("sections",[]): walk(section.get("questions",[]),None)
+    return scopes, repeating
+
 def check():
     missing=[k for k,u in C.items() if "__error__" in call("GET",f"/concept/{u}?v=custom:(uuid)")]
     for k,u in FORM.items():
-        f=call("GET",f"/form/{u}?v=custom:(uuid,encounterType:(uuid))")
-        if "__error__" in f: missing.append("form:"+k)
-        else: ETYPE[k]=f["encounterType"]["uuid"]
+        f=call("GET",f"/form/{u}?v=custom:(uuid,encounterType:(uuid),resources:(name,valueReference))")
+        if "__error__" in f: missing.append("form:"+k); continue
+        ETYPE[k]=f["encounterType"]["uuid"]
+        schema=[r["valueReference"] for r in f.get("resources",[]) if r["name"]=="JSON schema"]
+        schema=call("GET",f"/clobdata/{schema[0]}") if schema else {}
+        if "__error__" in schema or not schema.get("pages"): missing.append("form schema:"+k)
+        else: FIELDS[k]=form_fields(schema)
     return missing
+
+# Seeded obs that no field of the current form takes, which the form would not show: (form, scope, concept, fields).
+UNMAPPED=set()
+def with_paths(kind, obsl, scope=None, suffix=""):
+    """Gives each obs the form field path of the field showing it, as the form saves it. The form engine finds a saved
+    value by its path, and by concept only for an obs without one, which goes wrong where fields share a concept: a
+    question and its own group (Secondary Antibiotic Prophylaxis), or the Date Started of a regimen and of a medicine."""
+    scopes, repeating = FIELDS[kind]
+    seen, out = {}, []
+    for o in obsl:
+        o=dict(o); hint=o.pop("_field",None); group="groupMembers" in o
+        ids=[i for i in scopes.get(scope,{}).get((o["concept"],group),[]) if hint in (None,i)]
+        if len(ids)!=1:
+            with _lock: UNMAPPED.add((kind,scope or "top level",o["concept"],len(ids)))
+            if group: o["groupMembers"]=[{k:v for k,v in m.items() if k!="_field"} for m in o["groupMembers"]]
+            out.append(o); continue
+        fid=ids[0]; own=suffix
+        if group:
+            # A repeating group's second entry is <id>_1, its third <id>_2, and so on for its questions
+            n=seen.get(fid,0); seen[fid]=n+1
+            if n and fid not in repeating:
+                with _lock: UNMAPPED.add((kind,scope or "top level",o["concept"],"a second entry of a group that does not repeat"))
+            own=f"_{n}" if n else ""
+            o["groupMembers"]=with_paths(kind,o["groupMembers"],fid,own)
+        out.append({**o,"formFieldNamespace":"rfe-forms","formFieldPath":f"rfe-forms-{fid}{own}"})
+    return out
 
 LOG=[]; PATIENTS={}; VISITS={}
 def obs(c,v): return {"concept":C.get(c,c),"value":(C.get(v,v) if isinstance(v,str) else v)}
 def dobs(c,d): return {"concept":C[c],"value":iso(d)}
 def tobs(c,text): return {"concept":C.get(c,c),"value":text}
 def grp(c,members): return {"concept":C[c],"groupMembers":members}
-# The consultation form's fields for each repeated list: its group, the item and its Date Added. The three Date
-# Added share one concept, so the form can only tell them apart by their form field paths.
-LISTED=dict(chronic=("chronicHealthConditionEntry","chronicHealthCondition","dateAdded_chronic"), allergy=("allergyEntry","allergy","dateAdded_allergy"),
-            complication=("rhdComplicationsEntry","rhdComplications","dateAdded_rhdComplications"))
-def field(o, fid): return {**o,"formFieldNamespace":"rfe-forms","formFieldPath":f"rfe-forms-{fid}"}
-def listed(kind, answer, day):
-    group, item, added = LISTED[kind]
-    return field(grp(kind,[field(obs(kind,answer),item),field(dobs("dateAdded",day),added)]),group)
+def at(o, fid): return {**o,"_field":fid}   # for fields that share a concept and scope, which of them the obs is in
+def listed(kind, answer, day): return grp(kind,[obs(kind,answer),dobs("dateAdded",day)])
+# The recommendation's procedure type shows its surgery or its catheterization list, which share one concept.
+REC_FIELD={"aa5fefb0-cf61-5f36-82e6-31dbbdf3f616":"interventional_recommendation_surgery",
+           "91a4d13f-4bc8-54b0-a107-f4ab84cb7d60":"interventional_recommendation_catheterization"}
+# Completed left the consultation (AR-147): a recommendation is done once Procedures and Outcomes records its procedure
+# on or after the consultation's day, so performed() is how a seeded one is completed.
+def recommendation(ptype, rec, urgency):
+    return grp("rec",[obs("procType",ptype),at(obs("rec",rec),REC_FIELD[C.get(ptype,ptype)]),obs("urgency",urgency)])
+def performed(ptype, procedure):
+    """Procedures and Outcomes' type and its surgery or catheterization, which the form shows only for that type."""
+    kind="surgGroup" if C.get(ptype,ptype)==C["surgery"] else "cathGroup"
+    return [grp("procType",[obs("procType",ptype)]),grp(kind,[obs(kind,procedure)])]
+BIRTH={}
+def screening(pat, day, how="school"):
+    """Screen +, and for a Yes where and when the patient was screened and their age then (AR-167)."""
+    born=datetime.date.fromisoformat(BIRTH[pat])
+    age=day.year-born.year-((day.month,day.day)<(born.month,born.day))
+    return [obs("screenPos",YES),obs("detected",DETECTED.get(how,how)),dobs("screenDate",day),obs("ageScreen",age)]
 def enc(pat, kind, day, obsl, loc=ACIMI):
     # One visit per patient and day: OpenMRS refuses overlapping visits.
     visit=VISITS.get((pat,day))
@@ -123,7 +180,7 @@ def enc(pat, kind, day, obsl, loc=ACIMI):
                                           "stopDatetime":iso(day,17)}),f"visit for {kind}")
         VISITS[(pat,day)]=visit
     e=call("POST","/encounter?v=custom:(uuid)",{"patient":pat,"encounterType":ETYPE[kind],"form":FORM[kind],"location":loc,"encounterDatetime":iso(day),"visit":visit["uuid"],
-        "encounterProviders":[{"provider":PROV,"encounterRole":ROLE}],"obs":obsl})
+        "encounterProviders":[{"provider":PROV,"encounterRole":ROLE}],"obs":with_paths(kind,obsl)})
     must(e, f"{kind} encounter on {day}")
     return e["uuid"]
 def patient(key,given,family,gender,bdate,consent=YES,consentDate=None,pcc=ACIMI,cardiac=UHI,rel=SELF,guardian=None,phone=None,optIn=None,nationalId=None,quiet=False):
@@ -141,15 +198,12 @@ def patient(key,given,family,gender,bdate,consent=YES,consentDate=None,pcc=ACIMI
     p=call("POST","/patient?v=custom:(uuid)",{"person":{"names":[{"givenName":given,"familyName":family}],"gender":gender,"birthdate":bdate,
         "addresses":[{"country":"Uganda","stateProvince":"Northern Region","countyDistrict":"Gulu","cityVillage":"Laroo"}],"attributes":attrs},"identifiers":ids})
     must(p, f"patient {given} {family}")
-    PATIENTS[key]=p["uuid"]
+    PATIENTS[key]=p["uuid"]; BIRTH[p["uuid"]]=bdate
     if not quiet:
         LOG.append((f"{given} {family}",ident,p["uuid"])); print(f"{ident} {given} {family}")
     return p["uuid"]
 def PI(pat, day, details="rhdB", cat="catRHD", screen=None, loc=ACIMI):
-    o=[]
-    if screen:
-        o+=[obs("screenPos",YES),dobs("screenDate",screen),tobs("screenSite","Gulu Primary School"),obs("screenFU","echoBooked")]
-    pi=enc(pat,"pi",day,o,loc)
+    pi=enc(pat,"pi",day,screening(pat,screen) if screen else [],loc)
     # The diagnosis is recorded on a consultation (AR-167): one on the same day, with nothing else on it.
     if cat:
         m=[obs("category",cat),obs("active",YES),dobs("started",day)]
@@ -161,7 +215,8 @@ def consult(pat, day, regimen="q28", start=None, extra=None, nextMonths=6, loc=U
     if regimen: o.append(grp("sap",[obs("sap",regimen),dobs("dateStarted",start or day)]))
     return enc(pat,"consult",day,o+(extra or []),loc)
 def bpg(pat, day, loc=ACIMI, late=None):
-    o=[dobs("injDate",day),obs("dose","dose12"),obs("tolerance","tolerated"),obs("bpgGiven",YES),obs("facility",loc)]
+    # The facility is the encounter's location; Was BPG given is asked only after an anaphylaxis
+    o=[dobs("injDate",day),obs("dose","dose12"),obs("tolerance","tolerated")]
     if late: o.append(obs("lateWhy",late))
     return enc(pat,"bpg",day,o,loc)
 def bpg_anaph(pat, day, loc=ACIMI): return enc(pat,"bpg",day,[obs("tolerance","anaph"),obs("bpgGiven",NO)],loc)
@@ -176,7 +231,7 @@ def seed():
     p=patient("faith","Faith","Auma","F","2011-01-15",phone="+256701000104",rel=GUARDIAN,guardian="Mary Auma"); PI(p,D(70)); consult(p,D(60)); bpg(p,D(58)); bpg_anaph(p,D(2))
     p=patient("samuel","Samuel","Ocen","M","2013-09-09"); PI(p,D(22))
     p=patient("ruth","Ruth","Lamwaka","F","1995-02-02",cardiac=GULU,phone="+256782000106"); PI(p,D(80),details="rhdCD")
-    consult(p,D(70),nyha="nyha3",extra=[grp("rec",[obs("procType","surgery"),obs("rec","mvr"),obs("urgency","urgent"),obs("completed",NO)]),obs("contraMech",NO)],loc=GULU); echo(p,D(70),"severe",48,YES); [bpg(p,D(n)) for n in (70,42,14)]
+    consult(p,D(70),nyha="nyha3",extra=[recommendation("surgery","mvr","urgent")],loc=GULU); echo(p,D(70),"severe",48,YES); [bpg(p,D(n)) for n in (70,42,14)]
     p=patient("joan","Joan","Adong","F","2000-04-04",pcc=KITMAT); PI(p,D(410)); consult(p,D(400),"oralPenV"); oral(p,D(330),100,loc=KITMAT); oral(p,D(300),90,loc=KITMAT)
     p=patient("peter","Peter","Opio","M","2005-05-05",phone="+256752000108"); PI(p,D(410)); consult(p,D(400)); bpg(p,D(400)); bpg(p,D(372)); bpg_anaph(p,D(345))
     consult(p,D(250),regimen=None,extra=[grp("sap",[obs("sap","q28"),dobs("dateStarted",D(400)),dobs("dateStopped",D(250)),obs("reasonStopped","anaph")]),grp("sap",[obs("sap","oralEry"),dobs("dateStarted",D(250))])])
@@ -190,7 +245,7 @@ def seed():
     p=patient("hellen","Hellen","Akot","F","2013-05-20",pcc=AKUNA,cardiac=GULU,rel=GUARDIAN,guardian="Grace Akot",phone="+256774000112"); PI(p,D(0),screen=D(0),loc=AKUNA); consult(p,D(0),loc=GULU); echo(p,D(0)); bpg(p,D(0),AKUNA)
     p=patient("lucy","Lucy","Aber","F","2014-02-20",rel=GUARDIAN,guardian="Agnes Aber"); PI(p,D(10),cat=None,screen=D(35))
     p=patient("betty","Betty","Amony","F","1992-12-12"); PI(p,D(110),details="rhdCD"); consult(p,D(100))
-    enc(p,"proc",D(50),[dobs("procDate",D(50)),grp("surgGroup",[obs("surgGroup","mvrSurg")]),obs("procOutcome","dischargeHome"),dobs("discharge",D(45)),obs("siteInf",NO),obs("sepsis",NO)],UHI); [bpg(p,D(n)) for n in (100,72,44,16)]
+    enc(p,"proc",D(50),[dobs("procDate",D(50))]+performed("surgery","mvrSurg")+[obs("procOutcome","dischargeHome"),dobs("discharge",D(45)),obs("siteInf",NO),obs("sepsis",NO)],UHI); [bpg(p,D(n)) for n in (100,72,44,16)]
     p=patient("noah","Noah","Komakech","M","2009-09-19",consent=NO,consentDate=False,rel=None); PI(p,D(20)); consult(p,D(15)); bpg(p,D(15))
     p=patient("zara","Zara","Lakot","F","2003-03-03",pcc=AKUNA); PI(p,D(310)); consult(p,D(300),"oralPenV")
     p=patient("kato","Kato","Odong","M","2004-04-04",pcc=AKUNA); PI(p,D(310)); consult(p,D(300))
@@ -198,8 +253,8 @@ def seed():
     for n,why in ((190,None),(160,"transport"),(130,"stockout"),(95,"transport"),(60,None),(30,"transport"),(8,None)): bpg(p,D(n),late=why)
     p=patient("agnes","Agnes","Achola","F","1997-01-30",optIn=YES,phone="+256772000118",nationalId="CF970130ACHOLA"); PI(p,D(150),details="rhdA"); consult(p,D(140),"q14"); [bpg(p,D(n)) for n in range(140,8,-14)]
     p=patient("brian","Brian","Oyet","M","2006-06-16",optIn=YES); PI(p,D(120)); consult(p,D(110)); [bpg(p,D(n)) for n in (110,82,54,26)]
-    p=patient("isaac","Isaac","Okumu","M","1980-03-03"); PI(p,D(200),details="rhdCD"); consult(p,D(190),nyha="nyha3",extra=[listed("chronic","hypertension",D(900)),listed("complication","afib",D(200)),grp("rec",[obs("procType","surgery"),obs("rec","mvr"),obs("urgency","emergent"),obs("completed",YES)])]); bpg(p,D(190))
-    enc(p,"proc",D(100),[dobs("procDate",D(100)),grp("surgGroup",[obs("surgGroup","avr")]),obs("procOutcome","inHospDeath"),dobs("dateOfDeath",D(98)),obs("perfusion",YES),obs("siteInf",NO),obs("sepsis",YES)],UHI)
+    p=patient("isaac","Isaac","Okumu","M","1980-03-03"); PI(p,D(200),details="rhdCD"); consult(p,D(190),nyha="nyha3",extra=[listed("chronic","hypertension",D(900)),listed("complication","afib",D(200)),recommendation("surgery","avr","emergent")]); bpg(p,D(190))
+    enc(p,"proc",D(100),[dobs("procDate",D(100))]+performed("surgery","avr")+[obs("procOutcome","inHospDeath"),at(dobs("dateOfDeath",D(98)),"date_of_death"),obs("perfusion",YES),obs("siteInf",NO),obs("sepsis",YES)],UHI)
     p=patient("rose","Rose","Atim","F","1975-07-07",optIn=YES,cardiac=GULU); PI(p,D(300),details="rhdCD"); consult(p,D(290),nyha="nyha3",loc=GULU); [bpg(p,D(n)) for n in (290,262,234)]
     p=patient("christine","Christine","Lamaro","F","2002-09-09",phone="+256701000122"); PI(p,D(260)); consult(p,D(250)); [bpg(p,D(n)) for n in range(250,0,-28)]
     enc(p,"preg",D(200),[dobs("pregDate",D(200)),dobs("edd",D(40)),obs("gravidity",1)],UHI)
@@ -241,7 +296,6 @@ DETAILS = {"rhd": ("cfe17bb5-4a76-5f3a-9e1c-7b1e9b84a8e3", ["1c4a12e2-1f80-5176-
            "other": ("b7a2c4d8-5e91-5f3a-8c6d-2b9e4f7a1c0d", ["b0d85202-3ebb-5f7f-bd07-4d1778e68784", "117386AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "b6946c83-6e27-5f91-85ad-2ae2d1ab5593"]),
            "normal": ("e9f3a5c7-6b82-5d4e-9f1a-3c7d8e2b5f4a", ["f48b4ebc-17ef-5747-bc7f-545b8e61e851"])}
 NYHA = ["9b905331-5cd5-5624-9f02-a88efaf771d6", "e4a2da4b-cca3-5bd6-bfc6-8e206dc339e9", "fea16333-1c36-5478-9ebf-ca9f6201f753", "77e49ccb-efb0-5364-8dd2-d9e2a5e24924"]
-FOLLOW_UP = ["1035a94f-d8c1-4f0c-b376-5f6c5976b737", "6bcba113-f828-4635-9c47-bcf14b605532", "437bd172-c32b-430f-a9d1-acf20e398022"]
 URGENCY = ["1fe15210-4490-58b0-a38c-bb0386e98482", "33bf504a-15f2-5504-9bdc-ddded0b5eb00", "2666bf97-7400-57c7-b535-7903e22ced34"]
 PROCEDURES = [("surgery", "7af8595d-407e-5705-bd8a-812735e2f188", "7af8595d-407e-5705-bd8a-812735e2f188"),   # mitral valve repair/replacement
               ("91a4d13f-4bc8-54b0-a107-f4ab84cb7d60", "af9429ff-1b76-55f3-81ca-a9f775d93fb4", None),           # mitral balloon valvuloplasty
@@ -256,7 +310,6 @@ ALLERGIES = [("149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 3), ("b4e6c064-ab4f-5ee4-9
 COMPLICATIONS = [("cbfcf051-bee3-549d-b233-e5be0e7d691a", 4), ("65c796e5-bd32-51c6-93f7-991ff3add2ef", 3), ("148203AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 2),
                  ("b3a93528-7fed-5050-bce3-85ca4d7a4ee4", 1), ("41b1a801-9d9d-5687-9de5-39e89c73c8c7", 1)]
 INR_TARGETS = [("d894d89a-04bd-5fc0-91a0-5dc3ddd8802b", 2.0, 3.0), ("ea841a3a-f9cb-5761-aac6-939ffb158d94", 2.5, 3.5)]
-DETECTED_CONCEPT = "955632a1-82f7-5b84-a341-de85f95588d1"
 REGISTRY = "7d73e143-a550-5a9d-aecd-dd771add098d"
 POPULATION_SEED = 2026
 REFERENCE_YEAR = 2026   # birth dates are fixed from this, so a later run still finds the same people
@@ -315,13 +368,16 @@ def seed_person(p):
     enrolment = registry_enrolment(pat)
     if enrolment:
         must(call("POST", f"/programenrollment/{enrolment}?v=custom:(uuid)", {"dateEnrolled": iso(reg, 8)}), "registration date")
-    # Patient Information: how the case was found, the screen, and the diagnosis after the echo.
-    pi = [obs(DETECTED_CONCEPT, DETECTED[p["detected"]])]
+    # Patient Information: how the case was found, which the form asks for a Screen + Yes, and the diagnosis after the
+    # echo. A school, community or health centre screen comes up to 20 days before registration, any other on the day.
     if p["screened"]:
         screen = reg + datetime.timedelta(days=-rng.randint(0, 20))
-        pi += [obs("screenPos", YES), dobs("screenDate", screen),
-               tobs("screenSite", rng.choice(["Laroo Primary School", "Gulu Public School", "Pece Primary School", "Bardege outreach", "Kitgum market outreach"])),
-               obs("screenFU", rng.choice(FOLLOW_UP))]
+        # The draws the screening site and its follow-up took before the form dropped them, so the rest of each
+        # person's care is what earlier runs seeded
+        rng.choice(range(5)); rng.choice(range(3))
+    else:
+        screen = reg
+    pi = screening(pat, screen, p["detected"])
     if p["diagnosis"]:
         concept, answers = DETAILS[p["diagnosis"]]
         detail = answers[p["stage"]] if p["diagnosis"] == "rhd" else rng.choice(answers)
@@ -364,7 +420,8 @@ def seed_care(pat, p, rng, reg, status):
     done = procedure and rng.random() < 0.35
     if procedure:
         ptype, rec, _ = procedure
-        extra.append(grp("rec", [obs("procType", ptype), obs("rec", rec), obs("urgency", rng.choice(URGENCY)), obs("completed", YES if done else NO)]))
+        extra.append(recommendation(ptype, rec, rng.choice(URGENCY)))
+    # A valve surgery, not a balloon valvuloplasty
     on_warfarin = done and procedure[2] is not None
     if on_warfarin:
         extra.append(grp("med", [obs("med", "warfarin"), tobs("dosing", rng.choice(["2.5 mg daily", "5 mg daily", "7.5 mg daily"])), dobs("dateStarted", first)]))
@@ -384,8 +441,8 @@ def seed_care(pat, p, rng, reg, status):
     if done:
         when = first + datetime.timedelta(days=rng.randint(20, 120))
         if when < D(3):
-            surgery = [obs("surgGroup", procedure[2])] if procedure[2] else []
-            enc(pat, "proc", when, [dobs("procDate", when)] + ([grp("surgGroup", surgery)] if surgery else [])
+            # The procedure recommended, which completes the recommendation
+            enc(pat, "proc", when, [dobs("procDate", when)] + performed(procedure[0], procedure[1])
                 + [obs("procOutcome", "dischargeHome"), dobs("discharge", when + datetime.timedelta(days=rng.randint(4, 12))),
                    obs("siteInf", NO), obs("sepsis", NO), obs("perfusion", NO)], UHI)
     if on_warfarin:
@@ -573,6 +630,11 @@ def main():
     if ARGS.population:
         print(f"seeding a population of {ARGS.population} more patients across eight clinics ...")
         failed = seed_population(ARGS.population, ARGS.workers)
+    if UNMAPPED:
+        names = {u: k for k, u in C.items()}
+        print("Seeded obs that no field of the current form takes, so the form will not show them:")
+        for kind, scope, concept, fields in sorted(UNMAPPED, key=str):
+            print(f"  {kind}, {scope}: {names.get(concept, concept)} ({fields if isinstance(fields, str) else f'{fields} fields'})")
     refresh = call("POST", "/actcore/refresh", {})
     print("flags and adherence refreshed" if "__error__" not in refresh else f"refresh failed: {refresh}")
     print(f"seeded {len(LOG)} patients:")
