@@ -71,7 +71,8 @@ AT=dict(pcc="695f2990-236f-5d7c-b8aa-ddbdb22400f4", cardiac="fe261119-2911-5b36-
         phone="542c6fd2-05ca-53e3-a4f5-cd23bc1abd8f", phoneOwner="ea3cb7ae-ffbe-5aee-8343-44977898f675", optIn="a78f6ae3-faec-5db8-9493-53877985ca7f")
 FORM=dict(pi="a6646c51-130d-3b59-a442-959bea93487d", consult="4b063fc7-996f-3001-8500-8940e201be8f", bpg="0119d2e6-e2e1-391c-9b88-d59a10b0780d",
           oral="ba29e982-ce18-302a-9fc4-d4b2c3983465", inr="fe4848b2-a0b4-329f-a6a3-6ffc298e09a9", proc="bf762810-2bf1-3ca3-bdbe-8bd71fd5d59a",
-          echo="88e54fb0-1243-3f7a-b925-f64648ca6635", preg="a4f9103b-8396-3087-8cf4-e91610ec7c2d", hosp="949d365b-95ef-3ec9-bd8a-effcf1e6696c")
+          echo="88e54fb0-1243-3f7a-b925-f64648ca6635", preg="a4f9103b-8396-3087-8cf4-e91610ec7c2d", hosp="949d365b-95ef-3ec9-bd8a-effcf1e6696c",
+          allergy="baeb5cfb-8433-3ad7-a1e6-1e7f449e9dbe")
 ETYPE={}
 C=dict(diagGroup="594b4495-36dc-52a6-9810-15a9e2e2dcb9", category="1a5aa050-661d-5e89-95d7-c1eba476df22", catRHD="4e529463-2036-5327-ad69-7cbd39df86a1", catCHD="365e75bb-35bc-503f-b8db-53bea2528d1b",
  detailsRHD="cfe17bb5-4a76-5f3a-9e1c-7b1e9b84a8e3", rhdA="1c4a12e2-1f80-5176-bd8f-0e3a0154ce0b", rhdB="5e019f88-6b33-5749-8804-d9686ae680d5", rhdCD="8c2f337a-99b3-5f76-8312-1cee4336309c",
@@ -91,7 +92,7 @@ C=dict(diagGroup="594b4495-36dc-52a6-9810-15a9e2e2dcb9", category="1a5aa050-661d
  procDate="6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a", discharge="d4317b82-5d37-5b59-ac32-4922f18cd65b", surgGroup="46f4af80-b783-59f4-beb1-81144ccf3084", cathGroup="bb4a77ee-836a-57e7-a262-632fa22288d2", mvrSurg="7af8595d-407e-5705-bd8a-812735e2f188", avr="cd9c582a-71f9-5441-97a8-6d50d7dc15c8", procOutcome="7a54d2d6-0d34-5e5d-b8e7-84a3cf7e9dca", dischargeHome="98ea6c57-5f77-549b-97ca-32604c5b9220", inHospDeath="2567da9f-864e-5408-b5ae-6686f80d0a99", dateOfDeath="07534416-c1c2-5772-83d8-76a429986ec0", perfusion="1c14c3f1-1532-51b0-8680-d761e7f25ad5", siteInf="15e033f6-704e-5bde-ac1d-b401294f416c", sepsis="86c4348a-1ec0-5ca2-a9a6-15f0f282cb95",
  echoDate="911be530-9457-54be-8515-4bbcdb832ccb", mr="d6ab05e2-1ece-5f8f-893d-74739aa66ce5", moderate="1499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", severe="1500AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", ef="ed630fda-8451-53c0-929e-40eafd9bca9b", suitRepair="8d6e9ea5-aa27-57d6-bf43-198aca63a951",
  pregDate="f287af86-af54-5c49-b716-9737c4f022b1", edd="3ad5133c-80d0-5007-ba1a-c5be27cbb10c", gravidity="06ffd716-291b-5aa2-bb50-b029e58cdcae",
- chronic="d80478b2-4ed2-5d93-a604-6b5b50dab441", allergy="cd73e118-64ee-5855-b276-f7cb44fdcf7e", complication="a04d2268-a7de-589f-b4b6-92c47c13e342", dateAdded="b8514967-2259-5a4d-9ac5-b9319144b8dc",
+ chronic="d80478b2-4ed2-5d93-a604-6b5b50dab441", allergy="cd73e118-64ee-5855-b276-f7cb44fdcf7e", complication="a04d2268-a7de-589f-b4b6-92c47c13e342", dateAdded="b8514967-2259-5a4d-9ac5-b9319144b8dc", dateResolved="8fbebbea-16dd-5dc5-98f0-c522cab26e19",
  penAllergy="149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", arf="cbfcf051-bee3-549d-b233-e5be0e7d691a", hypertension="117399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", afib="148203AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
  admitDate="c437c2be-0520-5920-9bd7-26104bc229a4", admitReason="e60fcf3b-1057-5d1f-a8be-679411b48ba9", rhdHF="27f70da6-ee9e-5919-8b68-9977312f9ada", admitOutcome="ae69bb65-cd0a-5035-aee5-ba5521e7b889", dischargeDate="f17fbfad-6208-53ee-a97a-17583d2f6259")
 
@@ -168,6 +169,11 @@ def tobs(c,text): return {"concept":C.get(c,c),"value":text}
 def grp(c,members): return {"concept":C[c],"groupMembers":members}
 def at(o, fid): return {**o,"_field":fid}   # for fields that share a concept and scope, which of them the obs is in
 def listed(kind, answer, day): return grp(kind,[obs(kind,answer),dobs("dateAdded",day)])
+def allergy(pat, day, answer, added, resolved=None, loc=ACIMI):
+    """An entry on RHD Allergies (#320): the allergy, its Date Added and, if resolved, its Date Resolved."""
+    entry=listed("allergy",answer,added)
+    if resolved: entry["groupMembers"].append(dobs("dateResolved",resolved))
+    return enc(pat,"allergy",day,[entry],loc)
 # The recommendation's procedure type shows its surgery or its catheterization list, which share one concept.
 REC_FIELD={"aa5fefb0-cf61-5f36-82e6-31dbbdf3f616":"interventional_recommendation_surgery",
            "91a4d13f-4bc8-54b0-a107-f4ab84cb7d60":"interventional_recommendation_catheterization"}
@@ -237,8 +243,8 @@ def oral(pat, day, est=100, basis=("patientReport",), loc=ACIMI):
 def echo(pat, day, mrv="moderate", ef=60, repair=YES): return enc(pat,"echo",day,[dobs("echoDate",day),obs("mr",mrv),obs("ef",ef),obs("suitRepair",repair)],UHI)
 
 def seed():
-    p=patient("abebe","Abebe","Okot","M","2010-05-01",phone="+256772000101",guardian="Rose Okot",rel=GUARDIAN); PI(p,D(100)); consult(p,D(90),extra=[listed("allergy","penAllergy",D(400)),listed("complication","arf",D(120))]); echo(p,D(90)); [bpg(p,D(n)) for n in (90,62,40)]
-    p=patient("grace","Grace","Akello","F","2012-03-02",pcc=AKUNA); consult(p,D(60)); [bpg(p,D(n),AKUNA) for n in (60,36)]
+    p=patient("abebe","Abebe","Okot","M","2010-05-01",phone="+256772000101",guardian="Rose Okot",rel=GUARDIAN); PI(p,D(100)); consult(p,D(90),extra=[listed("complication","arf",D(120))]); allergy(p,D(90),"penAllergy",D(400),loc=UHI); echo(p,D(90)); [bpg(p,D(n)) for n in (90,62,40)]
+    p=patient("grace","Grace","Akello","F","2012-03-02",pcc=AKUNA); consult(p,D(60)); allergy(p,D(60),"penAllergy",D(300),resolved=D(61),loc=AKUNA); [bpg(p,D(n),AKUNA) for n in (60,36)]
     p=patient("sarah","Sarah","Apio","F","2008-07-07"); PI(p,D(130)); consult(p,D(120),"oralPenV"); oral(p,D(90),90); oral(p,D(60),50)
     p=patient("faith","Faith","Auma","F","2011-01-15",phone="+256701000104",rel=GUARDIAN,guardian="Mary Auma"); PI(p,D(70)); consult(p,D(60)); bpg(p,D(58)); bpg_anaph(p,D(2))
     p=patient("samuel","Samuel","Ocen","M","2013-09-09"); PI(p,D(22))
@@ -435,14 +441,21 @@ def seed_care(pat, p, rng, reg, status):
     if on_warfarin:
         extra.append(grp("med", [obs("med", "warfarin"), tobs("dosing", rng.choice(["2.5 mg daily", "5 mg daily", "7.5 mg daily"])), dobs("dateStarted", first)]))
     # About one patient in five each has a chronic condition or an RHD complication, and one in ten an allergy,
-    # dated a little before the consultation that records it. From a generator of their own, so the rest of the
-    # person's care is what earlier runs seeded.
+    # dated a little before the consultation day. From a generator of their own, so the rest of the person's care
+    # is what earlier runs seeded; the allergy goes on RHD Allergies that day, and one in three is resolved.
     lists = random.Random(f"{p['rng_seed']}-lists")
+    allergic = None
     for kind, answers, share in (("chronic", CHRONIC, 0.2), ("allergy", ALLERGIES, 0.1), ("complication", COMPLICATIONS, 0.2)):
         if lists.random() < share:
-            extra.append(listed(kind, weighted(lists, answers), first - datetime.timedelta(days=lists.randint(0, 400))))
+            item = (weighted(lists, answers), first - datetime.timedelta(days=lists.randint(0, 400)))
+            if kind == "allergy":
+                allergic = item
+            else:
+                extra.append(listed(kind, *item))
     months = rng.choice([3, 6, 6, 12])
     consult(pat, first, regimen=regimen, extra=extra, nextMonths=months, loc=p["cardiac"], nyha=None, nyha_concept=nyha)
+    if allergic:
+        allergy(pat, first, *allergic, resolved=first if lists.random() < 1 / 3 else None, loc=p["cardiac"])
     # Follow-up consultations for some, so reviews are on time, due or overdue.
     later = first + datetime.timedelta(days=months * 30 + rng.randint(-20, 40))
     if later < D(5) and rng.random() < 0.55:

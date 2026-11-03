@@ -13,6 +13,7 @@ CONFIG = pathlib.Path(__file__).resolve().parents[2] / 'frontend' / 'config-core
 
 CLINICIAN_ORDER = [
     'charts-summary-dashboard',  # Patient summary
+    'act-allergies-dashboard-link',  # Allergies, ACT's page
     'results-summary-dashboard',  # Vitals & Biometrics (the id upstream gives its link)
     'act-cardiac-tests-dashboard-link',  # Cardiac tests
     'act-consultations-dashboard-link',  # Consultation visits
@@ -34,7 +35,10 @@ class ChartMenuOrder(unittest.TestCase):
         order = slot()['order']
         self.assertEqual([i for i in order if i in CLINICIAN_ORDER], CLINICIAN_ORDER)
 
-    def test_hides_allergies_and_growth_chart_and_leaves_them_out_of_the_order(self):
+    def test_adds_acts_allergies_page(self):
+        self.assertIn('act-allergies-dashboard-link', slot()['add'])
+
+    def test_hides_openmrs_allergies_and_growth_chart_and_leaves_them_out_of_the_order(self):
         for link in ('allergies-summary-dashboard', 'growth-chart-dashboard-link'):
             self.assertIn(link, slot()['remove'])
             self.assertNotIn(link, slot()['order'])
