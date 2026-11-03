@@ -136,17 +136,29 @@ def with_paths(kind, obsl, scope=None, suffix=""):
         ids=[i for i in scopes.get(scope,{}).get((o["concept"],group),[]) if hint in (None,i)]
         if len(ids)!=1:
             with _lock: UNMAPPED.add((kind,scope or "top level",o["concept"],len(ids)))
-            if group: o["groupMembers"]=[{k:v for k,v in m.items() if k!="_field"} for m in o["groupMembers"]]
+            if group: o["groupMembers"]=unmapped_members(kind,o["groupMembers"])
             out.append(o); continue
-        fid=ids[0]; own=suffix
+        fid=ids[0]; path=f"{fid}{suffix}"
         if group:
-            # A repeating group's second entry is <id>_1, its third <id>_2, and so on for its questions
+            # A repeating group's second entry is <id>_1, its third <id>_2. The form engine renames only an entry's own
+            # questions, so a group inside an entry takes the entry's suffix and passes its members only its own.
             n=seen.get(fid,0); seen[fid]=n+1
             if n and fid not in repeating:
                 with _lock: UNMAPPED.add((kind,scope or "top level",o["concept"],"a second entry of a group that does not repeat"))
             own=f"_{n}" if n else ""
+            path=f"{fid}{suffix}{own}"
             o["groupMembers"]=with_paths(kind,o["groupMembers"],fid,own)
-        out.append({**o,"formFieldNamespace":"rfe-forms","formFieldPath":f"rfe-forms-{fid}{own}"})
+        out.append({**o,"formFieldNamespace":"rfe-forms","formFieldPath":f"rfe-forms-{path}"})
+    return out
+
+def unmapped_members(kind, members):
+    """The members of a group no field takes, without their field hints, each listed as unmapped too."""
+    out=[]
+    for m in members:
+        m={k:v for k,v in m.items() if k!="_field"}
+        with _lock: UNMAPPED.add((kind,"inside a group no field takes",m["concept"],0))
+        if "groupMembers" in m: m["groupMembers"]=unmapped_members(kind,m["groupMembers"])
+        out.append(m)
     return out
 
 LOG=[]; PATIENTS={}; VISITS={}
@@ -168,11 +180,10 @@ def performed(ptype, procedure):
     kind="surgGroup" if C.get(ptype,ptype)==C["surgery"] else "cathGroup"
     return [grp("procType",[obs("procType",ptype)]),grp(kind,[obs(kind,procedure)])]
 BIRTH={}
+def age_on(born, day): return day.year-born.year-((day.month,day.day)<(born.month,born.day))
 def screening(pat, day, how="school"):
     """Screen +, and for a Yes where and when the patient was screened and their age then (AR-167)."""
-    born=datetime.date.fromisoformat(BIRTH[pat])
-    age=day.year-born.year-((day.month,day.day)<(born.month,born.day))
-    return [obs("screenPos",YES),obs("detected",DETECTED.get(how,how)),dobs("screenDate",day),obs("ageScreen",age)]
+    return [obs("screenPos",YES),obs("detected",DETECTED.get(how,how)),dobs("screenDate",day),obs("ageScreen",age_on(datetime.date.fromisoformat(BIRTH[pat]),day))]
 def enc(pat, kind, day, obsl, loc=ACIMI):
     # One visit per patient and day: OpenMRS refuses overlapping visits.
     visit=VISITS.get((pat,day))
@@ -270,7 +281,7 @@ def seed():
 # Reports and lists have real distributions to show. Generated from a fixed random seed with fixed birth dates, so every
 # run makes the same people and --reset finds them again; visit dates are relative to the day it runs.
 # ---------------------------------------------------------------------------------------------------------------------
-import random, threading
+import functools, random, threading
 from concurrent.futures import ThreadPoolExecutor
 
 CLINIC_PAIRS = [  # (primary care clinic, its cardiac clinic, weight)
@@ -324,6 +335,7 @@ def weighted(rng, pairs):
             return value
     return pairs[-1][0]
 
+@functools.lru_cache(maxsize=None)
 def population_people(n):
     """The population's people, the same list every run: who they are and what happens to them."""
     rng = random.Random(POPULATION_SEED)
@@ -369,16 +381,12 @@ def seed_person(p):
     enrolment = registry_enrolment(pat)
     if enrolment:
         must(call("POST", f"/programenrollment/{enrolment}?v=custom:(uuid)", {"dateEnrolled": iso(reg, 8)}), "registration date")
-    # Patient Information: how the case was found, which the form asks for a Screen + Yes, and the diagnosis after the
-    # echo. A school, community or health centre screen comes up to 20 days before registration, any other on the day.
+    # Patient Information: for a school, community or health centre screen, Screen + Yes, where and when, up to 20 days
+    # before registration; the form asks nothing about a case found any other way, so the screening cascade counts only
+    # screens. The screen date is drawn from a generator of its own, so it never moves the rest of the person's care.
+    pi = []
     if p["screened"]:
-        screen = reg + datetime.timedelta(days=-rng.randint(0, 20))
-        # The draws the screening site and its follow-up took before the form dropped them, so the rest of each
-        # person's care is what earlier runs seeded
-        rng.choice(range(5)); rng.choice(range(3))
-    else:
-        screen = reg
-    pi = screening(pat, screen, p["detected"])
+        pi = screening(pat, reg - datetime.timedelta(days=random.Random(f"{p['rng_seed']}-screen").randint(0, 20)), p["detected"])
     if p["diagnosis"]:
         concept, answers = DETAILS[p["diagnosis"]]
         detail = answers[p["stage"]] if p["diagnosis"] == "rhd" else rng.choice(answers)
@@ -521,7 +529,8 @@ COHORT_PROCEDURES = [(("surgery", "mvr"), 5), (("cath", "af9429ff-1b76-55f3-81ca
 
 def cohort_people():
     rng = random.Random(COHORT_SEED)
-    taken = {(p["given"], p["family"]) for p in population_people(max(180, ARGS.population))} | {(g, f) for g, f, _ in SEEDED}
+    # Clear of the default population's names, whatever --population says, so a reset finds the same cohort
+    taken = {(p["given"], p["family"]) for p in population_people(180)} | {(g, f) for g, f, _ in SEEDED}
     people = []
     for i in range(COHORT_SIZE):
         female = rng.random() < 0.6
@@ -546,8 +555,10 @@ def cohort_people():
 def seed_cohort_person(p):
     rng = random.Random(p["rng_seed"])
     reg, rec = D(p["registered"]), D(p["recommended"])
+    minor = age_on(p["birth"], reg) < 18
     pat = patient(f"cohort{p['i']}", p["given"], p["family"], p["gender"], p["birth"].isoformat(), pcc=p["pcc"], cardiac=p["cardiac"],
-                  consentDate=reg, rel=GUARDIAN if TODAY.year - p["birth"].year < 18 else SELF, quiet=True)
+                  consentDate=reg, rel=GUARDIAN if minor else SELF, guardian=f"{rng.choice(GIVEN_F)} {p['family']}" if minor else None,
+                  quiet=True)
     enrolment = registry_enrolment(pat)
     if enrolment:
         must(call("POST", f"/programenrollment/{enrolment}?v=custom:(uuid)", {"dateEnrolled": iso(reg, 8)}), "registration date")
@@ -593,9 +604,9 @@ def seed_cohort(workers):
     people = cohort_people()
     with ThreadPoolExecutor(max_workers=workers) as pool:
         list(pool.map(one, people))
-    done = sum(1 for p in people if p["performed"] is not None)
-    print(f"procedures cohort: {len(people) - len(failed)} of {len(people)} patients seeded, {done} procedures performed,"
-          f" {sum(p['died'] for p in people)} died after surgery, {sum(p['followed_up'] for p in people)} reviewed since")
+    seeded = [p for p in people if not any(p is f for f in failed)]
+    print(f"procedures cohort: {len(seeded)} of {len(people)} patients seeded, of whom {sum(p['performed'] is not None for p in seeded)}"
+          f" had their procedure, {sum(p['died'] for p in seeded)} died after surgery and {sum(p['followed_up'] for p in seeded)} were reviewed since")
     return len(failed)
 
 # The seeded patients, by name and birth date: how a rerun finds them to skip or void.
@@ -608,15 +619,15 @@ SEEDED = [("Abebe","Okot","2010-05-01"),("Grace","Akello","2012-03-02"),("Sarah"
           ("Denis","Ojok","1986-02-14")]
 
 def seeded_patients():
-    found = []
     cohort = [(p["given"], p["family"], p["birth"].isoformat()) for p in cohort_people()]
-    for given, family, birthdate in SEEDED + population_seeded_names(ARGS.population) + cohort:
+    def find(person):
+        given, family, birthdate = person
         # Patient search leaves out the dead unless asked, so a reset would keep Rose and the others who died
         result = call("GET", f"/patient?q={urllib.request.quote(given + ' ' + family)}&v=custom:(uuid,person:(birthdate))&limit=50&includeDead=true")
-        for p in result.get("results", []):
-            if (p["person"].get("birthdate") or "").startswith(birthdate):
-                found.append(p["uuid"])
-    return sorted(set(found))
+        return [p["uuid"] for p in result.get("results", []) if (p["person"].get("birthdate") or "").startswith(birthdate)]
+    with ThreadPoolExecutor(max_workers=ARGS.workers) as pool:
+        found = pool.map(find, sorted(set(SEEDED + population_seeded_names(ARGS.population) + cohort)))
+    return sorted({uuid for uuids in found for uuid in uuids})
 
 def void_seeded():
     uuids = seeded_patients()
