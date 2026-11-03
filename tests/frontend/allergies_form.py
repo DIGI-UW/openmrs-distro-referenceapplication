@@ -131,8 +131,8 @@ class ReportsCountTheForm(unittest.TestCase):
         resolved = f"concept_id = (SELECT concept_id FROM concept WHERE uuid = '{DATE_RESOLVED}')"
         for name, sql, alias in (('flag', flag[4], 'al'), ('rhd_patients.sql', patients, 'o_pen')):
             sql = ' '.join(sql.split())
-            self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.person_id = {alias}\.person_id .*'
-                             rf'\w+\.value_coded = {alias}\.value_coded AND \(\w+\.obs_datetime > {alias}\.obs_datetime '
+            self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.person_id = {alias}\.person_id AND \w+\.voided = 0 '
+                             rf'AND \w+\.concept_id = {alias}\.concept_id AND \w+\.value_coded = {alias}\.value_coded AND \(\w+\.obs_datetime > {alias}\.obs_datetime '
                              rf'OR \(\w+\.obs_datetime = {alias}\.obs_datetime AND \w+\.obs_id > {alias}\.obs_id\)\)\)', name)
             self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.obs_group_id = {alias}\.obs_group_id '
                              rf'AND \w+\.voided = 0 AND \w+\.{re.escape(resolved)}\)', name)
