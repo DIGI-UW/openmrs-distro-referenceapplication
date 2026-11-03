@@ -111,7 +111,9 @@ SELECT
           AND NOT EXISTS (SELECT 1 FROM obs o_later WHERE o_later.person_id = o_pen.person_id AND o_later.voided = 0
                             AND o_later.concept_id = o_pen.concept_id AND o_later.value_coded = o_pen.value_coded
                             AND (o_later.obs_datetime > o_pen.obs_datetime
-                                 OR (o_later.obs_datetime = o_pen.obs_datetime AND o_later.obs_id > o_pen.obs_id)))
+                                 OR (o_later.obs_datetime = o_pen.obs_datetime AND o_later.obs_id <> o_pen.obs_id
+                                     AND EXISTS (SELECT 1 FROM obs o_later_res WHERE o_later_res.obs_group_id = o_later.obs_group_id
+                                                   AND o_later_res.voided = 0 AND o_later_res.concept_id = (SELECT concept_id FROM concept WHERE uuid = '8fbebbea-16dd-5dc5-98f0-c522cab26e19')))))
           AND NOT EXISTS (SELECT 1 FROM obs o_res WHERE o_res.obs_group_id = o_pen.obs_group_id AND o_res.voided = 0
                             AND o_res.concept_id = (SELECT concept_id FROM concept WHERE uuid = '8fbebbea-16dd-5dc5-98f0-c522cab26e19'))
         ORDER BY o_pen.obs_datetime DESC, o_pen.obs_id DESC LIMIT 1

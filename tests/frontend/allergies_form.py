@@ -133,7 +133,10 @@ class ReportsCountTheForm(unittest.TestCase):
             sql = ' '.join(sql.split())
             self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.person_id = {alias}\.person_id AND \w+\.voided = 0 '
                              rf'AND \w+\.concept_id = {alias}\.concept_id AND \w+\.value_coded = {alias}\.value_coded AND \(\w+\.obs_datetime > {alias}\.obs_datetime '
-                             rf'OR \(\w+\.obs_datetime = {alias}\.obs_datetime AND \w+\.obs_id > {alias}\.obs_id\)\)\)', name)
+                             rf'OR \(\w+\.obs_datetime = {alias}\.obs_datetime AND \w+\.obs_id <> {alias}\.obs_id '
+                             # At the same time, the resolved record decides, as the app's reading does.
+                             rf'AND EXISTS \(SELECT 1 FROM obs (\w+) WHERE \1\.obs_group_id = \w+\.obs_group_id '
+                             rf'AND \1\.voided = 0 AND \1\.{re.escape(resolved)}\)\)\)\)', name)
             self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.obs_group_id = {alias}\.obs_group_id '
                              rf'AND \w+\.voided = 0 AND \w+\.{re.escape(resolved)}\)', name)
 
