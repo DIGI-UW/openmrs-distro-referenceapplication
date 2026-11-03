@@ -37,17 +37,17 @@ def every_question(items):
 class ConsultationVitals(unittest.TestCase):
     def test_follows_the_allergies(self):
         ids = [q.get('id') for q in questions()]
-        self.assertEqual(ids[:3], ['current_allergies', 'current_vitals', 'record_vitals'])
+        self.assertEqual(ids[:4], ['current_allergies', 'add_allergy', 'current_vitals', 'record_vitals'])
 
     def test_is_filled_from_the_visit_by_the_helper_and_never_saved(self):
-        vitals = questions()[1]
+        vitals = questions()[2]
         self.assertTrue(vitals['readonly'])
         options = vitals['questionOptions']
         self.assertEqual(options['calculate']['calculateExpression'], 'actVisitVitals(patient.id, visit.uuid)')
         self.assertTrue(options['isTransient'])
 
     def test_offers_the_vitals_form_only_when_the_visit_has_none(self):
-        button = questions()[2]
+        button = questions()[3]
         self.assertEqual(button['questionOptions']['rendering'], 'workspace-launcher')
         # The ACT app's window for it, beside the consultation; the vitals app's own window would close the consultation.
         self.assertEqual(button['questionOptions']['workspaceName'], 'act-vitals-form-workspace')
