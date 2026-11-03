@@ -84,6 +84,19 @@ class AllergiesForm(unittest.TestCase):
         self.assertTrue(added['required'])
         self.assertEqual(added['questionOptions']['concept'], DATE_ADDED)
         self.assertEqual(added['questionOptions']['calculate']['calculateExpression'], "mode === 'enter' ? today() : null")
+        self.assertEqual(added['validators'], [{'type': 'date', 'allowFutureDates': 'false'}])
+
+    def test_date_resolved_is_not_in_the_future_nor_before_the_date_added(self):
+        resolved = by_id(ALLERGIES)['dateResolved_allergy']
+        self.assertEqual(resolved['validators'], [
+            {'type': 'date', 'allowFutureDates': 'false'},
+            {
+                'type': 'js_expression',
+                'failsWhenExpression': '!isEmpty(myValue) && !isEmpty(dateAdded_allergy) '
+                                       '&& new Date(myValue) < new Date(dateAdded_allergy)',
+                'message': 'The date resolved cannot be before the date added',
+            },
+        ])
 
     def test_date_resolved_is_a_date_concept(self):
         concept = rows('concepts/rhd_questions_consultation.csv', 'Uuid')[DATE_RESOLVED]
@@ -126,7 +139,8 @@ class ReportsCountTheForm(unittest.TestCase):
         for name, sql, alias in (('flag', flag[4], 'al'), ('rhd_patients.sql', patients, 'o_pen')):
             sql = ' '.join(sql.split())
             self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.person_id = {alias}\.person_id .*'
-                             rf'\w+\.value_coded = {alias}\.value_coded', name)
+                             rf'\w+\.value_coded = {alias}\.value_coded AND \(\w+\.obs_datetime > {alias}\.obs_datetime '
+                             rf'OR \(\w+\.obs_datetime = {alias}\.obs_datetime AND \w+\.obs_id > {alias}\.obs_id\)\)\)', name)
             self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.obs_group_id = {alias}\.obs_group_id '
                              rf'AND \w+\.voided = 0 AND \w+\.{re.escape(resolved)}\)', name)
 

@@ -43,8 +43,8 @@ class ConsultationAllergies(unittest.TestCase):
         props = options['workspaceProps']
         self.assertEqual(props['form']['display'], 'RHD Allergies')
         self.assertEqual(props['additionalProps'], {'mode': 'enter', 'openClinicalFormsWorkspaceOnFormClose': False})
-        # Hidden on edits and past visits, where a new allergy would be dated before records that outrank it.
-        self.assertEqual(button['hide'], {'hideWhenExpression': "mode !== 'enter' || !!visit.stopDatetime"})
+        # Hidden in a past visit, where a new allergy would be dated before records that outrank it.
+        self.assertEqual(button['hide'], {'hideWhenExpression': '!!visit.stopDatetime'})
 
     def test_reads_like_the_other_unsaved_lines(self):
         by_id = {q['id']: q for q in questions() if 'id' in q}

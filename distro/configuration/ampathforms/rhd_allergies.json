@@ -160,7 +160,13 @@
                       "calculateExpression": "mode === 'enter' ? today() : null"
                     }
                   },
-                  "required": true
+                  "required": true,
+                  "validators": [
+                    {
+                      "type": "date",
+                      "allowFutureDates": "false"
+                    }
+                  ]
                 },
                 {
                   "label": "Date Resolved",
@@ -169,7 +175,18 @@
                   "questionOptions": {
                     "rendering": "date",
                     "concept": "8fbebbea-16dd-5dc5-98f0-c522cab26e19"
-                  }
+                  },
+                  "validators": [
+                    {
+                      "type": "date",
+                      "allowFutureDates": "false"
+                    },
+                    {
+                      "type": "js_expression",
+                      "failsWhenExpression": "!isEmpty(myValue) && !isEmpty(dateAdded_allergy) && new Date(myValue) < new Date(dateAdded_allergy)",
+                      "message": "The date resolved cannot be before the date added"
+                    }
+                  ]
                 }
               ]
             }
