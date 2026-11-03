@@ -23,6 +23,8 @@ REACTION = '8200713e-8647-52f0-b93d-841e4e9687b7'
 DATE_ADDED = 'b8514967-2259-5a4d-9ac5-b9319144b8dc'
 DATE_RESOLVED = '8fbebbea-16dd-5dc5-98f0-c522cab26e19'
 ENCOUNTER_TYPE = '8a687651-3554-4255-941c-812d7a21312e'
+# CIEL's No known allergies, which the ACT app reads as no allergy.
+NO_KNOWN_ALLERGIES = '160557AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 PENICILLIN = {'149071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'b4e6c064-ab4f-5ee4-9837-094731ee23d4'}
 # Initializer names an ampath form by this uuid, its name and its version.
 AMPATH_FORMS_UUID = '794c4598-ab82-47ca-8d18-483a8abe6f4f'
@@ -91,6 +93,12 @@ class AllergiesForm(unittest.TestCase):
         resolved = by_id(ALLERGIES)['dateResolved_allergy']
         self.assertEqual(resolved['validators'], [{'type': 'date', 'allowFutureDates': 'false'}])
 
+    def test_no_known_allergies_is_an_answer_without_reactions_or_a_date_resolved(self):
+        qs = {q['id']: q for q in questions(ALLERGIES)}
+        self.assertIn(NO_KNOWN_ALLERGIES, [a['concept'] for a in qs['allergy']['questionOptions']['answers']])
+        for hidden in ('reaction_allergies_group', 'dateResolved_allergy'):
+            self.assertEqual(qs[hidden].get('hide'), {'hideWhenExpression': f"allergy === '{NO_KNOWN_ALLERGIES}'"}, hidden)
+
     def test_date_resolved_is_a_date_concept(self):
         concept = rows('concepts/rhd_questions_consultation.csv', 'Uuid')[DATE_RESOLVED]
         self.assertEqual(concept['Same as mappings'], 'ACT-RHD:q_allergy_date_resolved')
@@ -133,7 +141,10 @@ class ReportsCountTheForm(unittest.TestCase):
             sql = ' '.join(sql.split())
             self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.person_id = {alias}\.person_id AND \w+\.voided = 0 '
                              rf'AND \w+\.concept_id = {alias}\.concept_id AND \w+\.value_coded = {alias}\.value_coded AND \(\w+\.obs_datetime > {alias}\.obs_datetime '
-                             rf'OR \(\w+\.obs_datetime = {alias}\.obs_datetime AND \w+\.obs_id > {alias}\.obs_id\)\)\)', name)
+                             rf'OR \(\w+\.obs_datetime = {alias}\.obs_datetime AND \w+\.obs_id <> {alias}\.obs_id '
+                             # At the same time, the resolved record decides, as the app's reading does.
+                             rf'AND EXISTS \(SELECT 1 FROM obs (\w+) WHERE \1\.obs_group_id = \w+\.obs_group_id '
+                             rf'AND \1\.voided = 0 AND \1\.{re.escape(resolved)}\)\)\)\)', name)
             self.assertRegex(sql, rf'NOT EXISTS \(SELECT 1 FROM obs \w+ WHERE \w+\.obs_group_id = {alias}\.obs_group_id '
                              rf'AND \w+\.voided = 0 AND \w+\.{re.escape(resolved)}\)', name)
 
