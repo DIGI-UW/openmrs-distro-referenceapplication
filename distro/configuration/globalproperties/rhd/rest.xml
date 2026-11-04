@@ -4,5 +4,9 @@
 			<property>webservices.rest.maxResultsDefault</property>
 			<value>250</value>
 		</globalProperty>
+		<globalProperty>
+			<property>webservices.rest.maxResultsAbsolute</property>
+			<value>250</value>
+		</globalProperty>
 	</globalProperties>
 </config>
