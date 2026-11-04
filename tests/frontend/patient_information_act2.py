@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Checks the RHD Patient Information form mirrors ACT 2.0's (AR-167): screening with where, when and the age at
-screening shown only for a Screen + of Yes, the VHT's name and contact, and no diagnosis or confirmatory echo
-follow-up. The diagnosis is recorded on the RHD Consultation Visit instead, in its own section after Examination.
+Checks the RHD Patient Information form: screening with where, when and the age at screening shown only for a
+Screen + of Yes, the VHT's name and contact, the Diagnosis section with the one-choice rheumatic diagnosis and
+optional stage (AR-150), and no confirmatory echo follow-up. The RHD Consultation Visit does not record the
+diagnosis, per the revert of AR-167.
 
 Usage: python3 tests/frontend/patient_information_act2.py
 """
@@ -28,13 +29,13 @@ def every_question(items):
         yield from every_question(q.get('questions', []))
 
 
-class PatientInformationMirrorsAct2(unittest.TestCase):
+class PatientInformationRecordsTheDiagnosis(unittest.TestCase):
     def setUp(self):
         self.pi = sections('rhd_patient_information.json')
 
     def test_sections_in_order(self):
         self.assertEqual(
-            list(self.pi), ['Screening', 'Village health team', 'Status', 'Where to find the patient']
+            list(self.pi), ['Screening', 'Diagnosis', 'Village health team', 'Status', 'Where to find the patient']
         )
 
     def test_screening_asks_where_when_and_the_age_only_for_a_positive_screen(self):
@@ -53,24 +54,26 @@ class PatientInformationMirrorsAct2(unittest.TestCase):
         ids = [q['id'] for q in self.pi['Village health team']]
         self.assertEqual(ids[:2], ['vht_name', 'vht_contact'])
 
-    def test_no_diagnosis_or_follow_up_status(self):
-        concepts = {q.get('questionOptions', {}).get('concept') for q in every_question([q for qs in self.pi.values() for q in qs])}
-        self.assertNotIn(DIAGNOSIS_GROUP, concepts)
-        self.assertNotIn(FOLLOW_UP_STATUS, concepts)
-
-
-class ConsultationRecordsTheDiagnosis(unittest.TestCase):
-    def test_a_diagnosis_section_after_examination(self):
-        consultation = sections('rhd_consultation.json')
-        labels = list(consultation)
-        self.assertEqual(labels[labels.index('Examination') + 1], 'Diagnosis')
-        group = [q for q in consultation['Diagnosis'] if q.get('type') == 'obsGroup']
+    def test_a_diagnosis_section_with_the_one_choice_rheumatic_diagnosis(self):
+        group = [q for q in self.pi['Diagnosis'] if q.get('type') == 'obsGroup']
         self.assertEqual(len(group), 1)
         self.assertEqual(group[0]['questionOptions']['concept'], DIAGNOSIS_GROUP)
         self.assertEqual(group[0]['questionOptions']['rendering'], 'repeating')
-        # The one-choice rheumatic diagnosis with its optional stage (AR-150) comes along.
+        # The one-choice rheumatic diagnosis with its optional stage (AR-150).
         rhd = [q for q in group[0]['questions'] if q['id'] == 'diagnosis_details_rhd'][0]
         self.assertEqual(rhd['questionOptions']['rendering'], 'radio')
+
+    def test_no_follow_up_status(self):
+        concepts = {q.get('questionOptions', {}).get('concept') for q in every_question([q for qs in self.pi.values() for q in qs])}
+        self.assertNotIn(FOLLOW_UP_STATUS, concepts)
+
+
+class ConsultationDoesNotRecordTheDiagnosis(unittest.TestCase):
+    def test_no_diagnosis_section(self):
+        consultation = sections('rhd_consultation.json')
+        self.assertNotIn('Diagnosis', consultation)
+        concepts = {q.get('questionOptions', {}).get('concept') for q in every_question([q for qs in consultation.values() for q in qs])}
+        self.assertNotIn(DIAGNOSIS_GROUP, concepts)
 
 
 if __name__ == '__main__':
