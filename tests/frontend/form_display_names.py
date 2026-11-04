@@ -48,6 +48,17 @@ def strings(node):
         yield node
 
 
+def workspace_props(node):
+    if isinstance(node, dict):
+        if isinstance(node.get('workspaceProps'), dict):
+            yield node['workspaceProps']
+        for value in node.values():
+            yield from workspace_props(value)
+    elif isinstance(node, list):
+        for value in node:
+            yield from workspace_props(value)
+
+
 class FormDisplayNames(unittest.TestCase):
     def test_every_rhd_form_is_shown_without_the_prefix(self):
         prefixed = {f['name']: f for f in forms().values() if f['name'].startswith(PREFIX)}
@@ -71,6 +82,19 @@ class FormDisplayNames(unittest.TestCase):
             # The encounter type keeps its name: it is not a form name.
             body = {k: v for k, v in form.items() if k not in ('name', 'encounter')}
             self.assertFalse(old & set(strings(body)), file)
+
+    def test_headings_and_window_titles_match_the_shown_name(self):
+        shown = messages()
+        uuids = {form_uuid(f['name'], f['version']) for f in forms().values() if f['name'].startswith(PREFIX)}
+        for file, form in forms().items():
+            name = shown.get(f"ui.i18n.Form.name.{form_uuid(form['name'], form['version'])}")
+            if name:
+                self.assertIn(name, [page['label'] for page in form['pages']], file)
+            for props in workspace_props(form):
+                uuid_ = props.get('form', {}).get('uuid')
+                if uuid_ in uuids:
+                    self.assertEqual(props['form'].get('display'), shown[f'ui.i18n.Form.name.{uuid_}'], file)
+                    self.assertEqual(props.get('workspaceTitle'), shown[f'ui.i18n.Form.name.{uuid_}'], file)
 
     def test_the_stack_mounts_the_messages(self):
         self.assertIn(
