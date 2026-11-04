@@ -72,6 +72,7 @@ services:
       # sit at the demo's Outpatient Clinic (locations), the showcase translation is for Test Form 1 (ampathforms)
       - ./distro/configuration/queues:/openmrs/distribution/openmrs_config/queues:ro
       - ./distro/configuration/ampathformstranslations:/openmrs/distribution/openmrs_config/ampathformstranslations:ro
+      - ./distro/configuration/messageproperties:/openmrs/distribution/openmrs_config/messageproperties:ro
       - ./distro/configuration/idgen:/openmrs/distribution/openmrs_config/idgen:ro
       - ./distro/configuration/autogenerationoptions:/openmrs/distribution/openmrs_config/autogenerationoptions:ro
       - ./distro/configuration/flagpriorities:/openmrs/distribution/openmrs_config/flagpriorities:ro
