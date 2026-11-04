@@ -23,7 +23,7 @@
                 "rendering": "markdown"
               },
               "value": [
-                "For a patient found by an echo screening: whether the screening echo was positive, and if so where, when and how old the patient was. A Yes puts the patient on the Screen positive, pending confirmation worklist until a clinician records a diagnosis on the RHD Consultation Visit."
+                "For a patient found by an echo screening: whether the screening echo was positive, and if so where, when and how old the patient was."
               ]
             },
             {
