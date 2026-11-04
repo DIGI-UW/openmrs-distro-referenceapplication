@@ -41,7 +41,7 @@ class ConsultationAllergies(unittest.TestCase):
         # The ACT app's own workspace, so the consultation stays open beside it.
         self.assertEqual(options['workspaceName'], 'act-allergy-form-entry-workspace')
         props = options['workspaceProps']
-        self.assertEqual(props['form']['display'], 'RHD Allergies')
+        self.assertEqual(props['form']['display'], 'Allergies')
         self.assertEqual(props['additionalProps'], {'mode': 'enter', 'openClinicalFormsWorkspaceOnFormClose': False})
         # Hidden in a past visit, where a new allergy would be dated before records that outrank it.
         self.assertEqual(button['hide'], {'hideWhenExpression': '!!visit.stopDatetime'})

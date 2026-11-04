@@ -9,7 +9,7 @@
   "referencedForms": [],
   "pages": [
     {
-      "label": "RHD Consultation Visit",
+      "label": "Consultation Visit",
       "sections": [
         {
           "label": "Visit details",
@@ -38,10 +38,10 @@
                 "workspaceName": "act-allergy-form-entry-workspace",
                 "buttonLabel": "Add allergy",
                 "workspaceProps": {
-                  "workspaceTitle": "RHD Allergies",
+                  "workspaceTitle": "Allergies",
                   "form": {
                     "uuid": "baeb5cfb-8433-3ad7-a1e6-1e7f449e9dbe",
-                    "display": "RHD Allergies"
+                    "display": "Allergies"
                   },
                   "encounterUuid": "",
                   "additionalProps": {
@@ -427,10 +427,10 @@
                 "workspaceName": "act-cardiac-test-form-entry-workspace",
                 "buttonLabel": "Record ECG",
                 "workspaceProps": {
-                  "workspaceTitle": "RHD Electrocardiogram",
+                  "workspaceTitle": "Electrocardiogram",
                   "form": {
                     "uuid": "3776bb8d-4741-3741-aeef-d5b760443569",
-                    "display": "RHD Electrocardiogram"
+                    "display": "Electrocardiogram"
                   },
                   "encounterUuid": "",
                   "additionalProps": {
@@ -463,10 +463,10 @@
                 "workspaceName": "act-cardiac-test-form-entry-workspace",
                 "buttonLabel": "Record echocardiogram",
                 "workspaceProps": {
-                  "workspaceTitle": "RHD Echocardiogram",
+                  "workspaceTitle": "Echocardiogram",
                   "form": {
                     "uuid": "88e54fb0-1243-3f7a-b925-f64648ca6635",
-                    "display": "RHD Echocardiogram"
+                    "display": "Echocardiogram"
                   },
                   "encounterUuid": "",
                   "additionalProps": {
