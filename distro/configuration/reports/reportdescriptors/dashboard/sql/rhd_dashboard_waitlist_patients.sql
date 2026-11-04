@@ -71,7 +71,7 @@ completed_yes AS (
                                     (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
 ),
 -- Each recommendation is an obs group of Interventional Recommendation(s) whose procedure member has the same concept
-recommendation AS (
+recorded_recommendation AS (
     SELECT c.encounter_id, c.patient_id, c.encounter_datetime, g.obs_id,
            COALESCE(proc_name.name, 'Not given') AS procedure_name,
            CASE WHEN proc_concept.uuid IN ('af9429ff-1b76-55f3-81ca-a9f775d93fb4', 'aca1be99-d090-5078-be63-81353ae89195',
@@ -84,7 +84,19 @@ recommendation AS (
            type_concept.uuid AS procedure_type_uuid,
            COALESCE(urg_name.name, 'Not given') AS urgency,
            CASE WHEN yes.saved <= DATE_ADD(c.date_created, INTERVAL 1 MINUTE) THEN c.encounter_datetime
-                ELSE yes.saved END AS completed_on
+                ELSE yes.saved END AS completed_yes_on,
+           -- The first procedure of the same kind recorded on Procedures and Outcomes on or after the consultation's day,
+           -- as the Procedural Waiting List counts it done (AR-162)
+           (SELECT CAST(MIN(DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime))) AS DATETIME)
+            FROM obs pd
+            JOIN encounter pd_e ON pd_e.encounter_id = pd.encounter_id AND pd_e.voided = 0
+            LEFT JOIN obs pd_d ON pd_d.encounter_id = pd_e.encounter_id AND pd_d.voided = 0
+                AND pd_d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a')
+            WHERE pd.person_id = c.patient_id AND pd.voided = 0
+              AND pd.concept_id IN ((SELECT concept_id FROM concept WHERE uuid = '46f4af80-b783-59f4-beb1-81144ccf3084'),
+                                    (SELECT concept_id FROM concept WHERE uuid = 'bb4a77ee-836a-57e7-a262-632fa22288d2'))
+              AND pd.value_coded = proc.value_coded
+              AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) >= DATE(c.encounter_datetime)) AS performed_on
     FROM consultation c
     JOIN obs g ON g.encounter_id = c.encounter_id AND g.voided = 0 AND g.obs_group_id IS NULL
         AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'ce93d393-1df5-587f-bf11-c373eac2ccf4')
@@ -101,6 +113,14 @@ recommendation AS (
     LEFT JOIN concept type_concept ON type_concept.concept_id = typ.value_coded
     LEFT JOIN (SELECT obs_group_id, MIN(date_created) AS saved FROM completed_yes GROUP BY obs_group_id) yes
         ON yes.obs_group_id = g.obs_id
+),
+-- Each recommendation completed on the earlier of its Completed Yes and its procedure's date, if either
+recommendation AS (
+    SELECT r.*,
+           CASE WHEN r.completed_yes_on IS NULL THEN r.performed_on
+                WHEN r.performed_on IS NULL THEN r.completed_yes_on
+                ELSE LEAST(r.completed_yes_on, r.performed_on) END AS completed_on
+    FROM recorded_recommendation r
 ),
 -- The recommendations in the latest consultation by the end date of each patient alive and enrolled then, not completed
 -- by then

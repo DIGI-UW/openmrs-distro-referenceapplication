@@ -96,7 +96,13 @@
               "id": "consultationVisitLocation",
               "type": "encounterLocation",
               "questionOptions": {
-                "rendering": "ui-select-extended"
+                "rendering": "ui-select-extended",
+                "datasource": {
+                  "name": "location_datasource",
+                  "config": {
+                    "tag": "Visit Location"
+                  }
+                }
               }
             },
             {
