@@ -37,8 +37,10 @@ WITH scr_active AS (
 ),
 -- Each patient's latest Diagnosis group by the end date with a Category and not answered inactive or secondary, as ACT 2.0
 -- took the active primary diagnosis (unanswered counts, as those questions did not load before 2026-10-07).
+-- The latest is the one saved last, by the newest date_created of the group and its answers, as the chart ranks it
 diagnosis AS (
-    SELECT g.person_id, g.obs_id, g.obs_datetime
+    SELECT g.person_id, g.obs_id, g.uuid, g.obs_datetime,
+           GREATEST(g.date_created, (SELECT MAX(m.date_created) FROM obs m WHERE m.obs_group_id = g.obs_id AND m.voided = 0)) AS saved_at
     FROM obs g
     WHERE g.voided = 0 AND g.obs_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
       AND g.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
@@ -60,7 +62,7 @@ category AS (
     JOIN concept ans ON ans.concept_id = cat.value_coded
     WHERE NOT EXISTS (SELECT 1 FROM diagnosis later
                       WHERE later.person_id = d.person_id
-                        AND (later.obs_datetime > d.obs_datetime OR (later.obs_datetime = d.obs_datetime AND later.obs_id > d.obs_id)))
+                        AND (later.saved_at, later.obs_datetime, later.uuid) > (d.saved_at, d.obs_datetime, d.uuid))
 ),
 -- The patient's latest Screen + answer by the end date is Yes.
 screened_positive AS (

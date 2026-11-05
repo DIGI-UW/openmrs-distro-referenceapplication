@@ -4,10 +4,11 @@ Checks the run chart report, which gives every point of a range in one pass, aga
 ACT Core's run chart endpoint, on a running ACT stack.
 
 It first seeds a new test clinic with the cases where the one-pass SQL departs from the single-date form in structure,
-its LEAD() windows and their tie-breaks, so that the comparison crosses them: a patient re-enrolled after an enrolment
+its windows and their tie-breaks, so that the comparison crosses them: a patient re-enrolled after an enrolment
 ended in a terminal state, a patient whose diagnosis category changes from RHD to CHD between two points, a patient whose
-regimen changes from BPG to oral penicillin between two points, and a patient with two consultations at one datetime, the
-first with a completed recommendation and an RHD diagnosis, the second with an open one and a CHD diagnosis. It asserts
+regimen changes from BPG to oral penicillin between two points, a patient with two consultations at one datetime, the
+first with a completed recommendation and an RHD diagnosis, the second with an open one and a CHD diagnosis, and a patient
+whose RHD diagnosis is dated before a CHD one but saved after it, so RHD is the latest at every point. It asserts
 that clinic's rows at a weekly point before and one after the changes, figure by figure.
 
 For daily, weekly and monthly ranges it asserts that the one-pass report's point dates are the rule's (the end, then a
@@ -195,21 +196,29 @@ def seed_window_cases(stack, today):
                  [diagnosis(RHD), regimen(BPG_Q28, day(60)), recommendation({'concept': COMPLETED, 'value': YES})])
     consultation(stack, same_day, clinic, day(60) + 'T10:00:00',
                  [diagnosis(CHD), recommendation({'concept': URGENCY, 'value': URGENT})])
+    corrected = registrant(stack, clinic, f'{stamp} diagnosis saved after a later one', birthdate='2010-05-01')
+    enrol(stack, corrected, day(200))
+    consultation(stack, corrected, clinic, day(60) + 'T10:00:00', [diagnosis(CHD), regimen(BPG_Q28, day(60))])
+    # The registry ranks a diagnosis by when it was saved, to the second
+    time.sleep(1.1)
+    consultation(stack, corrected, clinic, day(150) + 'T10:00:00', [diagnosis(RHD)])
     return clinic
 
 
 def check_window_cases(by_date, clinic, today):
     """The seeded clinic's row at the Sunday on or before 80 days ago, before its changes, and at the last Sunday, after.
 
-    Before: re-enrolled is inactive, rediagnosed and switched are seen, on BPG and prescribed, and each has one visit.
-    After: re-enrolled is active again, rediagnosed is CHD and switched oral, so one is prescribed and nobody is on BPG,
-    and the same-day pair counts two visits with an intervention; the later consultation of the pair, with the open
-    recommendation and the CHD diagnosis, is the latest, so nothing is completed and nobody is prescribed there.
+    Before: re-enrolled is inactive, rediagnosed and switched are seen, on BPG and prescribed, and each has one visit;
+    corrected is seen with one visit and no regimen yet.
+    After: re-enrolled is active again, rediagnosed is CHD and switched oral, and the same-day pair counts two visits
+    with an intervention; the later consultation of the pair, with the open recommendation and the CHD diagnosis, is
+    the latest, so nothing is completed and nobody is prescribed there. Corrected's RHD, saved last, is its diagnosis,
+    so its BPG makes it the one on BPG and the second prescribed, with two visits.
     """
     sunday = lambda d: (d - datetime.timedelta(days=d.isoweekday() % 7)).isoformat()
     before, after = sunday(today - datetime.timedelta(days=80)), sunday(today)
     columns = COUNTS + ['active_registrants_on_bpg']
-    expected = {before: [4, 3, 2, 2, 2, 0, 0, 0, 2], after: [4, 4, 3, 1, 6, 0, 2, 0, 0]}
+    expected = {before: [5, 4, 3, 2, 3, 0, 0, 0, 2], after: [5, 5, 4, 2, 8, 0, 2, 0, 1]}
     for point, figures in expected.items():
         row = by_date.get(point, {}).get(clinic)
         check(f'seeded clinic at {point}', row and [int(row[c]) for c in columns], figures)
