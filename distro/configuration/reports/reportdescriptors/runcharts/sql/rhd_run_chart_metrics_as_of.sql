@@ -39,7 +39,7 @@ clinic_patient AS (
 -- Each active patient's latest Diagnosis group with a Category, not answered inactive or secondary, as the care cascade takes it
 -- The latest is the one saved last, by the newest date_created of the group and its answers, as the chart ranks it
 diagnosis AS (
-    SELECT g.person_id, g.obs_id, g.obs_datetime,
+    SELECT g.person_id, g.obs_id, g.uuid, g.obs_datetime,
            GREATEST(g.date_created, (SELECT MAX(m.date_created) FROM obs m WHERE m.obs_group_id = g.obs_id AND m.voided = 0)) AS saved_at
     FROM obs g
     JOIN registrant r ON r.patient_id = g.person_id AND r.active
@@ -62,7 +62,7 @@ rhd AS (
      AND cat.value_coded = (SELECT concept_id FROM concept WHERE uuid = '4e529463-2036-5327-ad69-7cbd39df86a1')
     WHERE NOT EXISTS (SELECT 1 FROM diagnosis later
                       WHERE later.person_id = d.person_id
-                        AND (later.saved_at, later.obs_datetime, later.obs_id) > (d.saved_at, d.obs_datetime, d.obs_id))
+                        AND (later.saved_at, later.obs_datetime, later.uuid) > (d.saved_at, d.obs_datetime, d.uuid))
 ),
 -- The regimens in the latest consultation recording one, without a Date Stopped, as the care cascade reads them
 sap_encounter AS (

@@ -73,7 +73,7 @@ JOIN encounter enc ON enc.encounter_id = COALESCE((
                       OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
                           AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
             ORDER BY GREATEST(dg.date_created, (SELECT MAX(m.date_created) FROM obs m WHERE m.obs_group_id = dg.obs_id AND m.voided = 0)) DESC,
-                     dg.obs_datetime DESC, dg.obs_id DESC
+                     dg.obs_datetime DESC, dg.uuid DESC
             LIMIT 1
           )
     ), (
@@ -129,7 +129,7 @@ WHERE scr.voided = 0
                       OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
                           AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
             ORDER BY GREATEST(dg.date_created, (SELECT MAX(m.date_created) FROM obs m WHERE m.obs_group_id = dg.obs_id AND m.voided = 0)) DESC,
-                     dg.obs_datetime DESC, dg.obs_id DESC
+                     dg.obs_datetime DESC, dg.uuid DESC
             LIMIT 1
         )
           AND det.voided = 0 AND det.value_coded IS NOT NULL

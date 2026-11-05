@@ -70,7 +70,7 @@ ended_state AS (
 -- the care cascade reads it.
 -- The latest is the one saved last, by the newest date_created of the group and its answers, as the chart ranks it
 diagnosis AS (
-    SELECT g.person_id, g.obs_id, g.obs_datetime,
+    SELECT g.person_id, g.obs_id, g.uuid, g.obs_datetime,
            GREATEST(g.date_created, (SELECT MAX(m.date_created) FROM obs m WHERE m.obs_group_id = g.obs_id AND m.voided = 0)) AS saved_at
     FROM obs g
     WHERE g.voided = 0 AND g.obs_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
@@ -89,7 +89,7 @@ latest_diagnosis AS (
     SELECT d.person_id, d.obs_id FROM diagnosis d
     WHERE NOT EXISTS (SELECT 1 FROM diagnosis later
                       WHERE later.person_id = d.person_id
-                        AND (later.saved_at, later.obs_datetime, later.obs_id) > (d.saved_at, d.obs_datetime, d.obs_id))
+                        AND (later.saved_at, later.obs_datetime, later.uuid) > (d.saved_at, d.obs_datetime, d.uuid))
 ),
 -- The category, and for Rheumatic Heart Disease/Rheumatic Fever its details in name order, one label per patient.
 disease AS (

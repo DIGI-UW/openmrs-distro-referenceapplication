@@ -58,7 +58,7 @@ clinic_patient AS (
 -- Each Diagnosis group with a Category, not answered inactive or secondary
 -- The latest is the one saved last, by the newest date_created of the group and its answers, as the chart ranks it
 diagnosis_saved AS (
-    SELECT g.person_id, g.obs_id, g.obs_datetime,
+    SELECT g.person_id, g.obs_id, g.uuid, g.obs_datetime,
            GREATEST(g.date_created, (SELECT MAX(m.date_created) FROM obs m WHERE m.obs_group_id = g.obs_id AND m.voided = 0)) AS saved_at
     FROM obs g
     WHERE g.voided = 0
@@ -76,7 +76,7 @@ diagnosis_saved AS (
 -- Each with the earliest date of those ranked above it, which ends the days it is the latest by
 diagnosis_group AS (
     SELECT g.person_id, g.obs_id, g.obs_datetime,
-           MIN(g.obs_datetime) OVER (PARTITION BY g.person_id ORDER BY g.saved_at, g.obs_datetime, g.obs_id
+           MIN(g.obs_datetime) OVER (PARTITION BY g.person_id ORDER BY g.saved_at, g.obs_datetime, g.uuid
                                      ROWS BETWEEN 1 FOLLOWING AND UNBOUNDED FOLLOWING) AS next_datetime
     FROM diagnosis_saved g
 ),
