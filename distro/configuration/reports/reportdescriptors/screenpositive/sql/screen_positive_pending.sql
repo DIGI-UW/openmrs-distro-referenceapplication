@@ -54,21 +54,33 @@ SELECT
 FROM obs scr
 JOIN person p ON p.person_id = scr.person_id AND p.voided = 0 AND p.dead = 0
 JOIN patient pat ON pat.patient_id = p.person_id AND pat.voided = 0
--- The encounter holding the active primary diagnosis, else the one that recorded the Screen +
+-- The Patient Information holding the diagnosis the registry reads, else the patient's latest Patient Information, as
+-- the chart's Edit opens them (a consultation no longer asks the diagnosis), else the one that recorded the Screen +
 JOIN encounter enc ON enc.encounter_id = COALESCE((
-        SELECT dg.encounter_id FROM obs dg
-        WHERE dg.person_id = scr.person_id AND dg.voided = 0
-          AND dg.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
-          AND EXISTS (SELECT 1 FROM obs has_cat WHERE has_cat.obs_group_id = dg.obs_id AND has_cat.voided = 0
-                      AND has_cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22'))
-          AND NOT EXISTS (
-              SELECT 1 FROM obs x
-              WHERE x.obs_group_id = dg.obs_id AND x.voided = 0
-                AND ((x.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'b1b5d279-8013-5ae4-83a7-0f2bd9bc8457')
-                      AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
-                  OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
-                      AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
-        ORDER BY dg.obs_datetime DESC, dg.obs_id DESC
+        SELECT held.encounter_id FROM encounter held
+        WHERE held.encounter_type = (SELECT encounter_type_id FROM encounter_type WHERE uuid = 'ffdc883f-f99f-496a-83f9-2c3c581e1af0')
+          AND held.encounter_id = (
+            SELECT dg.encounter_id FROM obs dg
+            WHERE dg.person_id = scr.person_id AND dg.voided = 0
+              AND dg.concept_id = (SELECT concept_id FROM concept WHERE uuid = '594b4495-36dc-52a6-9810-15a9e2e2dcb9')
+              AND EXISTS (SELECT 1 FROM obs has_cat WHERE has_cat.obs_group_id = dg.obs_id AND has_cat.voided = 0
+                          AND has_cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22'))
+              AND NOT EXISTS (
+                  SELECT 1 FROM obs x
+                  WHERE x.obs_group_id = dg.obs_id AND x.voided = 0
+                    AND ((x.concept_id = (SELECT concept_id FROM concept WHERE uuid = 'b1b5d279-8013-5ae4-83a7-0f2bd9bc8457')
+                          AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
+                      OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
+                          AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
+            ORDER BY GREATEST(dg.date_created, (SELECT MAX(m.date_created) FROM obs m WHERE m.obs_group_id = dg.obs_id AND m.voided = 0)) DESC,
+                     dg.obs_datetime DESC, dg.uuid DESC
+            LIMIT 1
+          )
+    ), (
+        SELECT info.encounter_id FROM encounter info
+        WHERE info.patient_id = scr.person_id AND info.voided = 0
+          AND info.encounter_type = (SELECT encounter_type_id FROM encounter_type WHERE uuid = 'ffdc883f-f99f-496a-83f9-2c3c581e1af0')
+        ORDER BY info.encounter_datetime DESC, info.encounter_id DESC
         LIMIT 1
     ), scr.encounter_id)
 LEFT JOIN form frm ON frm.form_id = enc.form_id
@@ -116,7 +128,8 @@ WHERE scr.voided = 0
                           AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
                       OR (x.concept_id = (SELECT concept_id FROM concept WHERE uuid = '97c025b2-f42c-5c53-8aaa-0506c8dd3774')
                           AND x.value_coded = (SELECT concept_id FROM concept WHERE uuid = 'af45fb2a-ed18-5beb-935e-8e4d92df2dac'))))
-            ORDER BY dg.obs_datetime DESC, dg.obs_id DESC
+            ORDER BY GREATEST(dg.date_created, (SELECT MAX(m.date_created) FROM obs m WHERE m.obs_group_id = dg.obs_id AND m.voided = 0)) DESC,
+                     dg.obs_datetime DESC, dg.uuid DESC
             LIMIT 1
         )
           AND det.voided = 0 AND det.value_coded IS NOT NULL

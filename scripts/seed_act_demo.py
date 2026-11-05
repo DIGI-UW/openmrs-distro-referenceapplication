@@ -221,13 +221,12 @@ def patient(key,given,family,gender,bdate,consent=YES,consentDate=None,pcc=ACIMI
         LOG.append((f"{given} {family}",ident,p["uuid"])); print(f"{ident} {given} {family}")
     return p["uuid"]
 def PI(pat, day, details="rhdB", cat="catRHD", screen=None, loc=ACIMI):
-    pi=enc(pat,"pi",day,screening(pat,screen) if screen else [],loc)
-    # The diagnosis is recorded on a consultation (AR-167): one on the same day, with nothing else on it.
+    o=screening(pat,screen) if screen else []
     if cat:
         m=[obs("category",cat),obs("active",YES),dobs("started",day)]
         if details: m.append(obs("detailsRHD",details))
-        enc(pat,"consult",day,[grp("diagGroup",m)],loc)
-    return pi
+        o.append(grp("diagGroup",m))
+    return enc(pat,"pi",day,o,loc)
 def consult(pat, day, regimen="q28", start=None, extra=None, nextMonths=6, loc=UHI, nyha="nyha1", nyha_concept=None):
     o=[dobs("consultDate",day),obs("nyha",nyha_concept or nyha),obs("nextAmt",nextMonths),obs("nextPeriod","months")]
     if regimen: o.append(grp("sap",[obs("sap",regimen),dobs("dateStarted",start or day)]))
@@ -396,11 +395,8 @@ def seed_person(p):
     if p["diagnosis"]:
         concept, answers = DETAILS[p["diagnosis"]]
         detail = answers[p["stage"]] if p["diagnosis"] == "rhd" else rng.choice(answers)
-        diagnosis = grp("diagGroup", [obs("category", CAT[p["diagnosis"]]), obs("active", YES), dobs("started", reg), {"concept": concept, "value": detail}])
+        pi.append(grp("diagGroup", [obs("category", CAT[p["diagnosis"]]), obs("active", YES), dobs("started", reg), {"concept": concept, "value": detail}]))
     enc(pat, "pi", reg, pi, p["pcc"])
-    if p["diagnosis"]:
-        # The diagnosis is recorded on a consultation (AR-167), here one on the registration day.
-        enc(pat, "consult", reg, [diagnosis], p["pcc"])
     if p["diagnosis"] in ("rhd", "chd", "other"):
         echo(pat, reg + datetime.timedelta(days=rng.randint(0, 25)), ["moderate", "moderate", "severe"][min(p["stage"], 2)] if p["diagnosis"] == "rhd" else "moderate",
              rng.randint(35, 68), YES if p["stage"] == 2 else NO)
