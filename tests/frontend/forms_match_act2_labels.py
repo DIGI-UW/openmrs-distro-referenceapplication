@@ -72,17 +72,17 @@ class ConsultationUsesAct2Wording(unittest.TestCase):
         )
         self.assertEqual(answers(self.questions['reason_stopped'])[2:4], ['Provider Stopped', 'Patient Preference'])
 
+
+class PatientInformationUsesAct2Wording(unittest.TestCase):
+    def setUp(self):
+        self.questions = {q['id']: q for q in every_question(form('rhd_patient_information.json'))}
+
     def test_tetralogy_of_fallot_is_a_congenital_diagnosis(self):
         congenital = self.questions['diagnosis_details_congenital']['questionOptions']['answers']
         by_label = {a['label']: a['concept'] for a in congenital}
         self.assertEqual(by_label['Tetralogy of Fallot'], TETRALOGY_OF_FALLOT)
         self.assertEqual(len(congenital), 25)
         self.assertEqual([a['label'] for a in congenital], sorted(by_label, key=str.lower))
-
-
-class PatientInformationUsesAct2Wording(unittest.TestCase):
-    def setUp(self):
-        self.questions = {q['id']: q for q in every_question(form('rhd_patient_information.json'))}
 
     def test_location_labels(self):
         self.assertEqual(self.questions['village_area_of_residence']['label'], 'District/Area of Residence')

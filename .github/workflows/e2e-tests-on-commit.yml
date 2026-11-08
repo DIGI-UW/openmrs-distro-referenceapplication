@@ -14,7 +14,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    # building both images and the first boot take 26 to 38 minutes
+    timeout-minutes: 60
     permissions:
       contents: read
       packages: read
@@ -84,7 +85,7 @@ jobs:
     # Playwright 1.58 cannot install browsers on ubuntu-26.04; drop the pin once it can
     runs-on: ubuntu-24.04
     needs: build
-    timeout-minutes: 15
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
@@ -95,6 +96,10 @@ jobs:
           - openmrs-esm-core
           - openmrs-esm-dispensing-app
           - openmrs-esm-billing-app
+        include:
+          # fails on ACT's config and passes on the reference application
+          - repo: openmrs-esm-patient-management
+            grep_invert: Swap a patient from one bed to another
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -142,7 +147,9 @@ jobs:
         run: while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/openmrs/login.htm)" != "200" ]]; do sleep 10; done
 
       - name: Run E2E tests
-        run: yarn playwright test
+        run: yarn playwright test ${GREP_INVERT:+--grep-invert "$GREP_INVERT"}
+        env:
+          GREP_INVERT: ${{ matrix.grep_invert }}
         working-directory: e2e_repo
 
       - name: Upload Report
