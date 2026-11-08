@@ -20,6 +20,10 @@ on:
         description: 'Docker image environment tag (e.g., dev3)'
         required: false
         default: 'dev3'
+      act_app_version:
+        description: 'Exact ACT app version to build in (e.g., 1.0.1-pre.577); empty takes next'
+        required: false
+        default: ''
   workflow_call:
     inputs:
       docker_image_tag:
@@ -76,6 +80,26 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
 
+      # The ACT app's CI sends the version it just published, so the image carries exactly that version.
+      - name: Pin the ACT app version
+        id: act_app
+        env:
+          VERSION: ${{ github.event.client_payload.act_app_version || inputs.act_app_version }}
+        run: |
+          if [ -z "$VERSION" ]; then
+            echo "No ACT app version given; the image takes next."
+            exit 0
+          fi
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-pre\.[0-9]+)?$'; then
+            echo "::error::Not an ACT app version: $VERSION"
+            exit 1
+          fi
+          jq --arg v "$VERSION" '.frontendModules["@act-registry/esm-act-app"] = $v' \
+            frontend/spa-assemble-config.json > "$RUNNER_TEMP/spa-assemble-config.json"
+          mv "$RUNNER_TEMP/spa-assemble-config.json" frontend/spa-assemble-config.json
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=${IMAGE}:act-app-${VERSION}" >> "$GITHUB_OUTPUT"
+
       - name: Build and push Docker image
         id: build
         uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
@@ -85,10 +109,12 @@ jobs:
           platforms: ${{ env.DOCKER_IMAGE_PLATFORMS }}
           build-args: |
             CACHE_BUST=${{ github.run_id }}
+            ACT_APP_VERSION=${{ steps.act_app.outputs.version }}
           tags: |
             ${{ env.IMAGE }}:${{ env.DOCKER_IMAGE_TAG }}
             ${{ env.IMAGE }}:${{ env.DOCKER_IMAGE_TAG_VERSION }}
             ${{ env.IMAGE }}:${{ env.DOCKER_IMAGE_TAG_ENV }}
+            ${{ steps.act_app.outputs.tag }}
 
       - name: Install cosign
         uses: sigstore/cosign-installer@d58896d6a1865668819e1d91763c7751a165e159 # v3.9.2

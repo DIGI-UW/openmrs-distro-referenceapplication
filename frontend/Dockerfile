@@ -14,6 +14,12 @@ COPY spa-build-config.json .
 
 ARG CACHE_BUST
 RUN npx --legacy-peer-deps openmrs@${APP_SHELL_VERSION:-next} assemble --manifest --mode config --config spa-assemble-config.json --target ./spa
+# Fails the build when the ACT app version asked for is not the one assembled.
+ARG ACT_APP_VERSION
+RUN ls -d ./spa/act-registry-esm-act-app-* && \
+    if [ -n "$ACT_APP_VERSION" ] && [ ! -d "./spa/act-registry-esm-act-app-$ACT_APP_VERSION" ]; then \
+      echo "Asked for ACT app $ACT_APP_VERSION but assembled a different version."; exit 1; \
+    fi
 RUN npx --legacy-peer-deps openmrs@${APP_SHELL_VERSION:-next} build --build-config spa-build-config.json --target ./spa
 RUN if [ ! -f ./spa/index.html ]; then echo 'Build failed. Please check the logs above for details. This may have happened because of an update to a library that OpenMRS depends on.'; exit 1; fi
 
