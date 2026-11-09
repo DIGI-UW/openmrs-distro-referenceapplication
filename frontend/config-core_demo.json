@@ -510,7 +510,7 @@
       },
       {
         "flagName": "RHD death not recorded on patient",
-        "workspace": "mark-patient-deceased-workspace-form"
+        "workspace": "act-update-patient-status-workspace"
       }
     ],
     "tagActions": [
