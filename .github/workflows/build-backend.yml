@@ -41,7 +41,7 @@ on:
         type: string
         default: ''
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '30 20 * * 6'
 
 env:
   IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/openmrs-reference-application-3-backend
@@ -52,8 +52,7 @@ env:
 
 concurrency:
   group: ${{ github.workflow }}-${{ inputs.ref || github.ref }}--backend
-  # queue rather than cancel, so a scheduled run never cancels the build of a merge
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-and-publish:
