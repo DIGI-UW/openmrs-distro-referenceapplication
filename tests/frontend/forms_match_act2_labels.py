@@ -2,7 +2,7 @@
 """
 Checks the RHD forms use ACT 2.0's wording where the team asked for it (AR-115): the consultation's Complication,
 Medication, Dose, Key Findings/Recommendations and endocarditis labels, the Patient Information location labels,
-the BPG anaphylaxis labels, the capitalised prophylaxis and Reason Stopped answers, Tetralogy of Fallot among the
+the BPG anaphylaxis labels, the capitalised prophylaxis and Reason Stopped answers, Tetralogy of Fallot among Patient Information's
 congenital diagnoses, Pregnant or Postpartum at Death back on the Patient Information form, and the echo's
 Wilkins Score before the suitability questions.
 
@@ -72,13 +72,6 @@ class ConsultationUsesAct2Wording(unittest.TestCase):
         )
         self.assertEqual(answers(self.questions['reason_stopped'])[2:4], ['Provider Stopped', 'Patient Preference'])
 
-    def test_tetralogy_of_fallot_is_a_congenital_diagnosis(self):
-        congenital = self.questions['diagnosis_details_congenital']['questionOptions']['answers']
-        by_label = {a['label']: a['concept'] for a in congenital}
-        self.assertEqual(by_label['Tetralogy of Fallot'], TETRALOGY_OF_FALLOT)
-        self.assertEqual(len(congenital), 25)
-        self.assertEqual([a['label'] for a in congenital], sorted(by_label, key=str.lower))
-
 
 class PatientInformationUsesAct2Wording(unittest.TestCase):
     def setUp(self):
@@ -89,6 +82,14 @@ class PatientInformationUsesAct2Wording(unittest.TestCase):
         self.assertEqual(
             self.questions['additional_information_to_help_locate_patient']['label'], 'Additional Location Information'
         )
+
+    # The Diagnosis questions moved here from the consultation (#327).
+    def test_tetralogy_of_fallot_is_a_congenital_diagnosis(self):
+        congenital = self.questions['diagnosis_details_congenital']['questionOptions']['answers']
+        by_label = {a['label']: a['concept'] for a in congenital}
+        self.assertEqual(by_label['Tetralogy of Fallot'], TETRALOGY_OF_FALLOT)
+        self.assertEqual(len(congenital), 25)
+        self.assertEqual([a['label'] for a in congenital], sorted(by_label, key=str.lower))
 
     def test_pregnant_or_postpartum_at_death_for_a_woman_who_died(self):
         question = self.questions['pregnant_or_postpartum_at_death']
