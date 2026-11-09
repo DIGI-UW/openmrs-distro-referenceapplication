@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Checks users see the forms without the "RHD " prefix (AR-184) while each form keeps the name, and so the uuid,
-Initializer derives from it: a ui.i18n.Form.name message gives the shown name, and nothing in the forms names
-a form by its old name.
+Checks users see the forms, visit types and encounter types without the "RHD " prefix (AR-184) while each keeps
+its stored name, and so for a form the uuid Initializer derives from it: a ui.i18n message gives the shown name, and
+nothing in the forms or the flag messages names a form by its old name.
 
 Usage: python3 tests/frontend/form_display_names.py
 """
+import csv
 import hashlib
 import json
 import pathlib
@@ -16,6 +17,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 FORMS = ROOT / 'distro' / 'configuration' / 'ampathforms'
 MESSAGES = ROOT / 'distro' / 'configuration' / 'messageproperties' / 'forms_en.properties'
 COMPOSE = ROOT / 'docker-compose.yml'
+CONFIG = ROOT / 'distro' / 'configuration'
 # Initializer names an ampath form by this uuid, its name and its version.
 AMPATH_FORMS_UUID = '794c4598-ab82-47ca-8d18-483a8abe6f4f'
 PREFIX = 'RHD '
@@ -67,7 +69,23 @@ class FormDisplayNames(unittest.TestCase):
         for name, form in prefixed.items():
             key = f"ui.i18n.Form.name.{form_uuid(name, form['version'])}"
             self.assertEqual(shown.get(key), name[len(PREFIX):], name)
-        self.assertEqual(len(shown), len(prefixed))
+        self.assertEqual(len([key for key in shown if key.startswith('ui.i18n.Form.name.')]), len(prefixed))
+
+    def test_every_rhd_visit_and_encounter_type_is_shown_without_the_prefix(self):
+        shown = messages()
+        for kind, path in (('VisitType', 'visittypes/rhd_visittypes.csv'),
+                           ('EncounterType', 'encountertypes/rhd_encountertypes.csv')):
+            rows = list(csv.DictReader((CONFIG / path).open(newline='')))
+            prefixed = [row for row in rows if row['name'].startswith(PREFIX)]
+            self.assertTrue(prefixed, path)
+            for row in prefixed:
+                self.assertEqual(shown.get(f"ui.i18n.{kind}.name.{row['uuid']}"), row['name'][len(PREFIX):], row['name'])
+            self.assertEqual(len([key for key in shown if key.startswith(f'ui.i18n.{kind}.name.')]), len(prefixed))
+
+    def test_no_flag_message_names_a_form_by_its_old_name(self):
+        old = {f['name'] for f in forms().values() if f['name'].startswith(PREFIX)}
+        for row in csv.DictReader((CONFIG / 'flags' / 'rhd_flags.csv').open(newline='')):
+            self.assertFalse([name for name in old if name in row['message']], row['name'])
 
     def test_keeps_the_names_and_so_the_uuids_the_config_uses(self):
         # The consultation's uuid, as the app config, reports and flags name it.
