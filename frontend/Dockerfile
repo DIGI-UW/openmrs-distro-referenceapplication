@@ -4,7 +4,8 @@
 #--------------------------------------------
 FROM --platform=$BUILDPLATFORM node:22-alpine as dev
 
-ARG APP_SHELL_VERSION=next
+# openmrs@next (11.0.1-pre.5917) needs an esm-app-shell that was never published; go back to next once it is
+ARG APP_SHELL_VERSION=11.0.1-pre.5908
 
 RUN mkdir -p /app
 WORKDIR /app
