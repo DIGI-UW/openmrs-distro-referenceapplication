@@ -176,7 +176,7 @@
                     },
                     {
                       "type": "js_expression",
-                      "failsWhenExpression": "!isEmpty(myValue) && (isNaN(new Date(myValue).getTime()) || !isEmpty(patient.birthDate) && new Date(myValue) < new Date(patient.birthDate))",
+                      "failsWhenExpression": "!isEmpty(myValue) && (isNaN(new Date(myValue).getTime()) || !isEmpty(patient.birthDate) && isDateBefore(new Date(myValue), patient.birthDate))",
                       "message": "Enter the full date added. It cannot be before the date of birth"
                     }
                   ]
@@ -199,7 +199,7 @@
                     },
                     {
                       "type": "js_expression",
-                      "failsWhenExpression": "!isEmpty(myValue) && (isNaN(new Date(myValue).getTime()) || !isEmpty(patient.birthDate) && new Date(myValue) < new Date(patient.birthDate))",
+                      "failsWhenExpression": "!isEmpty(myValue) && (isNaN(new Date(myValue).getTime()) || !isEmpty(patient.birthDate) && isDateBefore(new Date(myValue), patient.birthDate))",
                       "message": "Enter the full date resolved. It cannot be before the date of birth"
                     }
                   ]
