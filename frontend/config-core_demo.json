@@ -145,6 +145,7 @@
           "act-next-steps-card",
           "act-prophylaxis-card",
           "act-consultation-card",
+          "act-procedural-recommendations-card",
           "act-inr-card",
           "act-medications-card"
         ]
