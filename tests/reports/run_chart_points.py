@@ -7,7 +7,8 @@ It first seeds a new test clinic with the cases where the one-pass SQL departs f
 its windows and their tie-breaks, so that the comparison crosses them: a patient re-enrolled after an enrolment
 ended in a terminal state, a patient whose diagnosis category changes from RHD to CHD between two points, a patient whose
 regimen changes from BPG to oral penicillin between two points, a patient with two consultations at one datetime, the
-first with a completed recommendation and an RHD diagnosis, the second with an open one and a CHD diagnosis, and a patient
+first with a recommendation done on Procedures and Outcomes and an RHD diagnosis, the second with an open one and a CHD
+diagnosis, and a patient
 whose RHD diagnosis is dated before a CHD one but saved after it, so RHD is the latest at every point. It asserts
 that clinic's rows at a weekly point before and one after the changes, figure by figure.
 
@@ -55,8 +56,11 @@ SURGERY = 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'
 AORTIC_VALVE = 'cd9c582a-71f9-5441-97a8-6d50d7dc15c8'
 URGENCY = '7b8eda07-34b6-55f2-ab6c-1b295f41918b'
 URGENT = '33bf504a-15f2-5504-9bdc-ddded0b5eb00'
-COMPLETED = '1632f8dc-195d-5d67-a52e-6c7a057cb536'
-YES = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+MITRAL_VALVE = '7af8595d-407e-5705-bd8a-812735e2f188'
+PROCEDURES_TYPE = 'c9b87090-8768-50be-987e-8ca0a8983429'
+PROCEDURES_FORM = 'bf762810-2bf1-3ca3-bdbe-8bd71fd5d59a'
+PROCEDURE_DATE = '6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a'
+SURGERY_TYPE = '46f4af80-b783-59f4-beb1-81144ccf3084'
 COUNTS = ['total_registrants', 'active_registrants', 'active_registrants_seen_last_7_months',
           'active_registrants_prescribed_prophylaxis', 'consultation_visit_total',
           'consultation_visits_with_echocardiogram_resulted', 'consultation_visits_with_intervention',
@@ -169,9 +173,17 @@ def regimen(answer, started):
     return {'concept': REGIMEN, 'groupMembers': [{'concept': REGIMEN, 'value': answer}, {'concept': DATE_STARTED, 'value': started}]}
 
 
-def recommendation(*members):
+def recommendation(*members, procedure=AORTIC_VALVE):
     return {'concept': RECOMMENDATION, 'groupMembers': [{'concept': PROCEDURE_TYPE, 'value': SURGERY},
-                                                        {'concept': RECOMMENDATION, 'value': AORTIC_VALVE}, *members]}
+                                                        {'concept': RECOMMENDATION, 'value': procedure}, *members]}
+
+
+def procedure(stack, patient, clinic, when, kind, done):
+    """A Procedures and Outcomes encounter recording one surgery or catheterization, dated by its Date of Procedure."""
+    stack.call('POST', '/encounter', {'patient': patient, 'encounterType': PROCEDURES_TYPE, 'form': PROCEDURES_FORM,
+                                      'location': clinic, 'encounterDatetime': when,
+                                      'obs': [{'concept': PROCEDURE_DATE, 'value': when},
+                                              {'concept': kind, 'groupMembers': [{'concept': kind, 'value': done}]}]})
 
 
 def seed_window_cases(stack, today):
@@ -193,10 +205,11 @@ def seed_window_cases(stack, today):
     same_day = registrant(stack, clinic, f'{stamp} two consultations one day', birthdate='2010-05-01')
     enrol(stack, same_day, day(200))
     consultation(stack, same_day, clinic, day(60) + 'T10:00:00',
-                 [diagnosis(RHD), regimen(BPG_Q28, day(60)), recommendation({'concept': COMPLETED, 'value': YES})])
+                 [diagnosis(RHD), regimen(BPG_Q28, day(60)), recommendation(procedure=MITRAL_VALVE)])
+    procedure(stack, same_day, clinic, day(58) + 'T10:00:00', SURGERY_TYPE, MITRAL_VALVE)
     consultation(stack, same_day, clinic, day(60) + 'T10:00:00',
                  [diagnosis(CHD), recommendation({'concept': URGENCY, 'value': URGENT})])
-    corrected = registrant(stack, clinic, f'{stamp} diagnosis saved after a later one', birthdate='2010-05-01')
+    corrected = registrant(stack, clinic, f'{stamp} diagnosis saved later', birthdate='2010-05-01')
     enrol(stack, corrected, day(200))
     consultation(stack, corrected, clinic, day(60) + 'T10:00:00', [diagnosis(CHD), regimen(BPG_Q28, day(60))])
     # The registry ranks a diagnosis by when it was saved, to the second

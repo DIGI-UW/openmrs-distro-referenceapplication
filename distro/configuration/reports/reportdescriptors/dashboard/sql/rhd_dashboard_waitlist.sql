@@ -10,14 +10,12 @@
 --   performed: recommendations completed in the 365 days to the end date, as Mitral balloon valvuloplasty (mitral
 --              balloon valvuloplasty or mitral valvuloplasty) or Surgery (procedure type Surgery), including those of
 --              patients who have since died or whose enrolment has since ended
--- A recommendation is completed on its consultation's date when its Completed Yes was saved with the consultation, and
--- otherwise when a later edit of the consultation saved it, as the waiting list's row action does; or, if earlier, on the
--- date Procedures and Outcomes records the same procedure on or after the consultation's day (AR-162).
--- A Completed answer written over a minute after its consultation, as by a bulk import, is dated when it was written.
+-- A recommendation is completed on the date Procedures and Outcomes first records the same procedure on or after the
+-- consultation's day (AR-162), as Record procedure on the patient summary or the Procedural Waiting List saves it.
 -- Parameters: @endDate; @cardiacClinic and @primaryCareClinic, location uuids, each counting only its patients when
 -- set; @clinics, location uuids separated by commas, counting only the patients either of whose clinics is one of them.
 -- =============================================================================
-WITH RECURSIVE clinic_patient AS (
+WITH clinic_patient AS (
     -- Patients at the clinics chosen
     SELECT p.person_id, p.dead, p.death_date
     FROM person p
@@ -60,28 +58,11 @@ patient_at AS (
       )
 ),
 consultation AS (
-    SELECT e.encounter_id, e.patient_id, e.encounter_datetime, e.date_created
+    SELECT e.encounter_id, e.patient_id, e.encounter_datetime
     FROM encounter e
     JOIN form f ON f.form_id = e.form_id AND f.uuid = '4b063fc7-996f-3001-8500-8940e201be8f'
     JOIN clinic_patient cp ON cp.person_id = e.patient_id
     WHERE e.voided = 0 AND e.encounter_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY)
-),
--- A Completed answer of Yes (CIEL Yes, or core's True on answers saved before the form used CIEL), with the earlier
--- versions of it that also said Yes: moving a consultation's date saves each of its answers again unchanged.
-completed_yes AS (
-    SELECT done.obs_group_id, done.previous_version, done.date_created
-    FROM obs done
-    WHERE done.voided = 0
-      AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
-      AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
-                               (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
-    UNION ALL
-    SELECT y.obs_group_id, earlier.previous_version, earlier.date_created
-    FROM completed_yes y
-    JOIN obs earlier ON earlier.obs_id = y.previous_version
-        AND earlier.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
-        AND earlier.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
-                                    (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
 ),
 -- Each recommendation is an obs group of Interventional Recommendation(s) whose procedure member has the same concept
 recorded_recommendation AS (
@@ -96,8 +77,6 @@ recorded_recommendation AS (
            proc_concept.uuid AS procedure_uuid,
            type_concept.uuid AS procedure_type_uuid,
            COALESCE(urg_name.name, 'Not given') AS urgency,
-           CASE WHEN yes.saved <= DATE_ADD(c.date_created, INTERVAL 1 MINUTE) THEN c.encounter_datetime
-                ELSE yes.saved END AS completed_yes_on,
            -- The first procedure of the same kind recorded on Procedures and Outcomes on or after the consultation's day,
            -- as the Procedural Waiting List counts it done (AR-162)
            (SELECT CAST(MIN(DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime))) AS DATETIME)
@@ -124,15 +103,10 @@ recorded_recommendation AS (
     LEFT JOIN obs typ ON typ.obs_group_id = g.obs_id AND typ.voided = 0
         AND typ.concept_id = (SELECT concept_id FROM concept WHERE uuid = '3a576b80-744a-59ee-9515-d9fdca06f3d7')
     LEFT JOIN concept type_concept ON type_concept.concept_id = typ.value_coded
-    LEFT JOIN (SELECT obs_group_id, MIN(date_created) AS saved FROM completed_yes GROUP BY obs_group_id) yes
-        ON yes.obs_group_id = g.obs_id
 ),
--- Each recommendation completed on the earlier of its Completed Yes and its procedure's date, if either
+-- Each recommendation completed on its procedure's date, if recorded
 recommendation AS (
-    SELECT r.*,
-           CASE WHEN r.completed_yes_on IS NULL THEN r.performed_on
-                WHEN r.performed_on IS NULL THEN r.completed_yes_on
-                ELSE LEAST(r.completed_yes_on, r.performed_on) END AS completed_on
+    SELECT r.*, r.performed_on AS completed_on
     FROM recorded_recommendation r
 ),
 -- The recommendations in the latest consultation by the end date of each patient alive and enrolled then, not completed
