@@ -6,7 +6,7 @@
 --   consultations  RHD Consultation Visits in the 365 days to the end date (done only)
 --   echocardiogram an RHD Echocardiogram in the 395 days (13 months) to the end date
 --   retainedInCare a consultation, or a prophylaxis dose ACT Core knows of, in the 210 days (7 months) to the end date
---   interventionAssigned an interventional recommendation in the patient's latest consultation not answered Completed
+--   interventionAssigned an interventional recommendation in the patient's latest consultation not yet done
 --   interventions  the recommendations in active patients' latest consultations, completed or not
 --   warfarin       of the patients whose latest medication answer is warfarin or another vitamin K antagonist without a
 --                  Date Stopped (as the INR flags read it), those with an RHD INR Monitoring in the 90 days to the end date
