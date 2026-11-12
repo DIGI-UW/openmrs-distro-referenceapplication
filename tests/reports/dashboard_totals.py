@@ -4,9 +4,10 @@ Checks the Dashboard's count reports against the lists they summarise, on a runn
 
 It seeds a new test clinic with seven registrants (an enrolment ended in a terminal state, an active patient with no
 birth date, an active patient whose latest diagnosis is RHD with no details and who has one open recommendation and two
-completed with the consultation, a patient whose surgery recommended 400 days ago is completed by a later edit of that
-consultation and whose diagnosis is RHD B with acute rheumatic fever, a patient whose balloon valvuloplasty completed 400 days ago has its consultation moved a day, a
-patient with a surgery completed and a balloon valvuloplasty open whose enrolment then ended, and a patient registered
+done on Procedures and Outcomes since, a patient whose surgery recommended 400 days ago is recorded done today and whose
+diagnosis is RHD B with acute rheumatic fever, a patient whose balloon valvuloplasty was done the day after its consultation
+400 days ago and whose consultation is then moved to that day, a patient with a surgery done and a balloon valvuloplasty
+open whose enrolment then ended, and a patient registered
 at 19 who is 20 now and whose Screen + changed from No to core's True), some with Patient Information encounters, then
 asserts the counts at that clinic today and yesterday and, for every clinic, that rhd_dashboard_registrants,
 rhd_dashboard_waitlist and rhd_dashboard_screening total what the RHD Patient List and the Procedural Waiting List list.
@@ -19,7 +20,6 @@ import base64
 import datetime
 import json
 import sys
-import time
 import urllib.parse
 import urllib.request
 from collections import Counter
@@ -62,12 +62,16 @@ SURGERY = 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'
 CATHETERIZATION = '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'
 URGENCY = '7b8eda07-34b6-55f2-ab6c-1b295f41918b'
 URGENT = '33bf504a-15f2-5504-9bdc-ddded0b5eb00'
-COMPLETED = '1632f8dc-195d-5d67-a52e-6c7a057cb536'
 YES = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 CORE_TRUE = 'cf82933b-3f3f-45e7-a5ab-5d31aaee3da3'
 AORTIC_VALVE = 'cd9c582a-71f9-5441-97a8-6d50d7dc15c8'
 MITRAL_BALLOON = 'af9429ff-1b76-55f3-81ca-a9f775d93fb4'
 PULMONARY_VALVULOPLASTY = '36b3cc68-c53f-5a23-8380-24dbaf9c88fb'
+PROCEDURES_TYPE = 'c9b87090-8768-50be-987e-8ca0a8983429'
+PROCEDURES_FORM = 'bf762810-2bf1-3ca3-bdbe-8bd71fd5d59a'
+PROCEDURE_DATE = '6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a'
+SURGERY_TYPE = '46f4af80-b783-59f4-beb1-81144ccf3084'
+CATHETERIZATION_TYPE = 'bb4a77ee-836a-57e7-a262-632fa22288d2'
 RHD_DETAILS = 'cfe17bb5-4a76-5f3a-9e1c-7b1e9b84a8e3'
 ACUTE_RHEUMATIC_FEVER = 'cbfcf051-bee3-549d-b233-e5be0e7d691a'
 RHD_B = '5e019f88-6b33-5749-8804-d9686ae680d5'
@@ -142,11 +146,12 @@ def recommendation(procedure_type, procedure, *members):
                                                         {'concept': RECOMMENDATION, 'value': procedure}, *members]}
 
 
-def group(stack, encounter):
-    """The consultation's one recommendation, with its members."""
-    found = stack.call('GET', f'/encounter/{encounter}?v=custom:(obs:(uuid,concept:(uuid),'
-                              'groupMembers:(uuid,voided,concept:(uuid))))')['obs']
-    return next(obs for obs in found if obs['concept']['uuid'] == RECOMMENDATION)
+def procedure(stack, patient, clinic, when, kind, done):
+    """A Procedures and Outcomes encounter recording one surgery or catheterization, dated by its Date of Procedure."""
+    stack.call('POST', '/encounter', {'patient': patient, 'encounterType': PROCEDURES_TYPE, 'form': PROCEDURES_FORM,
+                                      'location': clinic, 'encounterDatetime': when,
+                                      'obs': [{'concept': PROCEDURE_DATE, 'value': when},
+                                              {'concept': kind, 'groupMembers': [{'concept': kind, 'value': done}]}]})
 
 
 def patient_information(stack, patient, clinic, when, answers):
@@ -240,12 +245,14 @@ def main():
     consultation(stack, rhd, clinic, day(20) + 'T10:00:00', [
         {'concept': DIAGNOSIS, 'groupMembers': [{'concept': DIAGNOSIS_CATEGORY, 'value': RHD}]},
         recommendation(SURGERY, AORTIC_VALVE, {'concept': URGENCY, 'value': URGENT}),
-        recommendation(CATHETERIZATION, MITRAL_BALLOON, {'concept': COMPLETED, 'value': YES}),
-        recommendation(CATHETERIZATION, PULMONARY_VALVULOPLASTY, {'concept': COMPLETED, 'value': YES}),
+        recommendation(CATHETERIZATION, MITRAL_BALLOON),
+        recommendation(CATHETERIZATION, PULMONARY_VALVULOPLASTY),
     ])
-    edited = registrant(stack, clinic, f'{stamp} completed later', birthdate='1990-03-15')
-    enrol(stack, edited, day(500))
-    edited_consultation = consultation(stack, edited, clinic, day(400) + 'T10:00:00', [
+    procedure(stack, rhd, clinic, day(15) + 'T10:00:00', CATHETERIZATION_TYPE, MITRAL_BALLOON)
+    procedure(stack, rhd, clinic, day(10) + 'T10:00:00', CATHETERIZATION_TYPE, PULMONARY_VALVULOPLASTY)
+    operated_later = registrant(stack, clinic, f'{stamp} operated later', birthdate='1990-03-15')
+    enrol(stack, operated_later, day(500))
+    consultation(stack, operated_later, clinic, day(400) + 'T10:00:00', [
         {'concept': DIAGNOSIS, 'groupMembers': [{'concept': DIAGNOSIS_CATEGORY, 'value': RHD},
                                                 {'concept': RHD_DETAILS, 'value': ACUTE_RHEUMATIC_FEVER},
                                                 {'concept': RHD_DETAILS, 'value': RHD_B}]},
@@ -254,27 +261,21 @@ def main():
     operated_then_ended = registrant(stack, clinic, f'{stamp} operated then ended', birthdate='1990-03-15')
     enrol(stack, operated_then_ended, day(300))
     consultation(stack, operated_then_ended, clinic, day(100) + 'T10:00:00', [
-        recommendation(SURGERY, AORTIC_VALVE, {'concept': COMPLETED, 'value': YES}),
+        recommendation(SURGERY, AORTIC_VALVE),
         recommendation(CATHETERIZATION, MITRAL_BALLOON, {'concept': URGENCY, 'value': URGENT}),
     ])
+    procedure(stack, operated_then_ended, clinic, day(90) + 'T10:00:00', SURGERY_TYPE, AORTIC_VALVE)
     enrol(stack, operated_then_ended, day(300), completed=day(50))
     moved = registrant(stack, clinic, f'{stamp} visit moved', birthdate='1990-03-15')
     enrol(stack, moved, day(500))
     moved_consultation = consultation(stack, moved, clinic, day(400) + 'T10:00:00', [
-        recommendation(CATHETERIZATION, MITRAL_BALLOON, {'concept': COMPLETED, 'value': YES}),
+        recommendation(CATHETERIZATION, MITRAL_BALLOON),
     ])
-    # The report dates a Completed answer saved within a minute of its consultation by the consultation's date.
-    time.sleep(65)
-    # As the form engine saves the waiting list's Completed action: the stored group, with only the new member
-    stack.call('POST', f'/encounter/{edited_consultation}', {'obs': [
-        {'uuid': group(stack, edited_consultation)['uuid'], 'concept': RECOMMENDATION,
-         'groupMembers': [{'concept': COMPLETED, 'value': YES}]},
-    ]})
-    stored = next(member['uuid'] for member in group(stack, moved_consultation)['groupMembers']
-                  if member['concept']['uuid'] == COMPLETED)
+    procedure(stack, moved, clinic, day(399) + 'T10:00:00', CATHETERIZATION_TYPE, MITRAL_BALLOON)
+    # Done on the consultation's day once it is moved: still done, as the match includes that day.
     stack.call('POST', f'/encounter/{moved_consultation}', {'encounterDatetime': day(399) + 'T10:00:00'})
-    if not stack.call('GET', f'/obs/{stored}?v=custom:(voided)')['voided']:
-        failures.append('moving the consultation did not save its Completed answer again, so that case was not built')
+    # Recorded today, after the yesterday checks' end date.
+    procedure(stack, operated_later, clinic, day(0) + 'T10:00:00', SURGERY_TYPE, AORTIC_VALVE)
 
     end = today.isoformat()
     at_clinic = stack.rows(REGISTRANTS, endDate=end, cardiacClinic=clinic)
@@ -348,7 +349,7 @@ def main():
 
     # Registered in the 365 days to today at the test clinic: no birth date (Screen + No, Other), rhd (Yes, School),
     # operated then ended (nothing recorded) and rescreened (core's True after No, adolescent when registered);
-    # ended, completed later and visit moved were registered before.
+    # ended, operated later and visit moved were registered before.
     period = {'startDate': day(364), 'endDate': end}
     screening = stack.rows(SCREENING, **period, cardiacClinic=clinic)
     check('screening total at the test clinic', by(screening, 'total'), {'Registered': 4})

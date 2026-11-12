@@ -113,15 +113,9 @@ all_consultation AS (
 -- Each interventional recommendation, as rhd_medical_optimisation.sql counts it
 recommendation AS (
     SELECT c.encounter_id, c.patient_id, c.latest,
-           -- Completed is only read on a latest consultation, as ACT 2.0 counted its recommendations
+           -- Only a latest consultation's recommendations count as completed, as ACT 2.0 counted them
            (c.latest AND (
-               EXISTS (SELECT 1 FROM obs done
-                       WHERE done.obs_group_id = g.obs_id AND done.voided = 0
-                         AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
-                         AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
-                                                  (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')))
-               -- Or the procedure recorded on Procedures and Outcomes on or after the consultation's day (AR-162)
-               OR EXISTS (
+               EXISTS (
                    SELECT 1 FROM obs pd
                    JOIN encounter pd_e ON pd_e.encounter_id = pd.encounter_id AND pd_e.voided = 0
                    LEFT JOIN obs pd_d ON pd_d.encounter_id = pd_e.encounter_id AND pd_d.voided = 0

@@ -260,19 +260,7 @@ SELECT
                 AND proc_first.concept_id = g_rec.concept_id AND proc_first.value_coded = proc_rec.value_coded
             WHERE g_first.person_id = p.person_id AND g_first.voided = 0
               AND g_first.concept_id = g_rec.concept_id AND g_first.obs_group_id IS NULL
-              AND e_first.encounter_datetime > GREATEST(COALESCE((
-                  SELECT MAX(e_done.encounter_datetime)
-                  FROM obs proc_done
-                  JOIN obs done ON done.obs_group_id = proc_done.obs_group_id AND done.voided = 0
-                      AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
-                      AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
-                                               (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
-                  JOIN encounter e_done ON e_done.encounter_id = proc_done.encounter_id AND e_done.voided = 0
-                      AND e_done.patient_id = p.person_id AND e_done.form_id = e_rec.form_id
-                  WHERE proc_done.person_id = p.person_id AND proc_done.voided = 0
-                    AND proc_done.concept_id = g_rec.concept_id AND proc_done.obs_group_id IS NOT NULL
-                    AND proc_done.value_coded = proc_rec.value_coded
-              ), '1900-01-01'), COALESCE(
+              AND e_first.encounter_datetime > COALESCE(
                   (SELECT MAX(DATE(COALESCE(pl_d.value_datetime, pl_e.encounter_datetime)))
                    FROM obs pl
                    JOIN encounter pl_e ON pl_e.encounter_id = pl.encounter_id AND pl_e.voided = 0
@@ -282,7 +270,7 @@ SELECT
                      AND pl.concept_id IN ((SELECT concept_id FROM concept WHERE uuid = '46f4af80-b783-59f4-beb1-81144ccf3084'),
                                            (SELECT concept_id FROM concept WHERE uuid = 'bb4a77ee-836a-57e7-a262-632fa22288d2'))
                      AND pl.value_coded = proc_rec.value_coded)
-              + INTERVAL 1 DAY, '1900-01-01'))
+              + INTERVAL 1 DAY, '1900-01-01')
         ), e_rec.encounter_datetime)))
         FROM encounter e_rec
         JOIN form f_rec ON f_rec.form_id = e_rec.form_id AND f_rec.uuid = '4b063fc7-996f-3001-8500-8940e201be8f'
@@ -296,13 +284,6 @@ SELECT
               WHERE later.patient_id = e_rec.patient_id AND later.form_id = e_rec.form_id AND later.voided = 0
                 AND (later.encounter_datetime > e_rec.encounter_datetime
                      OR (later.encounter_datetime = e_rec.encounter_datetime AND later.encounter_id > e_rec.encounter_id))
-          )
-          AND NOT EXISTS (
-              SELECT 1 FROM obs done
-              WHERE done.obs_group_id = g_rec.obs_id AND done.voided = 0
-                AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
-                AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
-                                         (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
           )
           -- Not done on Procedures and Outcomes on or after this consultation's day (AR-162)
           AND NOT EXISTS (

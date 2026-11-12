@@ -129,15 +129,10 @@ regimen AS (
     FROM sap_in_force
     GROUP BY d, person_id
 ),
--- Each interventional recommendation a consultation records, as rhd_medical_optimisation.sql counts it, with
--- whether it was marked completed with the consultation; a Procedure Type of None records that none is recommended
+-- Each interventional recommendation a consultation records, as rhd_medical_optimisation.sql counts it; a Procedure
+-- Type of None records that none is recommended
 recommendation_group AS (
-    SELECT g.encounter_id, g.obs_id, proc.value_coded AS procedure_concept,
-           EXISTS (SELECT 1 FROM obs done
-                   WHERE done.obs_group_id = g.obs_id AND done.voided = 0
-                     AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
-                     AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
-                                              (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))) AS done
+    SELECT g.encounter_id, g.obs_id, proc.value_coded AS procedure_concept
     FROM obs g
     -- The recommended procedure is the group's member with the group's concept
     LEFT JOIN obs proc ON proc.obs_group_id = g.obs_id AND proc.voided = 0 AND proc.concept_id = g.concept_id
@@ -174,11 +169,11 @@ all_consultation AS (
            OR c.next_datetime IS NULL OR c.next_datetime >= DATE_ADD(r.d, INTERVAL 1 DAY))
 ),
 -- Each recommendation of a counted consultation, and whether it is completed by the point: only on a latest
--- consultation, as ACT 2.0 counted its recommendations, with the consultation or by a procedure recorded on
--- Procedures and Outcomes on or after the consultation's day and by the point (AR-162)
+-- consultation, as ACT 2.0 counted its recommendations, by a procedure recorded on Procedures and Outcomes on or after
+-- the consultation's day and by the point (AR-162)
 recommendation AS (
     SELECT c.d, c.encounter_id, c.patient_id, c.latest,
-           (c.latest AND (rg.done OR EXISTS (
+           (c.latest AND EXISTS (
                SELECT 1 FROM obs pd
                JOIN encounter pd_e ON pd_e.encounter_id = pd.encounter_id AND pd_e.voided = 0
                LEFT JOIN obs pd_d ON pd_d.encounter_id = pd_e.encounter_id AND pd_d.voided = 0
@@ -188,7 +183,7 @@ recommendation AS (
                                        (SELECT concept_id FROM concept WHERE uuid = 'bb4a77ee-836a-57e7-a262-632fa22288d2'))
                  AND pd.value_coded = rg.procedure_concept
                  AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) >= DATE(c.encounter_datetime)
-                 AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) <= c.d))) AS completed
+                 AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) <= c.d)) AS completed
     FROM all_consultation c
     JOIN recommendation_group rg ON rg.encounter_id = c.encounter_id
 ),

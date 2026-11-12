@@ -6,7 +6,7 @@
 --   consultations  RHD Consultation Visits in the 365 days to the end date (done only)
 --   echocardiogram an RHD Echocardiogram in the 395 days (13 months) to the end date
 --   retainedInCare a consultation, or a prophylaxis dose ACT Core knows of, in the 210 days (7 months) to the end date
---   interventionAssigned an interventional recommendation in the patient's latest consultation not answered Completed
+--   interventionAssigned an interventional recommendation in the patient's latest consultation not yet done
 --   interventions  the recommendations in active patients' latest consultations, completed or not
 --   warfarin       of the patients whose latest medication answer is warfarin or another vitamin K antagonist without a
 --                  Date Stopped (as the INR flags read it), those with an RHD INR Monitoring in the 90 days to the end date
@@ -60,18 +60,12 @@ latest_consultation AS (
                         AND (later.encounter_datetime > c.encounter_datetime
                              OR (later.encounter_datetime = c.encounter_datetime AND later.encounter_id > c.encounter_id)))
 ),
--- Each interventional recommendation in a latest consultation, and whether it is answered Completed: CIEL Yes, or
--- core's True on answers saved before the form used CIEL, as the Procedural Waiting List reads it. A group whose
+-- Each interventional recommendation in a latest consultation, and whether its procedure is recorded on Procedures and
+-- Outcomes on or after the consultation's day (AR-162), as the Procedural Waiting List reads it. A group whose
 -- Procedure Type is None records that no intervention is recommended, so it is not a recommendation.
 recommendation AS (
     SELECT lc.patient_id, g.obs_id,
-           EXISTS (SELECT 1 FROM obs done
-                   WHERE done.obs_group_id = g.obs_id AND done.voided = 0
-                     AND done.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1632f8dc-195d-5d67-a52e-6c7a057cb536')
-                     AND done.value_coded IN ((SELECT CAST(property_value AS UNSIGNED) FROM global_property WHERE property = 'concept.true'),
-                                              (SELECT concept_id FROM concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')))
-           -- or the procedure recorded on Procedures and Outcomes on or after the consultation's day (AR-162)
-           OR EXISTS (
+           EXISTS (
                SELECT 1 FROM obs pd
                JOIN encounter pd_e ON pd_e.encounter_id = pd.encounter_id AND pd_e.voided = 0
                LEFT JOIN obs pd_d ON pd_d.encounter_id = pd_e.encounter_id AND pd_d.voided = 0
