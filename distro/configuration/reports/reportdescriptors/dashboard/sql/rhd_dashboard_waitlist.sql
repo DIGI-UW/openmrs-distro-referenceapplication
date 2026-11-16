@@ -5,7 +5,8 @@
 --   open: the recommendations not yet completed on the end date by procedure group and urgency, from the latest
 --         consultation by then of each patient alive and enrolled then, each counted once under its procedure's group;
 --         on today's date, the Procedural Waiting List. The groups: Balloon valvuloplasty (mitral, aortic or pulmonary),
---         Mitral valve, Aortic valve (each repair/replacement) and Other
+--         Mitral valve, Aortic valve (each repair/replacement) and Other. A recommendation of Procedure Type None is
+--         not a recommendation to wait for and is left out
 --   total: procedure 'All', the patients waiting and their open recommendations
 --   performed: recommendations completed in the 365 days to the end date, as Mitral balloon valvuloplasty (mitral
 --              balloon valvuloplasty or mitral valvuloplasty) or Surgery (procedure type Surgery), including those of
@@ -103,6 +104,10 @@ recorded_recommendation AS (
     LEFT JOIN obs typ ON typ.obs_group_id = g.obs_id AND typ.voided = 0
         AND typ.concept_id = (SELECT concept_id FROM concept WHERE uuid = '3a576b80-744a-59ee-9515-d9fdca06f3d7')
     LEFT JOIN concept type_concept ON type_concept.concept_id = typ.value_coded
+    -- A Procedure Type of None records that no intervention is recommended (AR-147), so nothing is waited for; the
+    -- Procedural Waiting List, the RHD Patient List, Medical optimisation and the run charts leave it out too (AR-195)
+    WHERE typ.value_coded IS NULL
+       OR typ.value_coded <> (SELECT concept_id FROM concept WHERE uuid = '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
 ),
 -- Each recommendation completed on its procedure's date, if recorded
 recommendation AS (

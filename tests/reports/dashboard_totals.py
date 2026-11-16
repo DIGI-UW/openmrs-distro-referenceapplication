@@ -2,8 +2,8 @@
 """
 Checks the Dashboard's count reports against the lists they summarise, on a running ACT stack.
 
-It seeds a new test clinic with seven registrants (an enrolment ended in a terminal state, an active patient with no
-birth date, an active patient whose latest diagnosis is RHD with no details and who has one open recommendation and two
+It seeds a new test clinic with eight registrants (an enrolment ended in a terminal state, an active patient with no
+birth date, a patient whose only recommendation is None, an active patient whose latest diagnosis is RHD with no details and who has one open recommendation and two
 done on Procedures and Outcomes since, a patient whose surgery recommended 400 days ago is recorded done today and whose
 diagnosis is RHD B with acute rheumatic fever, a patient whose balloon valvuloplasty was done the day after its consultation
 400 days ago and whose consultation is then moved to that day, a patient with a surgery done and a balloon valvuloplasty
@@ -60,6 +60,7 @@ RECOMMENDATION = 'ce93d393-1df5-587f-bf11-c373eac2ccf4'
 PROCEDURE_TYPE = '3a576b80-744a-59ee-9515-d9fdca06f3d7'
 SURGERY = 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'
 CATHETERIZATION = '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'
+NO_INTERVENTION = '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 URGENCY = '7b8eda07-34b6-55f2-ab6c-1b295f41918b'
 URGENT = '33bf504a-15f2-5504-9bdc-ddded0b5eb00'
 YES = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
@@ -276,21 +277,28 @@ def main():
     stack.call('POST', f'/encounter/{moved_consultation}', {'encounterDatetime': day(399) + 'T10:00:00'})
     # Recorded today, after the yesterday checks' end date.
     procedure(stack, operated_later, clinic, day(0) + 'T10:00:00', SURGERY_TYPE, AORTIC_VALVE)
+    # A Procedure Type of None, which the form saves as a recommendation with no procedure, is not waited for (AR-195).
+    not_recommended = registrant(stack, clinic, f'{stamp} no intervention', birthdate='1990-03-15')
+    enrol(stack, not_recommended, day(400))
+    consultation(stack, not_recommended, clinic, day(5) + 'T10:00:00', [
+        {'concept': RECOMMENDATION, 'groupMembers': [{'concept': PROCEDURE_TYPE, 'value': NO_INTERVENTION}]},
+    ])
 
     end = today.isoformat()
     at_clinic = stack.rows(REGISTRANTS, endDate=end, cardiacClinic=clinic)
-    check('status at the test clinic', by(at_clinic, 'status'), {'Active': 5, terminal_name: 2})
-    check('age at the test clinic', by(at_clinic, 'age'), {'20-39': 4, 'Age unknown': 1})
+    check('status at the test clinic', by(at_clinic, 'status'), {'Active': 6, terminal_name: 2})
+    check('age at the test clinic', by(at_clinic, 'age'), {'20-39': 5, 'Age unknown': 1})
     # Acute rheumatic fever beside RHD B counts under RHD B alone.
     check('disease at the test clinic', by(at_clinic, 'disease'),
-          {'RHD, details not recorded': 1, 'RHD B': 1, 'No diagnosis yet': 3})
-    check('sex at the test clinic', by(at_clinic, 'sex'), {'Female': 4, 'Male': 1})
+          {'RHD, details not recorded': 1, 'RHD B': 1, 'No diagnosis yet': 4})
+    check('sex at the test clinic', by(at_clinic, 'sex'), {'Female': 5, 'Male': 1})
 
     waitlist = stack.rows(WAITLIST, endDate=end, cardiacClinic=clinic)
     check('registrants among the clinics listed', by(stack.rows(REGISTRANTS, endDate=end, clinics=clinic), 'status'),
           by(at_clinic, 'status'))
     check('waitlist among the clinics listed', stack.rows(WAITLIST, endDate=end, clinics=clinic), waitlist)
     open_rows = [row for row in waitlist if row['breakdown'] == 'open']
+    # Neither the open rows nor the total count the None recommendation.
     check('open recommendations at the test clinic',
           [(row['procedure'], row['urgency'], int(row['patients']), int(row['recommendations'])) for row in open_rows],
           [('Aortic valve', '2: urgent (60 days/2 months)', 1, 1)])
@@ -349,7 +357,7 @@ def main():
 
     # Registered in the 365 days to today at the test clinic: no birth date (Screen + No, Other), rhd (Yes, School),
     # operated then ended (nothing recorded) and rescreened (core's True after No, adolescent when registered);
-    # ended, operated later and visit moved were registered before.
+    # ended, operated later, visit moved and no intervention were registered before.
     period = {'startDate': day(364), 'endDate': end}
     screening = stack.rows(SCREENING, **period, cardiacClinic=clinic)
     check('screening total at the test clinic', by(screening, 'total'), {'Registered': 4})

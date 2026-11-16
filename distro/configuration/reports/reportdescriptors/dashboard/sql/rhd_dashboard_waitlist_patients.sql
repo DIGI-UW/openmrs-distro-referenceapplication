@@ -92,6 +92,10 @@ recorded_recommendation AS (
     LEFT JOIN obs typ ON typ.obs_group_id = g.obs_id AND typ.voided = 0
         AND typ.concept_id = (SELECT concept_id FROM concept WHERE uuid = '3a576b80-744a-59ee-9515-d9fdca06f3d7')
     LEFT JOIN concept type_concept ON type_concept.concept_id = typ.value_coded
+    -- A Procedure Type of None records that no intervention is recommended (AR-147), so nothing is waited for; the
+    -- Procedural Waiting List, the RHD Patient List, Medical optimisation and the run charts leave it out too (AR-195)
+    WHERE typ.value_coded IS NULL
+       OR typ.value_coded <> (SELECT concept_id FROM concept WHERE uuid = '1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
 ),
 -- Each recommendation completed on its procedure's date, if recorded
 recommendation AS (
