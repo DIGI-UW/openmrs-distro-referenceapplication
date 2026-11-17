@@ -288,11 +288,26 @@
             },
             {
               "label": "Birth Weight",
+              "id": "birth_weight_kg",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "2a6c28f9-6845-558b-b2a1-3efbb8f123ff",
+                "min": "0",
+                "max": "7"
+              }
+            },
+            {
+              "label": "Birth Weight (entered as text)",
               "id": "neonatal_weight_kg",
               "type": "obs",
+              "readonly": true,
               "questionOptions": {
                 "rendering": "text",
                 "concept": "864deea0-d006-559e-b5fb-5b26c4c56fa5"
+              },
+              "hide": {
+                "hideWhenExpression": "isEmpty(neonatal_weight_kg)"
               }
             },
             {

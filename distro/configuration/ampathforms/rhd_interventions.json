@@ -433,6 +433,7 @@
               "questionOptions": {
                 "rendering": "number",
                 "concept": "6acafff7-7a23-50e6-8bca-24d8fc77c87d",
+                "min": "0",
                 "placeholder": "Minutes"
               },
               "hide": {
@@ -882,6 +883,7 @@
               "questionOptions": {
                 "rendering": "number",
                 "concept": "5b409279-ec02-50a9-8d68-9953f526beeb",
+                "min": "0",
                 "placeholder": "days"
               }
             },
@@ -892,6 +894,7 @@
               "questionOptions": {
                 "rendering": "number",
                 "concept": "26f8371b-ef08-5a2d-ab3d-88d384b142a5",
+                "min": "0",
                 "placeholder": "hours"
               }
             },
