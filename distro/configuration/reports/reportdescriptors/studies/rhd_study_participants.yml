@@ -1,0 +1,10 @@
+key: rhdStudyParticipants
+uuid: "ea8687da-4bed-5e2b-bafa-7a11ad9bc3ae"
+name: "RHD Study Participants"
+description: "One row per enrolment in a research study, with the participant's study ID, dates and status"
+datasets:
+  - key: studyParticipantsData
+    type: sql
+    config: "sql/rhd_study_participants.sql"
+designs:
+  - type: csv

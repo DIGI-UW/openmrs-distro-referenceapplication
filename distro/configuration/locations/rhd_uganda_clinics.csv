@@ -1,0 +1,61 @@
+uuid,name,description,parent,tags,void/retire
+5b5f6fb2-eb04-5d3b-a9cd-acea2027f5ad,Uganda Heart Institute Tertiary,"Public, Tertiary level",,RHD Tertiary,false
+b59eab2d-ed25-5a42-9e60-7c4d8b395fac,Anyeke HCIV - Oyam,"Public, District level",Uganda Heart Institute Tertiary,RHD District,false
+73e6a40f-b1b2-5dcc-883e-70ac8a8f4703,Acimi HCIII,"Public, Community level",Anyeke HCIV - Oyam,RHD Community,false
+f8cf700a-2e5d-594e-86e0-061fedae2c6d,Kitgum General Hospital,"Public, District level",Uganda Heart Institute Tertiary,RHD District,false
+9aacad7c-bbc5-5669-977d-4c20e31aa6e8,Akunalaber HCIII,"Public, Community level",Kitgum General Hospital,RHD Community,false
+292284c9-3d3a-57cc-bd4e-e7f6431460bd,Lira Regional Referral Hospital,"Public, District level",Uganda Heart Institute Tertiary,RHD District,false
+06763988-24fc-5f9f-bb4e-a9074880144c,Amach HCIV,"Public, Community level",Lira Regional Referral Hospital,RHD Community,false
+029d10e9-db48-5f6f-a8e8-74a647c66455,Gulu Regional Referral Hospital,"Public, District level",Uganda Heart Institute Tertiary,RHD District,false
+2d8e7377-05de-5bde-a427-fa02c73c04d6,Angaya HCIII,"Public, Community level",Gulu Regional Referral Hospital,RHD Community,false
+435963b0-14af-545f-880f-cc7670308675,Apala HCIII,"Public, Community level",Lira Regional Referral Hospital,RHD Community,false
+f5cec5d4-388b-5181-8c98-70b798aa92a9,Tororo General Hospital,"Public, District level",Uganda Heart Institute Tertiary,RHD District,false
+bb841799-fc13-5830-8e9e-7e65810dd533,Atangi HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+c6fa5720-75b5-54e3-8d1c-904978abb16a,Aywee HCIII,"Public, Community level",Gulu Regional Referral Hospital,RHD Community,false
+2b40aa4f-4482-5f6c-a36b-d4ceb8fcf160,Bardege HCIII,"Public, Community level",Gulu Regional Referral Hospital,RHD Community,false
+94641b7f-e422-5f42-9b5b-6bd6c254d9c4,Di Cunyi HCIII,"Public, Community level",Anyeke HCIV - Oyam,RHD Community,false
+071b6b1d-6163-5334-8cc7-b5fc13928e0d,Iceme HCIII,"Public, Community level",Anyeke HCIV - Oyam,RHD Community,false
+bbffefad-bdf0-5877-9579-5a6f78c59a9f,Iyolwa HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+d9f264f5-913c-5d6e-9748-cc90edc835f2,JCRC Lubowa,"Public, District level",Uganda Heart Institute Tertiary,RHD District,false
+074e65e0-6efc-5a79-9371-85311169b332,Kirewa HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+1202479e-5834-5d8d-bdc2-ee8352193580,Kisoko HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+3674412c-db50-5c9e-8aec-adbaa4e4df57,Kisoro District Hospital,"Public, District level",,RHD District,false
+96f0e6ec-228c-58a2-940d-d1be2f9cbe1c,Kitgum-Matidi HCIII,"Public, Community level",Kitgum General Hospital,RHD Community,false
+0f658bb2-b948-592e-aafd-a4bb6d9683d3,Kiyeyi HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+71d18d2d-5b71-563f-bc31-5aa8cf8df78d,Kwapa HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+0786e91b-a732-5f1d-a904-c7648430962d,Laroo HCIII,"Public, Community level",Gulu Regional Referral Hospital,RHD Community,false
+ed9883d7-917f-5be4-915f-cdc9b14d2927,Loborom HCIII,"Public, Community level",Kitgum General Hospital,RHD Community,false
+ba6c3f0e-1480-5697-b316-0043aeb70ba4,Loro HCIII,"Public, Community level",Anyeke HCIV - Oyam,RHD Community,false
+6f23d014-d1a9-5c5b-9eb8-56c427c64e35,Malaba HCIV,"Public, Community level",Tororo General Hospital,RHD Community,false
+84c6462d-d4a8-58e1-9bea-ff6ac99eeb59,Mbarara Regional Referral Hospital,"Public, District level",Uganda Heart Institute Tertiary,RHD District,false
+9f5230c6-e16c-5170-9039-6c5ff2c64ab0,Mella HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+73ce9e85-5af4-5260-a16e-794b948f5e91,Merikit HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+0ef0c808-768f-5833-9c5d-b716ab7c5660,Mollo HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+a977debf-e337-54af-ac88-dc99d137eb2d,Mucwini HCIII,"Public, Community level",Kitgum General Hospital,RHD Community,false
+5fbe4942-dee5-5287-beb3-3c04334dbba8,Mudakori HCIII,"Public, Community level",,RHD Community,false
+767ec6a5-ce5f-57e3-80aa-8e67d8449b31,Mukujju HCIV,"Public, Community level",Tororo General Hospital,RHD Community,false
+27ef634f-11ac-5cb1-bc7c-d53ad087d328,Mulanda HCIV,"Public, Community level",Tororo General Hospital,RHD Community,false
+0a67c0ca-92ed-52bb-824b-4e27896270e7,Nagongera HCIV,"Public, Community level",Tororo General Hospital,RHD Community,false
+24aa669e-7b7b-5bc8-84e6-72c4184414d0,Namokora HCIV,"Public, Community level",Kitgum General Hospital,RHD Community,false
+e86feb48-48c1-5e09-9edc-9967d2f98449,New Life Medical Center,"Private For-Profit, Community level",Kitgum General Hospital,RHD Community,false
+7f172746-9176-58cd-a888-e6ff24d4be0b,Ngai HCIII,"Public, Community level",Anyeke HCIV - Oyam,RHD Community,false
+c4c0a737-a14c-5861-b051-22b5b306f551,No Clinic,"No Designation, District level",,RHD District,false
+fda9f333-207b-5d75-b54c-77f92286f992,Ober HCIV,"Public, Community level",Lira Regional Referral Hospital,RHD Community,false
+f19de026-4aa6-59bb-95d5-4e7e8613dea5,Ogur HCIV,"Public, Community level",Lira Regional Referral Hospital,RHD Community,false
+38fd1d40-3658-52a2-8d70-526bdd1deb2f,Okidi HCIII,"Public, Community level",Kitgum General Hospital,RHD Community,false
+49c77399-2bf3-596f-886e-685f4fefe6be,Omiya Anyima HCIII,"Public, Community level",Kitgum General Hospital,RHD Community,false
+ba1296f8-a987-58b5-9c30-612d94510d47,Orom HCIII,"Public, Community level",Kitgum General Hospital,RHD Community,false
+1476319f-5108-54f0-9f58-cde5f0556c65,Osukuru HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+34d0e774-8bb7-5633-8351-b909d2dee5c1,Uganda Heart Institute - District,"Public, District level",Uganda Heart Institute Tertiary,RHD District,false
+509179b7-7169-54e4-98ca-30833c4a5ffa,Other HC - Private,"Private Not-For-Profit, Community level",Uganda Heart Institute - District,RHD Community,false
+32665b79-a2d9-5045-8517-142f2d9c793a,Other HC - Public,"Public, Community level",Uganda Heart Institute - District,RHD Community,false
+9899d7c9-14f2-5d81-8e40-bf462509c0b1,Otwal HCIII,"Public, Community level",Anyeke HCIV - Oyam,RHD Community,false
+c51207a0-7473-5d26-a5e3-8f96778c4d4d,Pajimo HCIII,"Public, Community level",Kitgum General Hospital,RHD Community,false
+5fca0fa9-981a-5828-9a43-a64838a62667,Pandwong HCIII,"Public, Community level",Kitgum General Hospital,RHD Community,false
+54f795f2-86c0-5ea9-81fa-54f6abb5ae43,Panyangasi HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+079c55a1-c089-5a79-acab-d43cec6ed034,Paya HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+10b6a273-4acb-5df1-98e5-e64ac7fb1b79,Peta HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+7bc1161a-6dcc-5c7f-bb28-16a85aa89700,Petta HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+725da0f7-14b0-5667-bbc8-3960a73b3fd8,Poyameri HCIII,"Public, Community level",Tororo General Hospital,RHD Community,false
+4ab39b30-34c3-56e2-8fee-fb3eda449d9e,St. Francis Mutolere Hospital,"Private Not-For-Profit, District level",Uganda Heart Institute - District,RHD District,false
+57bc2cd9-e04b-5910-8b4b-4de58ee225de,St. Joseph's Hospital,"Private For-Profit, Community level",Kitgum General Hospital,RHD Community,false
