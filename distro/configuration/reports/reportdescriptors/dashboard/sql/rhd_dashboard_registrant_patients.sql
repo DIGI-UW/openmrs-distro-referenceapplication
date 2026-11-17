@@ -91,6 +91,16 @@ latest_diagnosis AS (
                       WHERE later.person_id = d.person_id
                         AND (later.saved_at, later.obs_datetime, later.uuid) > (d.saved_at, d.obs_datetime, d.uuid))
 ),
+demographic AS (
+    SELECT a.* FROM active a
+    -- Keep this IN uncorrelated, or MariaDB rebuilds latest_diagnosis for each active patient.
+    WHERE @category IS NULL OR @category = '' OR a.patient_id IN (
+        SELECT ld.person_id FROM latest_diagnosis ld
+        JOIN obs cat ON cat.obs_group_id = ld.obs_id AND cat.voided = 0
+            AND cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22')
+        JOIN concept cat_concept ON cat_concept.concept_id = cat.value_coded AND cat_concept.uuid = @category
+    )
+),
 -- The category, and for Rheumatic Heart Disease/Rheumatic Fever its details in name order, as the registry splits it.
 disease AS (
     SELECT a.patient_id,
@@ -112,8 +122,7 @@ disease AS (
                               AND EXISTS (SELECT 1 FROM obs stage WHERE stage.obs_group_id = det.obs_group_id AND stage.voided = 0
                                           AND stage.concept_id = det.concept_id AND stage.value_coded <> det.value_coded))
                ), 'RHD, details not recorded')
-           END AS label,
-           cat_concept.uuid AS category
+           END AS label
     FROM active a
     LEFT JOIN latest_diagnosis ld ON ld.person_id = a.patient_id
     LEFT JOIN obs cat ON cat.obs_group_id = ld.obs_id AND cat.voided = 0
@@ -140,11 +149,12 @@ labelled AS (
                ELSE '40+'
            END AS age,
            d.label AS disease,
-           @category IS NULL OR @category = '' OR d.category = @category AS in_category
+           dm.patient_id IS NOT NULL AS in_category
     FROM registrant r
     LEFT JOIN active a ON a.patient_program_id = r.patient_program_id
     LEFT JOIN ended_state es ON es.patient_program_id = r.patient_program_id
     LEFT JOIN disease d ON d.patient_id = r.patient_id
+    LEFT JOIN demographic dm ON dm.patient_program_id = r.patient_program_id
 ),
 -- registered: every registrant; active: the active ones; status, sex, age or disease: those with @label
 figure AS (
