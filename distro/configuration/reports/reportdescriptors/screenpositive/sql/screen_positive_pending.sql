@@ -17,8 +17,8 @@ SELECT
         WHERE d.encounter_id = scr.encounter_id AND d.voided = 0
           AND d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '96d6d328-87ba-5a2e-bb71-2d1cd73b3e90')
     ), scr.obs_datetime))                                           AS screen_date,
-    -- Where the patient was screened: Case Detected By, recorded with the Screen + answer (AR-167); before that the
-    -- Screening site text, or a school screening's School Name
+    -- Where the patient was screened: Case Detected By, else the Screening site text, else School Name; a school
+    -- screening recorded with Case Detected By shows 'School health screening', not the school
     COALESCE((
         SELECT cn.name FROM obs cd
         JOIN concept_name cn ON cn.concept_id = cd.value_coded AND cn.locale = 'en' AND cn.locale_preferred = 1 AND cn.voided = 0
