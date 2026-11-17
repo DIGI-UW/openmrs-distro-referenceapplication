@@ -229,6 +229,11 @@
       "alt": "ACT, Active Community Case Management Tool"
     },
     "extensionSlots": {
+      "user-panel-slot": {
+        "remove": [
+          "change-language"
+        ]
+      },
       "app-menu-slot": {
         "remove": [
           "dispensing-link",
