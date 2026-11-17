@@ -296,6 +296,18 @@
                   "required": true
                 },
                 {
+                  "label": "Other medication",
+                  "id": "other_cardiac_medication",
+                  "type": "obs",
+                  "questionOptions": {
+                    "rendering": "text",
+                    "concept": "f317415d-aed3-514b-8d9c-e11a79987646"
+                  },
+                  "hide": {
+                    "hideWhenExpression": "cardiac_medication !== '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+                  }
+                },
+                {
                   "label": "Dose",
                   "id": "dosing_consultation_visit",
                   "type": "obs",
