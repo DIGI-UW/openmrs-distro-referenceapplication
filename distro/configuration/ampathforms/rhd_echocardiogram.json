@@ -216,7 +216,9 @@
               "type": "obs",
               "questionOptions": {
                 "rendering": "number",
-                "concept": "ed630fda-8451-53c0-929e-40eafd9bca9b"
+                "concept": "ed630fda-8451-53c0-929e-40eafd9bca9b",
+                "min": "0",
+                "max": "100"
               }
             },
             {
