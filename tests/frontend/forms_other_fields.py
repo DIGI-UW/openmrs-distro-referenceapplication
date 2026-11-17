@@ -2,7 +2,8 @@
 """
 Checks that choosing Other on a medication, interventional recommendation, allergy, INR indication or chronic health
 condition opens a text field for what it is, as ACT 2.0 did and #125 did for BPG and adherence (AR-205): the field
-follows its question in the same group, shows only for Other, and is a Text concept of its own in its section's set.
+follows its question in the same group, shows only for Other, carries the previous value when its question does,
+and is a Text concept of its own in its section's set.
 
 Usage: python3 tests/frontend/forms_other_fields.py
 """
@@ -87,8 +88,11 @@ class OtherOpensAField(unittest.TestCase):
                 ids = [q.get('id') for q in siblings]
                 self.assertEqual(ids[ids.index(after) + 1], field_id)
                 field = siblings[ids.index(field_id)]
+                options = {'rendering': 'text', 'concept': concept}
+                if siblings[ids.index(after)]['questionOptions'].get('enablePreviousValue'):
+                    options['enablePreviousValue'] = True
                 self.assertEqual(field['type'], 'obs')
-                self.assertEqual(field['questionOptions'], {'rendering': 'text', 'concept': concept})
+                self.assertEqual(field['questionOptions'], options)
                 self.assertEqual(field['hide']['hideWhenExpression'], hide)
 
     def test_each_new_concept_is_one_field_per_form(self):

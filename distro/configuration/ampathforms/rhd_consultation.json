@@ -1055,7 +1055,8 @@
                   "type": "obs",
                   "questionOptions": {
                     "rendering": "text",
-                    "concept": "f317415d-aed3-514b-8d9c-e11a79987646"
+                    "concept": "f317415d-aed3-514b-8d9c-e11a79987646",
+                    "enablePreviousValue": true
                   },
                   "hide": {
                     "hideWhenExpression": "cardiac_medication !== '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
