@@ -9,8 +9,10 @@ diagnosis is RHD B with acute rheumatic fever, a patient whose balloon valvulopl
 400 days ago and whose consultation is then moved to that day, a patient with a surgery done and a balloon valvuloplasty
 open whose enrolment then ended, and a patient registered
 at 19 who is 20 now and whose Screen + changed from No to core's True), some with Patient Information encounters, then
-asserts the counts at that clinic today and yesterday and, for every clinic, that rhd_dashboard_registrants,
-rhd_dashboard_waitlist and rhd_dashboard_screening total what the RHD Patient List and the Procedural Waiting List list.
+asserts the counts at that clinic today and yesterday, and with a diagnosis category limiting the active registrants'
+sex, age and disease (RHD, which two of them have, and congenital heart disease, which none has); and, for every clinic,
+that rhd_dashboard_registrants, rhd_dashboard_waitlist and rhd_dashboard_screening total what the RHD Patient List and
+the Procedural Waiting List list.
 
 Usage: python3 tests/reports/dashboard_totals.py [--base http://localhost/openmrs] [--user admin] [--password ...]
 The seeded patients and clinic are left on the stack; run it against a test stack only.
@@ -41,9 +43,13 @@ CASE_DETECTED_BY = '955632a1-82f7-5b84-a341-de85f95588d1'
 NO = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 SCHOOL_SCREENING = '5b7d5eb4-4c6a-52cb-95f3-ac5033708fc9'
 CLINICAL_PRESENTATION = '28452410-f2a2-5ad7-9590-43e47df1d254'
-# How the screening section buckets Case Detected By, by the answer's name as the registry prints it
+# How the screening section names Case Detected By, by the answer's name as the registry prints it; any other is Other
 DETECTION_BUCKETS = {'School health screening': 'School', 'Community-based screening': 'Community',
-                     'Healthcare center screening': 'Health facility'}
+                     'Healthcare center screening': 'Health facility', 'Clinical presentation': 'Clinical presentation',
+                     'Pregnancy/labor': 'Pregnancy / labor', 'Pregnancy / labor': 'Pregnancy / labor',
+                     'Coincidental finding': 'Coincidental finding', 'Post-mortem': 'Post-mortem'}
+# A patient with no answer: Not recorded when screen-positive, else never asked (AR-203)
+UNANSWERED = ('Not recorded', 'Not screen-positive')
 
 RHD_REGISTRY = '7d73e143-a550-5a9d-aecd-dd771add098d'
 TERMINAL_STATE = '407a4a4d-bc47-51e2-aa48-32e9a8d5634f'
@@ -56,6 +62,7 @@ CONSULTATION_FORM = '4b063fc7-996f-3001-8500-8940e201be8f'
 DIAGNOSIS = '594b4495-36dc-52a6-9810-15a9e2e2dcb9'
 DIAGNOSIS_CATEGORY = '1a5aa050-661d-5e89-95d7-c1eba476df22'
 RHD = '4e529463-2036-5327-ad69-7cbd39df86a1'
+CONGENITAL = '365e75bb-35bc-503f-b8db-53bea2528d1b'
 RECOMMENDATION = 'ce93d393-1df5-587f-bf11-c373eac2ccf4'
 PROCEDURE_TYPE = '3a576b80-744a-59ee-9515-d9fdca06f3d7'
 SURGERY = 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616'
@@ -169,7 +176,7 @@ def params_clinic(params):
     return {key: value for key, value in params.items() if key != 'endDate'}
 
 
-def check_figure_lists(stack, where, **params):
+def check_figure_lists(stack, where, *, registrants_only=False, **params):
     """Every figure the count reports give equals the rows of its patients report, with the same parameters."""
     def listed(report, **figure):
         return len(stack.rows(report, **params, **figure))
@@ -181,6 +188,8 @@ def check_figure_lists(stack, where, **params):
     status = by(registrants, 'status')
     check(f'registered listed at {where}', listed(REGISTRANT_PATIENTS, breakdown='registered'), sum(status.values()))
     check(f'active listed at {where}', listed(REGISTRANT_PATIENTS, breakdown='active'), status.get('Active', 0))
+    if registrants_only:
+        return
 
     for row in stack.rows(WAITLIST, **params):
         if row['breakdown'] == 'open':
@@ -292,6 +301,15 @@ def main():
     check('disease at the test clinic', by(at_clinic, 'disease'),
           {'RHD, details not recorded': 1, 'RHD B': 1, 'No diagnosis yet': 4})
     check('sex at the test clinic', by(at_clinic, 'sex'), {'Female': 5, 'Male': 1})
+    rhd_only = stack.rows(REGISTRANTS, endDate=end, cardiacClinic=clinic, category=RHD)
+    check('status at the test clinic, RHD only', by(rhd_only, 'status'), by(at_clinic, 'status'))
+    check('sex at the test clinic, RHD only', by(rhd_only, 'sex'), {'Female': 2})
+    check('age at the test clinic, RHD only', by(rhd_only, 'age'), {'20-39': 2})
+    check('disease at the test clinic, RHD only', by(rhd_only, 'disease'), {'RHD, details not recorded': 1, 'RHD B': 1})
+    congenital_only = stack.rows(REGISTRANTS, endDate=end, cardiacClinic=clinic, category=CONGENITAL)
+    check('status at the test clinic, congenital only', by(congenital_only, 'status'), by(at_clinic, 'status'))
+    for breakdown in ('sex', 'age', 'disease'):
+        check(f'{breakdown} at the test clinic, congenital only', by(congenital_only, breakdown), {})
 
     waitlist = stack.rows(WAITLIST, endDate=end, cardiacClinic=clinic)
     check('registrants among the clinics listed', by(stack.rows(REGISTRANTS, endDate=end, clinics=clinic), 'status'),
@@ -321,10 +339,14 @@ def main():
     waiting = stack.rows(WAITING_LIST)
     alive = lambda row: row['enrollment_status'] == 'Active' and not row.get('deceased')
     clinics = {None} | {row.get('cardiac_clinic') for row in registry if row.get('cardiac_clinic')}
-    uuids = {}
-    for name in clinics - {None}:
-        found = stack.call('GET', f'/location?q={urllib.parse.quote(name)}&v=custom:(uuid,display)')['results']
-        uuids[name] = next(location['uuid'] for location in found if location['display'] == name)
+    # Every location, retired ones too: a name search leaves retired clinics out, and the demo seed retires most.
+    uuids, start = {}, 0
+    while True:
+        page = stack.call('GET', f'/location?includeAll=true&v=custom:(uuid,display)&limit=100&startIndex={start}')['results']
+        uuids.update({location['display']: location['uuid'] for location in page})
+        if len(page) < 100:
+            break
+        start += 100
     for name in sorted(clinics, key=str):
         params = {'endDate': end, **({'cardiacClinic': uuids[name]} if name else {})}
         listed = [row for row in registry if not name or row.get('cardiac_clinic') == name]
@@ -340,12 +362,17 @@ def main():
         check(f'screening registered at {where}', by(screening, 'total').get('Registered', 0), len(registered_here))
         check(f'screening female at {where}', by(screening, 'female').get('Female', 0),
               sum(1 for row in registered_here if row.get('sex') == 'F'))
+        # The Patient List has no Screen +, so the two labels of an unanswered patient are checked together.
         detected = {}
         for row in registered_here:
             name_ = row.get('case_detected_by')
-            bucket = DETECTION_BUCKETS.get(name_, 'Other') if name_ else 'Not recorded'
+            bucket = DETECTION_BUCKETS.get(name_, 'Other') if name_ else 'Unanswered'
             detected[bucket] = detected.get(bucket, 0) + 1
-        check(f'screening detection at {where}', by(screening, 'detected'), detected)
+        reported = {}
+        for label, patients in by(screening, 'detected').items():
+            bucket = 'Unanswered' if label in UNANSWERED else label
+            reported[bucket] = reported.get(bucket, 0) + patients
+        check(f'screening detection at {where}', reported, detected)
         for breakdown in ('screen', 'age', 'detected'):
             check(f'screening {breakdown} total at {where}', sum(by(screening, breakdown).values()), len(registered_here))
         waiting_here = [row for row in waiting if not name or row.get('cardiac_clinic') == name]
@@ -355,8 +382,9 @@ def main():
         check(f'patients waiting at {where}', by(stack.rows(WAITLIST, **params), 'total', 'procedure', 'patients'),
               {'All': len({row['patient_uuid'] for row in waiting_here})})
 
-    # Registered in the 365 days to today at the test clinic: no birth date (Screen + No, Other), rhd (Yes, School),
-    # operated then ended (nothing recorded) and rescreened (core's True after No, adolescent when registered);
+    # Registered in the 365 days to today at the test clinic: no birth date (Screen + No, Clinical presentation), rhd
+    # (Yes, School), operated then ended (nothing recorded, so never asked where it was screened) and rescreened (core's
+    # True after No, adolescent when registered, screen-positive with no answer);
     # ended, operated later, visit moved and no intervention were registered before.
     period = {'startDate': day(364), 'endDate': end}
     screening = stack.rows(SCREENING, **period, cardiacClinic=clinic)
@@ -366,7 +394,7 @@ def main():
     check('screening age at the test clinic', by(screening, 'age'),
           {'Adults 20+': 2, 'Adolescents 10-19': 1, 'Age unknown': 1})
     check('screening detection at the test clinic', by(screening, 'detected'),
-          {'School': 1, 'Other': 1, 'Not recorded': 2})
+          {'School': 1, 'Clinical presentation': 1, 'Not screen-positive': 1, 'Not recorded': 1})
     # Rescreened's True, saved after this period, still counts.
     check('screening Screen + for a period ended before the later answer',
           by(stack.rows(SCREENING, startDate=day(364), endDate=day(150), cardiacClinic=clinic), 'screen'),
@@ -374,6 +402,8 @@ def main():
     check('screening among the clinics listed', stack.rows(SCREENING, **period, clinics=clinic), screening)
 
     check_figure_lists(stack, 'the test clinic', endDate=end, cardiacClinic=clinic)
+    check_figure_lists(stack, 'the test clinic, RHD only', registrants_only=True, endDate=end, cardiacClinic=clinic, category=RHD)
+    check_figure_lists(stack, 'every clinic, RHD only', registrants_only=True, endDate=end, category=RHD)
     check_figure_lists(stack, 'the clinics listed', endDate=end, clinics=clinic)
     check_figure_lists(stack, 'every clinic', endDate=end)
     check_figure_lists(stack, 'every clinic a day back', endDate=day(1))

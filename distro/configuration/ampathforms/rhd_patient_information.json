@@ -102,6 +102,18 @@
               }
             },
             {
+              "label": "School Name",
+              "id": "school_name",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "cfd8f77a-a2b5-5836-96c1-d3e5fdd48e02"
+              },
+              "hide": {
+                "hideWhenExpression": "screen_positive !== '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' || case_detected_by !== '5b7d5eb4-4c6a-52cb-95f3-ac5033708fc9'"
+              }
+            },
+            {
               "label": "Screen date",
               "id": "screen_positive_date",
               "type": "obs",
