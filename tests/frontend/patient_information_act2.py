@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 Checks the RHD Patient Information form: screening with where, when and the age at screening shown only for a
-Screen + of Yes, the school only for a school screening, the VHT's name and contact, the Diagnosis section with the one-choice rheumatic diagnosis and
-optional stage (AR-150), and no confirmatory echo follow-up. The RHD Consultation Visit does not record the
-diagnosis, per the revert of AR-167.
+Screen + of Yes, the school only for a school screening, the VHT's name and contact, the Diagnosis section with
+the one-choice rheumatic diagnosis and optional stage (AR-150), and no confirmatory echo follow-up. The RHD
+Consultation Visit does not record the diagnosis, per the revert of AR-167.
 
 Usage: python3 tests/frontend/patient_information_act2.py
 """
