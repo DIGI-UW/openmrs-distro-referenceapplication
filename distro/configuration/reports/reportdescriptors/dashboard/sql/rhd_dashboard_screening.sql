@@ -2,6 +2,8 @@
 -- RHD Dashboard Screening
 -- The Dashboard's screening figures from registrations: the patients whose registry enrolment started in the period,
 -- as the RHD Patient List lists them for it. It counts registered patients, not people screened.
+-- Patient Information asks "Where the patient was screened" (Case Detected By) only when Screen + is Yes, so a patient
+-- with no answer is Not recorded only when screen-positive; anyone else was never asked and is Not screen-positive (AR-203).
 -- Rows: breakdown (total, female, screen, age, detected), label, patients.
 -- Parameters: @startDate, @endDate; @cardiacClinic and @primaryCareClinic, location uuids, each counting only its
 -- patients when set; @clinics, location uuids separated by commas, counting only the patients either of whose clinics
@@ -68,11 +70,16 @@ labelled AS (
                WHEN TIMESTAMPDIFF(YEAR, r.birthdate, DATE(r.date_enrolled)) < 20 THEN 'Adolescents 10-19'
                ELSE 'Adults 20+'
            END AS age,
-           -- The earliest Case Detected By, as the registry's case_detected_by reads it
+           -- The earliest Case Detected By, as the registry's case_detected_by reads it, named as the form offers it.
+           -- ACT 2.0 asked it of every patient, so a migrated answer counts whatever Screen + says.
            (SELECT CASE c.uuid
                        WHEN '5b7d5eb4-4c6a-52cb-95f3-ac5033708fc9' THEN 'School'
                        WHEN '24b5320c-bf9b-5c3b-a43c-d700cc1134e1' THEN 'Community'
                        WHEN '9e861499-cebe-5371-a893-5747f365da73' THEN 'Health facility'
+                       WHEN '28452410-f2a2-5ad7-9590-43e47df1d254' THEN 'Clinical presentation'
+                       WHEN '06d80315-eaf9-5c71-a4c7-cb9759f93fe1' THEN 'Pregnancy / labor'
+                       WHEN 'fdecbe0d-8c8d-545d-a3b8-b2fd31704db1' THEN 'Coincidental finding'
+                       WHEN '00e06a31-9d6f-5045-a6f8-62cf96fcd526' THEN 'Post-mortem'
                        ELSE 'Other'
                    END
             FROM obs d
@@ -90,4 +97,5 @@ SELECT 'screen', COALESCE(screen, 'Not recorded'), COUNT(*) FROM labelled GROUP 
 UNION ALL
 SELECT 'age', age, COUNT(*) FROM labelled GROUP BY 2
 UNION ALL
-SELECT 'detected', COALESCE(detected, 'Not recorded'), COUNT(*) FROM labelled GROUP BY 2
+SELECT 'detected', COALESCE(detected, CASE WHEN screen = 'Yes' THEN 'Not recorded' ELSE 'Not screen-positive' END), COUNT(*)
+  FROM labelled GROUP BY 2

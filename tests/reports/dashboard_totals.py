@@ -41,9 +41,13 @@ CASE_DETECTED_BY = '955632a1-82f7-5b84-a341-de85f95588d1'
 NO = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 SCHOOL_SCREENING = '5b7d5eb4-4c6a-52cb-95f3-ac5033708fc9'
 CLINICAL_PRESENTATION = '28452410-f2a2-5ad7-9590-43e47df1d254'
-# How the screening section buckets Case Detected By, by the answer's name as the registry prints it
+# How the screening section names Case Detected By, by the answer's name as the registry prints it; any other is Other
 DETECTION_BUCKETS = {'School health screening': 'School', 'Community-based screening': 'Community',
-                     'Healthcare center screening': 'Health facility'}
+                     'Healthcare center screening': 'Health facility', 'Clinical presentation': 'Clinical presentation',
+                     'Pregnancy/labor': 'Pregnancy / labor', 'Pregnancy / labor': 'Pregnancy / labor',
+                     'Coincidental finding': 'Coincidental finding', 'Post-mortem': 'Post-mortem'}
+# A patient with no answer: Not recorded when screen-positive, else never asked (AR-203)
+UNANSWERED = ('Not recorded', 'Not screen-positive')
 
 RHD_REGISTRY = '7d73e143-a550-5a9d-aecd-dd771add098d'
 TERMINAL_STATE = '407a4a4d-bc47-51e2-aa48-32e9a8d5634f'
@@ -340,12 +344,17 @@ def main():
         check(f'screening registered at {where}', by(screening, 'total').get('Registered', 0), len(registered_here))
         check(f'screening female at {where}', by(screening, 'female').get('Female', 0),
               sum(1 for row in registered_here if row.get('sex') == 'F'))
+        # The Patient List has no Screen +, so the two labels of an unanswered patient are checked together.
         detected = {}
         for row in registered_here:
             name_ = row.get('case_detected_by')
-            bucket = DETECTION_BUCKETS.get(name_, 'Other') if name_ else 'Not recorded'
+            bucket = DETECTION_BUCKETS.get(name_, 'Other') if name_ else 'Unanswered'
             detected[bucket] = detected.get(bucket, 0) + 1
-        check(f'screening detection at {where}', by(screening, 'detected'), detected)
+        reported = {}
+        for label, patients in by(screening, 'detected').items():
+            bucket = 'Unanswered' if label in UNANSWERED else label
+            reported[bucket] = reported.get(bucket, 0) + patients
+        check(f'screening detection at {where}', reported, detected)
         for breakdown in ('screen', 'age', 'detected'):
             check(f'screening {breakdown} total at {where}', sum(by(screening, breakdown).values()), len(registered_here))
         waiting_here = [row for row in waiting if not name or row.get('cardiac_clinic') == name]
@@ -355,8 +364,9 @@ def main():
         check(f'patients waiting at {where}', by(stack.rows(WAITLIST, **params), 'total', 'procedure', 'patients'),
               {'All': len({row['patient_uuid'] for row in waiting_here})})
 
-    # Registered in the 365 days to today at the test clinic: no birth date (Screen + No, Other), rhd (Yes, School),
-    # operated then ended (nothing recorded) and rescreened (core's True after No, adolescent when registered);
+    # Registered in the 365 days to today at the test clinic: no birth date (Screen + No, Clinical presentation), rhd
+    # (Yes, School), operated then ended (nothing recorded, so never asked where it was screened) and rescreened (core's
+    # True after No, adolescent when registered, screen-positive with no answer);
     # ended, operated later, visit moved and no intervention were registered before.
     period = {'startDate': day(364), 'endDate': end}
     screening = stack.rows(SCREENING, **period, cardiacClinic=clinic)
@@ -366,7 +376,7 @@ def main():
     check('screening age at the test clinic', by(screening, 'age'),
           {'Adults 20+': 2, 'Adolescents 10-19': 1, 'Age unknown': 1})
     check('screening detection at the test clinic', by(screening, 'detected'),
-          {'School': 1, 'Other': 1, 'Not recorded': 2})
+          {'School': 1, 'Clinical presentation': 1, 'Not screen-positive': 1, 'Not recorded': 1})
     # Rescreened's True, saved after this period, still counts.
     check('screening Screen + for a period ended before the later answer',
           by(stack.rows(SCREENING, startDate=day(364), endDate=day(150), cardiacClinic=clinic), 'screen'),
