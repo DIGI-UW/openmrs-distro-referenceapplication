@@ -3,7 +3,9 @@
 -- The Dashboard's registrant status, and the sex, age band and disease of the active registrants, as counts.
 -- Rows: breakdown (status, sex, age, disease), label, patients.
 -- Parameters: @endDate; @cardiacClinic and @primaryCareClinic, location uuids, each counting only its patients when
--- set; @clinics, location uuids separated by commas, counting only the patients either of whose clinics is one of them.
+-- set; @clinics, location uuids separated by commas, counting only the patients either of whose clinics is one of them;
+-- @category, an answer uuid of Category at Diagnosis, counting only the active registrants whose latest diagnosis has it
+-- in the sex, age and disease rows.
 -- =============================================================================
 WITH registrant AS (
     -- Each patient's latest RHD Registry enrolment by the end date, as the RHD Patient List lists one row per patient
@@ -91,6 +93,16 @@ latest_diagnosis AS (
                       WHERE later.person_id = d.person_id
                         AND (later.saved_at, later.obs_datetime, later.uuid) > (d.saved_at, d.obs_datetime, d.uuid))
 ),
+demographic AS (
+    SELECT a.* FROM active a
+    -- Keep this IN uncorrelated, or MariaDB rebuilds latest_diagnosis for each active patient.
+    WHERE @category IS NULL OR @category = '' OR a.patient_id IN (
+        SELECT ld.person_id FROM latest_diagnosis ld
+        JOIN obs cat ON cat.obs_group_id = ld.obs_id AND cat.voided = 0
+            AND cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22')
+        JOIN concept cat_concept ON cat_concept.concept_id = cat.value_coded AND cat_concept.uuid = @category
+    )
+),
 -- The category, and for Rheumatic Heart Disease/Rheumatic Fever its details in name order, one label per patient.
 disease AS (
     SELECT a.patient_id,
@@ -113,7 +125,7 @@ disease AS (
                                           AND stage.concept_id = det.concept_id AND stage.value_coded <> det.value_coded))
                ), 'RHD, details not recorded')
            END AS label
-    FROM active a
+    FROM demographic a
     LEFT JOIN latest_diagnosis ld ON ld.person_id = a.patient_id
     LEFT JOIN obs cat ON cat.obs_group_id = ld.obs_id AND cat.voided = 0
         AND cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22')
@@ -137,7 +149,7 @@ GROUP BY label
 UNION ALL
 SELECT 'sex', CASE gender WHEN 'F' THEN 'Female' WHEN 'M' THEN 'Male' WHEN 'O' THEN 'Other' ELSE 'Not recorded' END,
        COUNT(*)
-FROM active
+FROM demographic
 GROUP BY 2
 UNION ALL
 -- Age on the end date; a missing birth date is Age unknown, where ACT 2.0 counted it 40+.
@@ -150,7 +162,7 @@ SELECT 'age',
            ELSE '40+'
        END,
        COUNT(*)
-FROM active
+FROM demographic
 GROUP BY 2
 UNION ALL
 SELECT 'disease', label, COUNT(*)

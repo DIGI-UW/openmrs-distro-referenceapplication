@@ -2,7 +2,8 @@
 -- RHD Dashboard Registrant Patients
 -- The patients (or consultations or recommendations) behind one figure of rhd_dashboard_registrants.sql, one row each, from
 -- the same CTEs, so a figure's rows equal its count; tests/reports/dashboard_totals.py checks that they do.
--- Parameters: those of rhd_dashboard_registrants.sql, and @breakdown, @label
+-- Parameters: those of rhd_dashboard_registrants.sql, and @breakdown, @label. @category limits sex, age and disease
+-- figures only, as it limits those rows of the counts.
 -- =============================================================================
 WITH registrant AS (
     -- Each patient's latest RHD Registry enrolment by the end date, as the RHD Patient List lists one row per patient
@@ -90,6 +91,16 @@ latest_diagnosis AS (
                       WHERE later.person_id = d.person_id
                         AND (later.saved_at, later.obs_datetime, later.uuid) > (d.saved_at, d.obs_datetime, d.uuid))
 ),
+demographic AS (
+    SELECT a.* FROM active a
+    -- Keep this IN uncorrelated, or MariaDB rebuilds latest_diagnosis for each active patient.
+    WHERE @category IS NULL OR @category = '' OR a.patient_id IN (
+        SELECT ld.person_id FROM latest_diagnosis ld
+        JOIN obs cat ON cat.obs_group_id = ld.obs_id AND cat.voided = 0
+            AND cat.concept_id = (SELECT concept_id FROM concept WHERE uuid = '1a5aa050-661d-5e89-95d7-c1eba476df22')
+        JOIN concept cat_concept ON cat_concept.concept_id = cat.value_coded AND cat_concept.uuid = @category
+    )
+),
 -- The category, and for Rheumatic Heart Disease/Rheumatic Fever its details in name order, as the registry splits it.
 disease AS (
     SELECT a.patient_id,
@@ -137,11 +148,13 @@ labelled AS (
                WHEN TIMESTAMPDIFF(YEAR, r.birthdate, DATE(@endDate)) < 40 THEN '20-39'
                ELSE '40+'
            END AS age,
-           d.label AS disease
+           d.label AS disease,
+           dm.patient_id IS NOT NULL AS in_category
     FROM registrant r
     LEFT JOIN active a ON a.patient_program_id = r.patient_program_id
     LEFT JOIN ended_state es ON es.patient_program_id = r.patient_program_id
     LEFT JOIN disease d ON d.patient_id = r.patient_id
+    LEFT JOIN demographic dm ON dm.patient_program_id = r.patient_program_id
 ),
 -- registered: every registrant; active: the active ones; status, sex, age or disease: those with @label
 figure AS (
@@ -152,9 +165,9 @@ figure AS (
     WHERE CASE @breakdown
               WHEN 'status' THEN status = @label
               WHEN 'active' THEN is_active
-              WHEN 'sex' THEN is_active AND sex = @label
-              WHEN 'age' THEN is_active AND age = @label
-              WHEN 'disease' THEN is_active AND disease = @label
+              WHEN 'sex' THEN is_active AND in_category AND sex = @label
+              WHEN 'age' THEN is_active AND in_category AND age = @label
+              WHEN 'disease' THEN is_active AND in_category AND disease = @label
               ELSE 1
           END
 )

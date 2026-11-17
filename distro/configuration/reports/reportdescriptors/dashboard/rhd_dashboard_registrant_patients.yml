@@ -18,6 +18,10 @@ parameters:
     type: java.lang.String
     label: "Either clinic among these (location uuids separated by commas, no spaces)"
     required: false
+  - key: category
+    type: java.lang.String
+    label: "Category at Diagnosis (answer uuid): sex, age and disease of the active registrants with it"
+    required: false
   - key: breakdown
     type: java.lang.String
     label: "breakdown"
