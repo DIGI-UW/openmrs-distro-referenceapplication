@@ -68,6 +68,18 @@
                   "required": true
                 },
                 {
+                  "label": "Other allergy",
+                  "id": "other_allergy",
+                  "type": "obs",
+                  "questionOptions": {
+                    "rendering": "text",
+                    "concept": "9afb116d-e840-5dda-995f-aea75491675b"
+                  },
+                  "hide": {
+                    "hideWhenExpression": "allergy !== '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+                  }
+                },
+                {
                   "label": "Reaction (Allergies)",
                   "id": "reaction_allergies_group",
                   "hide": {

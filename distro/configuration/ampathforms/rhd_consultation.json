@@ -248,6 +248,18 @@
                   }
                 },
                 {
+                  "label": "Other condition",
+                  "id": "other_chronic_health_condition",
+                  "type": "obs",
+                  "questionOptions": {
+                    "rendering": "text",
+                    "concept": "fa9214bd-7b36-57ab-836d-a2eaf7898bbe"
+                  },
+                  "hide": {
+                    "hideWhenExpression": "chronicHealthCondition !== '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+                  }
+                },
+                {
                   "label": "Date Added",
                   "id": "dateAdded_chronic",
                   "type": "obs",
@@ -1038,6 +1050,18 @@
                   }
                 },
                 {
+                  "label": "Other medication",
+                  "id": "other_cardiac_medication",
+                  "type": "obs",
+                  "questionOptions": {
+                    "rendering": "text",
+                    "concept": "f317415d-aed3-514b-8d9c-e11a79987646"
+                  },
+                  "hide": {
+                    "hideWhenExpression": "cardiac_medication !== '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+                  }
+                },
+                {
                   "label": "Dose",
                   "id": "dosing_consultation_visit",
                   "type": "obs",
@@ -1424,6 +1448,18 @@
                   },
                   "hide": {
                     "hideWhenExpression": "procedureType !== '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60'"
+                  }
+                },
+                {
+                  "label": "Other recommendation",
+                  "id": "other_interventional_recommendation",
+                  "type": "obs",
+                  "questionOptions": {
+                    "rendering": "text",
+                    "concept": "1a1c54ad-632f-5be0-a78a-6f6d6401c059"
+                  },
+                  "hide": {
+                    "hideWhenExpression": "!((procedureType === 'aa5fefb0-cf61-5f36-82e6-31dbbdf3f616' && interventional_recommendation_surgery === '4ff41d80-a6f6-5e65-b20a-66b31ce1baa6') || (procedureType === '91a4d13f-4bc8-54b0-a107-f4ab84cb7d60' && interventional_recommendation_catheterization === '4ff41d80-a6f6-5e65-b20a-66b31ce1baa6'))"
                   }
                 },
                 {

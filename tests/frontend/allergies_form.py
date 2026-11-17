@@ -71,7 +71,7 @@ class AllergiesForm(unittest.TestCase):
         self.assertEqual(group['questionOptions'], {'rendering': 'group', 'concept': ALLERGY})
         self.assertEqual(
             [q['id'] for q in group['questions']],
-            ['allergy', 'reaction_allergies_group', 'dateAdded_allergy', 'dateResolved_allergy'],
+            ['allergy', 'other_allergy', 'reaction_allergies_group', 'dateAdded_allergy', 'dateResolved_allergy'],
         )
         allergy = questions_by_id['allergy']
         self.assertTrue(allergy['required'])

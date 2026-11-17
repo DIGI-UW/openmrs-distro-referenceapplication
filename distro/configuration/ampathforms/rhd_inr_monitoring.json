@@ -52,6 +52,18 @@
               }
             },
             {
+              "label": "Other indication",
+              "id": "other_inr_indication",
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "edc5a6a1-e3b5-5273-9cab-8769f9db22ea"
+              },
+              "hide": {
+                "hideWhenExpression": "indication_inr_monitoring !== '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"
+              }
+            },
+            {
               "label": "INR Target",
               "id": "inr_target",
               "type": "obs",
