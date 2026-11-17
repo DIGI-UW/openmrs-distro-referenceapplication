@@ -2,7 +2,8 @@
 -- RHD Dashboard Registrant Patients
 -- The patients (or consultations or recommendations) behind one figure of rhd_dashboard_registrants.sql, one row each, from
 -- the same CTEs, so a figure's rows equal its count; tests/reports/dashboard_totals.py checks that they do.
--- Parameters: those of rhd_dashboard_registrants.sql, and @breakdown, @label
+-- Parameters: those of rhd_dashboard_registrants.sql, and @breakdown, @label. @category limits sex, age and disease
+-- figures only, as it limits those rows of the counts.
 -- =============================================================================
 WITH registrant AS (
     -- Each patient's latest RHD Registry enrolment by the end date, as the RHD Patient List lists one row per patient
@@ -111,7 +112,8 @@ disease AS (
                               AND EXISTS (SELECT 1 FROM obs stage WHERE stage.obs_group_id = det.obs_group_id AND stage.voided = 0
                                           AND stage.concept_id = det.concept_id AND stage.value_coded <> det.value_coded))
                ), 'RHD, details not recorded')
-           END AS label
+           END AS label,
+           cat_concept.uuid AS category
     FROM active a
     LEFT JOIN latest_diagnosis ld ON ld.person_id = a.patient_id
     LEFT JOIN obs cat ON cat.obs_group_id = ld.obs_id AND cat.voided = 0
@@ -137,7 +139,8 @@ labelled AS (
                WHEN TIMESTAMPDIFF(YEAR, r.birthdate, DATE(@endDate)) < 40 THEN '20-39'
                ELSE '40+'
            END AS age,
-           d.label AS disease
+           d.label AS disease,
+           @category IS NULL OR @category = '' OR d.category = @category AS in_category
     FROM registrant r
     LEFT JOIN active a ON a.patient_program_id = r.patient_program_id
     LEFT JOIN ended_state es ON es.patient_program_id = r.patient_program_id
@@ -152,9 +155,9 @@ figure AS (
     WHERE CASE @breakdown
               WHEN 'status' THEN status = @label
               WHEN 'active' THEN is_active
-              WHEN 'sex' THEN is_active AND sex = @label
-              WHEN 'age' THEN is_active AND age = @label
-              WHEN 'disease' THEN is_active AND disease = @label
+              WHEN 'sex' THEN is_active AND in_category AND sex = @label
+              WHEN 'age' THEN is_active AND in_category AND age = @label
+              WHEN 'disease' THEN is_active AND in_category AND disease = @label
               ELSE 1
           END
 )
