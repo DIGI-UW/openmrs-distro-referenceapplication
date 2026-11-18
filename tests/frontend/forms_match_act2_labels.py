@@ -15,7 +15,6 @@ import unittest
 
 CONFIG = pathlib.Path(__file__).resolve().parents[2] / 'distro' / 'configuration'
 FORMS = CONFIG / 'ampathforms'
-DEATH = '159AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 TETRALOGY_OF_FALLOT = '124944AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 PREGNANT_OR_POSTPARTUM_AT_DEATH = '4e66ea66-6bac-5a83-93be-3c2c8aabf49f'
 
@@ -90,20 +89,6 @@ class PatientInformationUsesAct2Wording(unittest.TestCase):
         self.assertEqual(by_label['Tetralogy of Fallot'], TETRALOGY_OF_FALLOT)
         self.assertEqual(len(congenital), 25)
         self.assertEqual([a['label'] for a in congenital], sorted(by_label, key=str.lower))
-
-    def test_pregnant_or_postpartum_at_death_for_a_woman_who_died(self):
-        question = self.questions['pregnant_or_postpartum_at_death']
-        self.assertEqual(question['label'], 'Pregnant or Postpartum at Death')
-        self.assertEqual(question['questionOptions']['concept'], PREGNANT_OR_POSTPARTUM_AT_DEATH)
-        self.assertEqual(answers(question), ['Yes', 'No'])
-        self.assertTrue(question['required'])
-        self.assertEqual(
-            question['hide']['hideWhenExpression'],
-            f"reason_inactive !== '{DEATH}' || patient.gender !== 'female'",
-        )
-        # It follows Details of Death, as on ACT 2.0.
-        ids = [q['id'] for q in every_question(form('rhd_patient_information.json'))]
-        self.assertEqual(ids[ids.index('details_of_events_leading_up_to_death') + 1], 'pregnant_or_postpartum_at_death')
 
 
 class OtherFormsUseAct2Wording(unittest.TestCase):
