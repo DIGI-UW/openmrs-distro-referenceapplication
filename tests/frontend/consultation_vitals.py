@@ -44,6 +44,8 @@ class ConsultationVitals(unittest.TestCase):
         self.assertTrue(vitals['readonly'])
         options = vitals['questionOptions']
         self.assertEqual(options['calculate']['calculateExpression'], 'actVisitVitals(patient.id, visit.uuid)')
+        # The ACT app's control, which re-reads the visit once vitals are recorded, so Record vitals hides.
+        self.assertEqual(options['rendering'], 'act-visit-vitals')
         self.assertTrue(options['isTransient'])
 
     def test_offers_the_vitals_form_only_when_the_visit_has_none(self):

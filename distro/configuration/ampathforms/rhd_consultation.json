@@ -60,7 +60,7 @@
               "type": "obs",
               "readonly": true,
               "questionOptions": {
-                "rendering": "text",
+                "rendering": "act-visit-vitals",
                 "concept": "f27f6ed2-48db-5be7-91da-3e2483915462",
                 "isTransient": true,
                 "calculate": {
