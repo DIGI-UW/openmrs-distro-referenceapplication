@@ -432,7 +432,7 @@ def main():
     check('screening diagnoses among a primary-care clinic listed',
           by(stack.rows(SCREENING_DIAGNOSES, endDate=end, clinics=primary_care), 'category', 'category'),
           {'Rheumatic Heart Disease/Rheumatic Fever': 1})
-    # A patient who died with the enrolment still open counts until the death date, as the care cascade counts them.
+    # A patient who died with the enrolment still open counts only while alive on the end date, as the care cascade counts them.
     deceased_clinic = stack.call('POST', '/location', {'name': f'Dashboard Test Deceased {stamp}'})['uuid']
     deceased = registrant(stack, deceased_clinic, f'{stamp} deceased', birthdate='1992-07-01')
     enrol(stack, deceased, day(100))
@@ -441,14 +441,14 @@ def main():
         {'concept': DIAGNOSIS, 'groupMembers': [{'concept': DIAGNOSIS_CATEGORY, 'value': RHD}]},
     ])
     stack.call('POST', f'/person/{deceased}', {'dead': True, 'deathDate': day(5), 'causeOfDeathNonCoded': 'Dashboard test'})
-    for when, alive in ((day(10), 1), (end, 0)):
+    for when, counted in ((day(10), 1), (end, 0)):
         steps = lambda report: {row['step']: int(row['patients']) for row in stack.rows(report, endDate=when, clinics=deceased_clinic)}
         check(f'screening cascade of a patient who died, as of {when}', steps(SCREENING_CASCADE),
-              {'Active': alive, 'Confirmatory Diagnosis': alive, 'Diagnosed': alive, 'Heart Disease': alive})
-        check(f'care cascade Active of a patient who died, as of {when}', steps(CASCADE).get('Active'), alive)
+              {'Active': counted, 'Confirmatory Diagnosis': counted, 'Diagnosed': counted, 'Heart Disease': counted})
+        check(f'care cascade Active of a patient who died, as of {when}', steps(CASCADE).get('Active'), counted)
         check(f'screening diagnoses of a patient who died, as of {when}',
               by(stack.rows(SCREENING_DIAGNOSES, endDate=when, clinics=deceased_clinic), 'category', 'category'),
-              {'Rheumatic Heart Disease/Rheumatic Fever': 1} if alive else {})
+              {'Rheumatic Heart Disease/Rheumatic Fever': 1} if counted else {})
     # The programme report files patients under their primary care clinic, so only the SQL can hold it to a cardiac one.
     active_by_facility = {}
     for where, scope, limit, active in (('the test clinic', {'cardiacClinic': clinic}, clinic, 6),
