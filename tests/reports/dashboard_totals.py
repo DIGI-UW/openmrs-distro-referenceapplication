@@ -431,11 +431,19 @@ def main():
           by(stack.rows(SCREENING_DIAGNOSES, endDate=end, clinics=primary_care), 'category', 'category'),
           {'Rheumatic Heart Disease/Rheumatic Fever': 1})
     # The programme report files patients under their primary care clinic, so only the SQL can hold it to a cardiac one.
+    active_by_facility = {}
     for where, scope, limit, active in (('the test clinic', {'cardiacClinic': clinic}, clinic, 6),
                                          ('a primary-care clinic', {'primaryCareClinic': primary_care}, primary_care, 1)):
         listed = stack.rows(PROGRAMME, **period, clinics=limit)
         check(f'programme among {where} listed', listed, stack.rows(PROGRAMME, **period, **scope))
         check(f'programme active among {where} listed', sum(int(row['active_patients']) for row in listed), active)
+        for row in listed:
+            facility = row['facility_uuid']
+            active_by_facility[facility] = active_by_facility.get(facility, 0) + int(row['active_patients'])
+    both = stack.rows(PROGRAMME, **period, clinics=f'{clinic},{primary_care}')
+    check('programme active by facility among two clinics listed',
+          {row['facility_uuid']: int(row['active_patients']) for row in both}, active_by_facility)
+    check('programme active among two clinics listed', sum(int(row['active_patients']) for row in both), 7)
 
     check_figure_lists(stack, 'the test clinic', endDate=end, cardiacClinic=clinic)
     check_figure_lists(stack, 'the test clinic, RHD only', registrants_only=True, endDate=end, cardiacClinic=clinic, category=RHD)
