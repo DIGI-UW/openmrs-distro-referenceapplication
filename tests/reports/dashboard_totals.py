@@ -40,6 +40,7 @@ OPTIMISATION_PATIENTS = '45c646b2-f223-585e-963a-3c74fe883ae4'
 SCREENING = '0f4b7c2d-6a1e-5d93-8b47-2c9e1f5a3d68'
 SCREENING_CASCADE = '8b257a0c-7e96-5a01-9672-975cae3b0419'
 SCREENING_DIAGNOSES = '6ddf6b36-2789-4733-8433-a877d54795cf'
+PROGRAMME = 'c4a9e2d1-7b3f-4e58-9a16-2f0d8b5c7e31'
 PATIENT_INFORMATION_TYPE = 'ffdc883f-f99f-496a-83f9-2c3c581e1af0'
 SCREEN_POSITIVE = '82a5fbb5-038d-57b8-82d1-3fd0ac95673d'
 CASE_DETECTED_BY = '955632a1-82f7-5b84-a341-de85f95588d1'
@@ -425,6 +426,12 @@ def main():
     check('screening diagnoses among a primary-care clinic listed',
           by(stack.rows(SCREENING_DIAGNOSES, endDate=end, clinics=primary_care), 'category', 'category'),
           {'Rheumatic Heart Disease/Rheumatic Fever': 1})
+    # The programme report files patients under their primary care clinic, so only the SQL can hold it to a cardiac one.
+    for where, scope, limit, active in (('the test clinic', {'cardiacClinic': clinic}, clinic, 6),
+                                         ('a primary-care clinic', {'primaryCareClinic': primary_care}, primary_care, 1)):
+        listed = stack.rows(PROGRAMME, **period, clinics=limit)
+        check(f'programme among {where} listed', listed, stack.rows(PROGRAMME, **period, **scope))
+        check(f'programme active among {where} listed', sum(int(row['active_patients']) for row in listed), active)
 
     check_figure_lists(stack, 'the test clinic', endDate=end, cardiacClinic=clinic)
     check_figure_lists(stack, 'the test clinic, RHD only', registrants_only=True, endDate=end, cardiacClinic=clinic, category=RHD)
