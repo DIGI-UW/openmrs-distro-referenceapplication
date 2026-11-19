@@ -5,7 +5,8 @@
 -- without one. A clinic with neither is left out rather than shown as an empty, complete row.
 -- Active: living patients whose latest RHD Registry enrolment is open, as the due list counts them.
 -- Scope: an optional cardiac clinic and an optional primary care clinic, each a location uuid, as ACT 2.0's
--- dashboard filtered on each; both blank means every clinic.
+-- dashboard filtered on each; @clinics, location uuids separated by commas, counts only the patients either of whose
+-- clinics is one of them; all blank means every clinic.
 -- Due this week: next due date from today to 7 days ahead, the window of the registry's "Deadline approaching",
 -- over the due list's patients, so an oral regimen counts as it does in Overdue; the registry's chip is BPG only.
 -- Overdue: next due date before today. Both with the due list's regimens, from ACT Core's adherence table.
@@ -81,6 +82,14 @@ WITH active AS (
             WHERE pa.person_id = p.person_id AND pa.voided = 0
               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')
         ))
+        AND (@clinics IS NULL OR @clinics = '' OR EXISTS (
+            SELECT 1 FROM person_attribute pa
+            JOIN location l ON l.location_id = pa.value AND FIND_IN_SET(l.uuid, @clinics) > 0
+            WHERE pa.person_id = p.person_id AND pa.voided = 0
+              AND pa.person_attribute_type_id IN (SELECT person_attribute_type_id FROM person_attribute_type
+                                                   WHERE uuid IN ('fe261119-2911-5b36-be40-8f9827826987',
+                                                                  '695f2990-236f-5d7c-b8aa-ddbdb22400f4'))
+        ))
 ),
 -- Injections in the period of any patient in scope, by the clinic recorded for them now
 timed AS (
@@ -105,6 +114,14 @@ timed AS (
             JOIN location l ON l.location_id = pa.value AND l.uuid = @primaryCareClinic
             WHERE pa.person_id = t.patient_id AND pa.voided = 0
               AND pa.person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE uuid = '695f2990-236f-5d7c-b8aa-ddbdb22400f4')
+        ))
+        AND (@clinics IS NULL OR @clinics = '' OR EXISTS (
+            SELECT 1 FROM person_attribute pa
+            JOIN location l ON l.location_id = pa.value AND FIND_IN_SET(l.uuid, @clinics) > 0
+            WHERE pa.person_id = t.patient_id AND pa.voided = 0
+              AND pa.person_attribute_type_id IN (SELECT person_attribute_type_id FROM person_attribute_type
+                                                   WHERE uuid IN ('fe261119-2911-5b36-be40-8f9827826987',
+                                                                  '695f2990-236f-5d7c-b8aa-ddbdb22400f4'))
         ))
     GROUP BY facility_id
 ),
