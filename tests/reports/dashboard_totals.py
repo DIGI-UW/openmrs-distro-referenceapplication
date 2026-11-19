@@ -402,6 +402,9 @@ def main():
           by(stack.rows(SCREENING, startDate=day(364), endDate=day(150), cardiacClinic=clinic), 'screen'),
           {'Yes': 2, 'No': 1, 'Not recorded': 1})
     check('screening among the clinics listed', stack.rows(SCREENING, **period, clinics=clinic), screening)
+    check('screening cascade at the test clinic',
+          {row['step']: int(row['patients']) for row in stack.rows(SCREENING_CASCADE, endDate=end, cardiacClinic=clinic)},
+          {'Active': 2, 'Confirmatory Diagnosis': 1, 'Diagnosed': 1, 'Heart Disease': 1})
     for report, label in ((SCREENING_CASCADE, 'screening cascade'), (SCREENING_DIAGNOSES, 'screening diagnoses')):
         check(f'{label} among the clinics listed', stack.rows(report, endDate=end, clinics=clinic),
               stack.rows(report, endDate=end, cardiacClinic=clinic))
