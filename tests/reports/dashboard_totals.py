@@ -37,6 +37,8 @@ WAITLIST_PATIENTS = 'bc987343-8b70-5f95-84a8-d017cffa14da'
 CASCADE_PATIENTS = '7c62fcfd-03b2-5d84-9cea-92a43b70ae76'
 OPTIMISATION_PATIENTS = '45c646b2-f223-585e-963a-3c74fe883ae4'
 SCREENING = '0f4b7c2d-6a1e-5d93-8b47-2c9e1f5a3d68'
+SCREENING_CASCADE = '8b257a0c-7e96-5a01-9672-975cae3b0419'
+SCREENING_DIAGNOSES = '6ddf6b36-2789-4733-8433-a877d54795cf'
 PATIENT_INFORMATION_TYPE = 'ffdc883f-f99f-496a-83f9-2c3c581e1af0'
 SCREEN_POSITIVE = '82a5fbb5-038d-57b8-82d1-3fd0ac95673d'
 CASE_DETECTED_BY = '955632a1-82f7-5b84-a341-de85f95588d1'
@@ -400,6 +402,9 @@ def main():
           by(stack.rows(SCREENING, startDate=day(364), endDate=day(150), cardiacClinic=clinic), 'screen'),
           {'Yes': 2, 'No': 1, 'Not recorded': 1})
     check('screening among the clinics listed', stack.rows(SCREENING, **period, clinics=clinic), screening)
+    for report, label in ((SCREENING_CASCADE, 'screening cascade'), (SCREENING_DIAGNOSES, 'screening diagnoses')):
+        check(f'{label} among the clinics listed', stack.rows(report, endDate=end, clinics=clinic),
+              stack.rows(report, endDate=end, cardiacClinic=clinic))
 
     check_figure_lists(stack, 'the test clinic', endDate=end, cardiacClinic=clinic)
     check_figure_lists(stack, 'the test clinic, RHD only', registrants_only=True, endDate=end, cardiacClinic=clinic, category=RHD)
