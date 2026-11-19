@@ -441,7 +441,7 @@ def main():
         {'concept': DIAGNOSIS, 'groupMembers': [{'concept': DIAGNOSIS_CATEGORY, 'value': RHD}]},
     ])
     stack.call('POST', f'/person/{deceased}', {'dead': True, 'deathDate': day(5), 'causeOfDeathNonCoded': 'Dashboard test'})
-    for when, counted in ((day(10), 1), (end, 0)):
+    for when, counted in ((day(10), 1), (day(5), 0), (end, 0)):
         steps = lambda report: {row['step']: int(row['patients']) for row in stack.rows(report, endDate=when, clinics=deceased_clinic)}
         check(f'screening cascade of a patient who died, as of {when}', steps(SCREENING_CASCADE),
               {'Active': counted, 'Confirmatory Diagnosis': counted, 'Diagnosed': counted, 'Heart Disease': counted})
