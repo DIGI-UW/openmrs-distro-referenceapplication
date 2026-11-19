@@ -362,6 +362,8 @@ def main():
         counts = stack.rows(REGISTRANTS, **params)
         status = by(counts, 'status')
         where = name or 'every clinic'
+        active_in = lambda report: {row['step']: int(row['patients']) for row in stack.rows(report, **params)}.get('Active')
+        check(f'screening Active equals care cascade Active at {where}', active_in(SCREENING_CASCADE), active_in(CASCADE))
         check(f'registrants at {where}', sum(status.values()), len(listed))
         check(f'active at {where}', status.get('Active', 0), sum(1 for row in listed if alive(row)))
         for breakdown in ('sex', 'age', 'disease'):
@@ -430,6 +432,23 @@ def main():
     check('screening diagnoses among a primary-care clinic listed',
           by(stack.rows(SCREENING_DIAGNOSES, endDate=end, clinics=primary_care), 'category', 'category'),
           {'Rheumatic Heart Disease/Rheumatic Fever': 1})
+    # A patient who died with the enrolment still open counts until the death date, as the care cascade counts them.
+    deceased_clinic = stack.call('POST', '/location', {'name': f'Dashboard Test Deceased {stamp}'})['uuid']
+    deceased = registrant(stack, deceased_clinic, f'{stamp} deceased', birthdate='1992-07-01')
+    enrol(stack, deceased, day(100))
+    patient_information(stack, deceased, deceased_clinic, day(100) + 'T09:00:00', [(SCREEN_POSITIVE, YES)])
+    consultation(stack, deceased, deceased_clinic, day(20) + 'T10:00:00', [
+        {'concept': DIAGNOSIS, 'groupMembers': [{'concept': DIAGNOSIS_CATEGORY, 'value': RHD}]},
+    ])
+    stack.call('POST', f'/person/{deceased}', {'dead': True, 'deathDate': day(5), 'causeOfDeathNonCoded': 'Dashboard test'})
+    for when, alive in ((day(10), 1), (end, 0)):
+        steps = lambda report: {row['step']: int(row['patients']) for row in stack.rows(report, endDate=when, clinics=deceased_clinic)}
+        check(f'screening cascade of a patient who died, as of {when}', steps(SCREENING_CASCADE),
+              {'Active': alive, 'Confirmatory Diagnosis': alive, 'Diagnosed': alive, 'Heart Disease': alive})
+        check(f'care cascade Active of a patient who died, as of {when}', steps(CASCADE).get('Active'), alive)
+        check(f'screening diagnoses of a patient who died, as of {when}',
+              by(stack.rows(SCREENING_DIAGNOSES, endDate=when, clinics=deceased_clinic), 'category', 'category'),
+              {'Rheumatic Heart Disease/Rheumatic Fever': 1} if alive else {})
     # The programme report files patients under their primary care clinic, so only the SQL can hold it to a cardiac one.
     active_by_facility = {}
     for where, scope, limit, active in (('the test clinic', {'cardiacClinic': clinic}, clinic, 6),
