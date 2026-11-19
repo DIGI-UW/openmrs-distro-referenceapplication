@@ -355,6 +355,10 @@ def main():
     for name in sorted(clinics, key=str):
         params = {'endDate': end, **({'cardiacClinic': uuids[name]} if name else {})}
         listed = [row for row in registry if not name or row.get('cardiac_clinic') == name]
+        if name:
+            # Real clinics have injections, which the seeded ones do not, so this covers the on-time columns too.
+            check(f'programme among {name} listed', stack.rows(PROGRAMME, startDate=day(364), endDate=end, clinics=uuids[name]),
+                  stack.rows(PROGRAMME, startDate=day(364), endDate=end, cardiacClinic=uuids[name]))
         counts = stack.rows(REGISTRANTS, **params)
         status = by(counts, 'status')
         where = name or 'every clinic'

@@ -5,8 +5,8 @@
 -- without one. A clinic with neither is left out rather than shown as an empty, complete row.
 -- Active: living patients whose latest RHD Registry enrolment is open, as the due list counts them.
 -- Scope: an optional cardiac clinic and an optional primary care clinic, each a location uuid, as ACT 2.0's
--- dashboard filtered on each; both blank means every clinic.
--- @clinics, location uuids separated by commas, counting only the patients either of whose clinics is one of them
+-- dashboard filtered on each; @clinics, location uuids separated by commas, counts only the patients either of whose
+-- clinics is one of them; all blank means every clinic.
 -- Due this week: next due date from today to 7 days ahead, the window of the registry's "Deadline approaching",
 -- over the due list's patients, so an oral regimen counts as it does in Overdue; the registry's chip is BPG only.
 -- Overdue: next due date before today. Both with the due list's regimens, from ACT Core's adherence table.
