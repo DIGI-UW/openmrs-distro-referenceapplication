@@ -12,7 +12,8 @@ at 19 who is 20 now and whose Screen + changed from No to core's True), some wit
 asserts the counts at that clinic today and yesterday, and with a diagnosis category limiting the active registrants'
 sex, age and disease (RHD, which two of them have, and congenital heart disease, which none has); and, for every clinic,
 that rhd_dashboard_registrants, rhd_dashboard_waitlist and rhd_dashboard_screening total what the RHD Patient List and
-the Procedural Waiting List list.
+the Procedural Waiting List list. A patient seeded at a second, primary-care-only location, screen-positive with RHD, counts
+in the screening cascade and diagnoses for the clinics listed.
 
 Usage: python3 tests/reports/dashboard_totals.py [--base http://localhost/openmrs] [--user admin] [--password ...]
 The seeded patients and clinic are left on the stack; run it against a test stack only.
@@ -59,6 +60,7 @@ TERMINAL_STATE_CONCEPT = '6a5113cc-1ecc-5f83-bddd-6a74a79daf5a'
 RHD_ID_TYPE = '240f85fa-46e1-540e-9234-2796c623f7ea'
 RHD_ID_SOURCE = 'f1c4a7be-160e-5d9b-ae5a-345cb15186dc'
 CARDIAC_CLINIC_ATTRIBUTE = 'fe261119-2911-5b36-be40-8f9827826987'
+PRIMARY_CARE_CLINIC_ATTRIBUTE = '695f2990-236f-5d7c-b8aa-ddbdb22400f4'
 CONSULTATION_TYPE = 'c2503561-c00d-5460-8157-43d594472b4a'
 CONSULTATION_FORM = '4b063fc7-996f-3001-8500-8940e201be8f'
 DIAGNOSIS = '594b4495-36dc-52a6-9810-15a9e2e2dcb9'
@@ -119,9 +121,9 @@ def check(what, actual, expected):
         failures.append(f'{what}: expected {expected!r}, got {actual!r}')
 
 
-def registrant(stack, clinic, suffix, *, birthdate, gender='F'):
+def registrant(stack, clinic, suffix, *, birthdate, gender='F', attribute=CARDIAC_CLINIC_ATTRIBUTE):
     person = {'names': [{'givenName': 'Dashboard', 'familyName': f'Test {suffix}'}], 'gender': gender,
-              'attributes': [{'attributeType': CARDIAC_CLINIC_ATTRIBUTE, 'value': clinic}]}
+              'attributes': [{'attributeType': attribute, 'value': clinic}]}
     if birthdate:
         person['birthdate'] = birthdate
     identifier = stack.call('POST', f'/idgen/identifiersource/{RHD_ID_SOURCE}/identifier', {})['identifier']
@@ -408,6 +410,21 @@ def main():
     for report, label in ((SCREENING_CASCADE, 'screening cascade'), (SCREENING_DIAGNOSES, 'screening diagnoses')):
         check(f'{label} among the clinics listed', stack.rows(report, endDate=end, clinics=clinic),
               stack.rows(report, endDate=end, cardiacClinic=clinic))
+    # A patient whose only clinic is a primary-care one counts among the clinics listed, as a site administrator's would.
+    primary_care = stack.call('POST', '/location', {'name': f'Dashboard Test Primary Care {stamp}'})['uuid']
+    primary_care_only = registrant(stack, primary_care, f'{stamp} primary care only', birthdate='1990-03-15',
+                                   attribute=PRIMARY_CARE_CLINIC_ATTRIBUTE)
+    enrol(stack, primary_care_only, day(100))
+    patient_information(stack, primary_care_only, primary_care, day(100) + 'T09:00:00', [(SCREEN_POSITIVE, YES)])
+    consultation(stack, primary_care_only, primary_care, day(20) + 'T10:00:00', [
+        {'concept': DIAGNOSIS, 'groupMembers': [{'concept': DIAGNOSIS_CATEGORY, 'value': RHD}]},
+    ])
+    check('screening cascade among a primary-care clinic listed',
+          {row['step']: int(row['patients']) for row in stack.rows(SCREENING_CASCADE, endDate=end, clinics=primary_care)},
+          {'Active': 1, 'Confirmatory Diagnosis': 1, 'Diagnosed': 1, 'Heart Disease': 1})
+    check('screening diagnoses among a primary-care clinic listed',
+          by(stack.rows(SCREENING_DIAGNOSES, endDate=end, clinics=primary_care), 'category', 'category'),
+          {'Rheumatic Heart Disease/Rheumatic Fever': 1})
 
     check_figure_lists(stack, 'the test clinic', endDate=end, cardiacClinic=clinic)
     check_figure_lists(stack, 'the test clinic, RHD only', registrants_only=True, endDate=end, cardiacClinic=clinic, category=RHD)
