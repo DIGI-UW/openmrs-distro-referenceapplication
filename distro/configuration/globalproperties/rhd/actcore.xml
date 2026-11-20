@@ -21,6 +21,10 @@
 			<value>4358f696-7a3d-5da4-949f-c8919974cccc</value>
 		</globalProperty>
 		<globalProperty>
+			<property>actcore.registry.deathStateConcept</property>
+			<value>159AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</value>
+		</globalProperty>
+		<globalProperty>
 			<property>actcore.adherence.prescriptionConcept</property>
 			<value>668e0221-8b41-5669-9ad8-78e193d42494</value>
 		</globalProperty>
