@@ -8,5 +8,9 @@
 			<property>webservices.rest.maxResultsAbsolute</property>
 			<value>250</value>
 		</globalProperty>
+		<globalProperty>
+			<property>webservices.rest.enableStackTraceDetails</property>
+			<value>false</value>
+		</globalProperty>
 	</globalProperties>
 </config>
