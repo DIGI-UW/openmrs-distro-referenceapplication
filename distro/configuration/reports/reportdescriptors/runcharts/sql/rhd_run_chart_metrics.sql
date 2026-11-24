@@ -232,10 +232,12 @@ seen AS (
 -- Each registrant's measures as of each point
 measure AS (
     SELECT r.d, r.patient_id, r.active,
+           (rh.patient_id IS NOT NULL) AS rhd,
            (sn.patient_id IS NOT NULL) AS seen,
            COALESCE(rg.prescribed, 0) AS prescribed,
            COALESCE(rg.on_bpg, 0) AS on_bpg
     FROM registrant r
+    LEFT JOIN rhd rh ON rh.d = r.d AND rh.patient_id = r.patient_id
     LEFT JOIN seen sn ON sn.d = r.d AND sn.patient_id = r.patient_id
     LEFT JOIN regimen rg ON rg.d = r.d AND rg.person_id = r.patient_id
 ),
@@ -247,6 +249,8 @@ SELECT cp.d                                     AS point_date,
        cp.clinic_uuid,
        COUNT(*)                                AS total_registrants,
        SUM(m.active)                           AS active_registrants,
+       -- The active patients with the RHD category, which prescribed and adherent are shares of, as on the care cascade
+       SUM(m.rhd)                              AS active_registrants_rhd,
        SUM(m.seen)                             AS active_registrants_seen_last_7_months,
        SUM(m.prescribed)                       AS active_registrants_prescribed_prophylaxis,
        COALESCE(SUM(v.total), 0)               AS consultation_visit_total,
@@ -262,7 +266,7 @@ LEFT JOIN procedure_clinic pc ON pc.d = cp.d AND pc.clinic_uuid <=> cp.clinic_uu
 GROUP BY cp.d, cp.clinic_uuid
 UNION ALL
 -- A point with nobody registered still gets its all-clinics row, of zeros
-SELECT pt.d, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL
+SELECT pt.d, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL
 FROM point pt
 WHERE NOT EXISTS (SELECT 1 FROM registrant r WHERE r.d = pt.d)
 ORDER BY point_date, clinic_uuid
