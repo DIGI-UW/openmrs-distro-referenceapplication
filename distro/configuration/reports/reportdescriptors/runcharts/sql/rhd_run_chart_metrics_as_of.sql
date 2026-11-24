@@ -189,9 +189,12 @@ measure AS (
                             AND d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '183fb30e-b861-5b7c-806f-7118a40f2b51')
                             AND d.value_datetime >= DATE_SUB(DATE(@endDate), INTERVAL 210 DAY)
                             AND d.value_datetime < DATE_ADD(DATE(@endDate), INTERVAL 1 DAY))) AS seen,
+           EXISTS (SELECT 1 FROM rhd x WHERE x.patient_id = r.patient_id) AS rhd,
            EXISTS (SELECT 1 FROM prescribed pr WHERE pr.person_id = r.patient_id) AS prescribed,
            EXISTS (SELECT 1 FROM bpg b WHERE b.person_id = r.patient_id) AS on_bpg,
-           (EXISTS (SELECT 1 FROM bpg b WHERE b.person_id = r.patient_id) AND adh.adherence >= 0.8) IS TRUE AS adherent
+           -- Adherent as the care cascade counts it: 80% or more, and covered, the next dose not yet due (AR-219)
+           (EXISTS (SELECT 1 FROM bpg b WHERE b.person_id = r.patient_id) AND adh.adherence >= 0.8
+            AND DATE(adh.next_due) >= DATE(@endDate)) IS TRUE AS adherent
     FROM registrant r
     LEFT JOIN actcore_prophylaxis_adherence adh ON adh.patient_id = r.patient_id
 ),
@@ -202,6 +205,7 @@ visits AS (
 SELECT cp.clinic_uuid,
        COUNT(*)                                AS total_registrants,
        SUM(m.active)                           AS active_registrants,
+       SUM(m.rhd)                              AS active_registrants_rhd,
        SUM(m.seen)                             AS active_registrants_seen_last_7_months,
        SUM(m.prescribed)                       AS active_registrants_prescribed_prophylaxis,
        SUM(m.adherent)                         AS active_registrants_adherent,
@@ -217,6 +221,6 @@ LEFT JOIN procedure_clinic pc ON pc.clinic_uuid <=> cp.clinic_uuid
 GROUP BY cp.clinic_uuid
 UNION ALL
 -- The all-clinics row with nobody registered, so a check against the one-pass report has a row to compare
-SELECT NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+SELECT NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 WHERE NOT EXISTS (SELECT 1 FROM registrant)
 ORDER BY clinic_uuid

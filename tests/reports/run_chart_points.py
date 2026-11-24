@@ -61,17 +61,17 @@ PROCEDURES_TYPE = 'c9b87090-8768-50be-987e-8ca0a8983429'
 PROCEDURES_FORM = 'bf762810-2bf1-3ca3-bdbe-8bd71fd5d59a'
 PROCEDURE_DATE = '6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a'
 SURGERY_TYPE = '46f4af80-b783-59f4-beb1-81144ccf3084'
-COUNTS = ['total_registrants', 'active_registrants', 'active_registrants_seen_last_7_months',
+COUNTS = ['total_registrants', 'active_registrants', 'active_registrants_rhd', 'active_registrants_seen_last_7_months',
           'active_registrants_prescribed_prophylaxis', 'consultation_visit_total',
           'consultation_visits_with_echocardiogram_resulted', 'consultation_visits_with_intervention',
           'interventions_completed']
 PERCENT_OF = {'active_registrants_seen_last_7_months': 'active_registrants',
-              'active_registrants_prescribed_prophylaxis': 'active_registrants',
-              'active_registrants_adherent': 'active_registrants',
+              'active_registrants_prescribed_prophylaxis': 'active_registrants_rhd',
+              'active_registrants_adherent': 'active_registrants_rhd',
               'consultation_visits_with_echocardiogram_resulted': 'consultation_visit_total',
               'consultation_visits_with_intervention': 'consultation_visit_total'}
 # The eight charted metrics: the counts less consultation_visit_total, which is only a denominator, plus adherent
-METRICS = [c for c in COUNTS if c != 'consultation_visit_total']
+METRICS = [c for c in COUNTS if c not in ('consultation_visit_total', 'active_registrants_rhd')]
 METRICS.insert(4, 'active_registrants_adherent')
 
 
@@ -225,7 +225,8 @@ def check_window_cases(by_date, clinic, today):
     """The seeded clinic's row at the Sunday on or before 80 days ago, before its changes, and at the last Sunday, after.
 
     Before: re-enrolled is inactive, rediagnosed and switched are seen, on BPG and prescribed, and each has one visit;
-    corrected is seen with one visit and no regimen yet.
+    corrected is seen with one visit and no regimen yet; those three are the active RHD patients. After, rediagnosed
+    is CHD, so switched and corrected are the active RHD patients prescribed and adherent are shares of.
     After: re-enrolled is active again, rediagnosed is CHD and switched oral, and the same-day pair counts two visits
     with an intervention; the later consultation of the pair, with the open recommendation and the CHD diagnosis, is
     the latest, so nobody is prescribed there. Corrected's RHD, saved last, is its diagnosis, so its BPG makes it the
@@ -235,7 +236,7 @@ def check_window_cases(by_date, clinic, today):
     sunday = lambda d: (d - datetime.timedelta(days=d.isoweekday() % 7)).isoformat()
     before, after = sunday(today - datetime.timedelta(days=80)), sunday(today)
     columns = COUNTS + ['active_registrants_on_bpg']
-    expected = {before: [5, 4, 3, 2, 3, 0, 0, 0, 2], after: [5, 5, 4, 2, 8, 0, 2, 1, 1]}
+    expected = {before: [5, 4, 3, 3, 2, 3, 0, 0, 0, 2], after: [5, 5, 2, 4, 2, 8, 0, 2, 1, 1]}
     for point, figures in expected.items():
         row = by_date.get(point, {}).get(clinic)
         check(f'seeded clinic at {point}', row and [int(row[c]) for c in columns], figures)
