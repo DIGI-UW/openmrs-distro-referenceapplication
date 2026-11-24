@@ -6,6 +6,9 @@ parameters:
   - key: endDate
     type: java.util.Date
     label: "As of date"
+  - key: points
+    type: java.lang.String
+    label: "Period length: day, week or month"
 datasets:
   - key: runChartMetrics
     type: sql
