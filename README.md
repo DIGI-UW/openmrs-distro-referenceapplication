@@ -1,6 +1,27 @@
-# OpenMRS 3.0 Reference Application
+# ACT 3.0
 
-This project holds the build configuration for the OpenMRS 3.0 reference application, found on
+ACT 3.0 is the [OpenMRS](https://openmrs.org) 3 edition of the ACT rheumatic heart disease (RHD)
+registry. It is built on OpenMRS, the open-source medical record system platform, and extends the
+OpenMRS 3.0 reference application with the modules, metadata, and frontend configuration needed to
+run RHD screening, prophylaxis, and cardiology follow-up at participating clinics.
+
+This repository is the distribution: it assembles OpenMRS core, the ACT backend and frontend, and
+the reference-application metadata into runnable Docker images. The two ACT-specific pieces live in
+their own repositories:
+
+- [**ACT Core**](https://github.com/DIGI-UW/openmrs-module-actcore) — OpenMRS backend module.
+  Adds SQL-driven patient flags (overdue prophylaxis, upcoming cardiology appointments), prophylaxis
+  adherence tracking, run-chart metrics and monthly screening totals aggregated across clinics,
+  research-study consent tracking, activity and access auditing, clinic-scoped admin privileges,
+  configurable data export, and REST endpoints for all of the above. Scheduled daily jobs recompute
+  flags and adherence.
+- [**ACT frontend app**](https://github.com/DIGI-UW/openmrs-esm-act-app) — the ACT ESM
+  (`@act-registry/esm-act-app`). Adds the ACT home, registry and worklists, screening and prophylaxis
+  entry, patient-card scanning, dashboards and run charts, facility reports and data export,
+  clinic/user/role administration, and RHD-specific patient-chart pages, summary cards and banner
+  tags. Menu visibility is driven by ACT-specific privileges (e.g. `App: act.registry`).
+
+The upstream OpenMRS 3.0 reference application this distribution is based on is available at
 https://dev3.openmrs.org and https://o3.openmrs.org.
 
 ## Quick start
@@ -70,14 +91,16 @@ The `COMPOSE_FILE` variable tells Docker Compose to automatically include the SS
 
 This distribution consists of four images:
 
-- **db** - This is just the standard MariaDB image supplied to use as a database
-- **backend** - This image is the OpenMRS backend. It is built from the main Dockerfile included in the root of the project and
-  based on the core OpenMRS Docker file. Additional contents for this image are drawn from the `distro` sub-directory which
-  includes a full Initializer configuration for the reference application intended as a starting point.
-- **frontend** - This image is a simple nginx container that embeds the 3.x frontend, including the modules described in the
-  `frontend/spa-assemble-config.json` file.
-- **gateway** - This image is an nginx reverse proxy that sits in front of the `backend` and `frontend` containers
-  and provides a common interface to both. This helps mitigate CORS issues.
+- **db** — standard MariaDB image used as the database.
+- **backend** — the OpenMRS backend, built from the root `Dockerfile` on top of the core OpenMRS
+  image. It bundles the ACT Core module (see [ACT Core](#act-core) below) and the Initializer
+  configuration under `distro/`, which carries the ACT-specific metadata (forms, concepts, roles,
+  privileges, patient flags, reports) alongside the reference-application starting point.
+- **frontend** — nginx container serving the OpenMRS 3.x single-page app. It embeds the ESM modules
+  listed in `frontend/spa-assemble-config.json`, including the ACT frontend `@act-registry/esm-act-app`,
+  and applies the ACT branding and configuration from `frontend/config-core_demo.json`.
+- **gateway** — nginx reverse proxy in front of `backend` and `frontend` that gives both a common
+  interface and avoids CORS issues.
 
 When running with SSL enabled (using `docker-compose.ssl.yml`), an additional service is included:
 
