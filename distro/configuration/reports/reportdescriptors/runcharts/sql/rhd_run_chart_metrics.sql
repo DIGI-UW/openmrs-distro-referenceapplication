@@ -1,6 +1,7 @@
 -- =============================================================================
 -- RHD Run Chart Metrics
--- ACT 2.0's runchart_record metrics (scheduled_record_calcs.py create_clinic_daily_record) as of every point of a range, in one pass.
+-- ACT 2.0's runchart_record metrics (scheduled_record_calcs.py create_clinic_daily_record) as of every point of a range, in one pass,
+-- except interventions_completed, which counts the procedures done in each point's period (AR-218).
 -- For each point: one row per clinic, a patient counting at both their clinics, and one row with no clinic_uuid counting each patient once,
 -- of zeros when nobody is registered by the point, so ACT Core can refuse a report that leaves a point out.
 -- Parameters: @startDate and @endDate, and @points (day, week or month).
@@ -168,24 +169,44 @@ all_consultation AS (
       AND (c.encounter_datetime >= DATE_SUB(r.d, INTERVAL 365 DAY)
            OR c.next_datetime IS NULL OR c.next_datetime >= DATE_ADD(r.d, INTERVAL 1 DAY))
 ),
--- Each recommendation of a counted consultation, and whether it is completed by the point: only on a latest
--- consultation, as ACT 2.0 counted its recommendations, by a procedure recorded on Procedures and Outcomes on or after
--- the consultation's day and by the point (AR-162)
-recommendation AS (
-    SELECT c.d, c.encounter_id, c.patient_id, c.latest,
-           (c.latest AND EXISTS (
-               SELECT 1 FROM obs pd
-               JOIN encounter pd_e ON pd_e.encounter_id = pd.encounter_id AND pd_e.voided = 0
-               LEFT JOIN obs pd_d ON pd_d.encounter_id = pd_e.encounter_id AND pd_d.voided = 0
-                   AND pd_d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a')
-               WHERE pd.person_id = c.patient_id AND pd.voided = 0
-                 AND pd.concept_id IN ((SELECT concept_id FROM concept WHERE uuid = '46f4af80-b783-59f4-beb1-81144ccf3084'),
-                                       (SELECT concept_id FROM concept WHERE uuid = 'bb4a77ee-836a-57e7-a262-632fa22288d2'))
-                 AND pd.value_coded = rg.procedure_concept
-                 AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) >= DATE(c.encounter_datetime)
-                 AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) <= c.d)) AS completed
-    FROM all_consultation c
-    JOIN recommendation_group rg ON rg.encounter_id = c.encounter_id
+-- Procedures done in the period to each point: each surgery or catheterization recorded on Procedures and Outcomes,
+-- by its Date of Procedure (else its encounter's day), after the point before and by the point, for a patient
+-- enrolled in the registry by the point, whether or not a recommendation preceded it and whether or not the patient
+-- is still active or alive. A flow per period, where the other counts are stocks as of the point; the column keeps
+-- ACT 2.0's name interventions_completed, which ACT Core and the app read, though it counted completed
+-- recommendations on latest consultations there (AR-218).
+procedure_done AS (
+    SELECT pt.d, pd_e.patient_id, pd.obs_id
+    FROM point pt
+    -- The procedure is the member of the Surgery Type or Catheterization Type group that holds the group's concept
+    JOIN obs pd ON pd.voided = 0 AND pd.value_coded IS NOT NULL
+     AND pd.concept_id IN ((SELECT concept_id FROM concept WHERE uuid = '46f4af80-b783-59f4-beb1-81144ccf3084'),
+                           (SELECT concept_id FROM concept WHERE uuid = 'bb4a77ee-836a-57e7-a262-632fa22288d2'))
+    JOIN encounter pd_e ON pd_e.encounter_id = pd.encounter_id AND pd_e.voided = 0
+    LEFT JOIN obs pd_d ON pd_d.encounter_id = pd_e.encounter_id AND pd_d.voided = 0
+     AND pd_d.concept_id = (SELECT concept_id FROM concept WHERE uuid = '6cbb5176-144a-576b-9b3d-c9e9d6bc5f5a')
+    WHERE DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) <= pt.d
+      AND DATE(COALESCE(pd_d.value_datetime, pd_e.encounter_datetime)) > CASE @points
+              WHEN 'week' THEN pt.d - INTERVAL (WEEKDAY(pt.d) + 1) DAY
+              WHEN 'month' THEN LAST_DAY(pt.d - INTERVAL 1 MONTH)
+              ELSE pt.d - INTERVAL 1 DAY
+          END
+      AND EXISTS (SELECT 1 FROM patient_program pp
+                  JOIN program pr ON pr.program_id = pp.program_id AND pr.uuid = '7d73e143-a550-5a9d-aecd-dd771add098d'
+                  WHERE pp.patient_id = pd_e.patient_id AND pp.voided = 0 AND DATE(pp.date_enrolled) <= pt.d)
+),
+-- Those procedures by clinic, a patient's counting at both their clinics, and once in the all-clinics row
+procedure_clinic AS (
+    SELECT p.d, l.uuid AS clinic_uuid, COUNT(*) AS done
+    FROM procedure_done p
+    JOIN person_attribute pa ON pa.person_id = p.patient_id AND pa.voided = 0
+     AND pa.person_attribute_type_id IN (SELECT person_attribute_type_id FROM person_attribute_type
+                                          WHERE uuid IN ('fe261119-2911-5b36-be40-8f9827826987',
+                                                         '695f2990-236f-5d7c-b8aa-ddbdb22400f4'))
+    JOIN location l ON l.location_id = pa.value
+    GROUP BY p.d, l.uuid
+    UNION ALL
+    SELECT d, NULL, COUNT(*) FROM procedure_done GROUP BY d
 ),
 -- The consultations in the 365 days to each point
 consultation AS (
@@ -208,22 +229,15 @@ seen AS (
      AND dt.value_datetime >= DATE_SUB(r.d, INTERVAL 210 DAY) AND dt.value_datetime < DATE_ADD(r.d, INTERVAL 1 DAY)
     WHERE r.active
 ),
-completed AS (
-    SELECT d, patient_id, COUNT(*) AS recommendations
-    FROM recommendation WHERE latest AND completed
-    GROUP BY d, patient_id
-),
 -- Each registrant's measures as of each point
 measure AS (
     SELECT r.d, r.patient_id, r.active,
            (sn.patient_id IS NOT NULL) AS seen,
            COALESCE(rg.prescribed, 0) AS prescribed,
-           COALESCE(rg.on_bpg, 0) AS on_bpg,
-           COALESCE(cm.recommendations, 0) AS completed
+           COALESCE(rg.on_bpg, 0) AS on_bpg
     FROM registrant r
     LEFT JOIN seen sn ON sn.d = r.d AND sn.patient_id = r.patient_id
     LEFT JOIN regimen rg ON rg.d = r.d AND rg.person_id = r.patient_id
-    LEFT JOIN completed cm ON cm.d = r.d AND cm.patient_id = r.patient_id
 ),
 visits AS (
     SELECT d, patient_id, COUNT(*) AS total, SUM(with_echo) AS with_echo, SUM(with_recommendation) AS with_recommendation
@@ -238,12 +252,13 @@ SELECT cp.d                                     AS point_date,
        COALESCE(SUM(v.total), 0)               AS consultation_visit_total,
        COALESCE(SUM(v.with_echo), 0)           AS consultation_visits_with_echocardiogram_resulted,
        COALESCE(SUM(v.with_recommendation), 0) AS consultation_visits_with_intervention,
-       SUM(m.completed)                        AS interventions_completed,
+       COALESCE(MAX(pc.done), 0)               AS interventions_completed,
        SUM(m.on_bpg)                           AS active_registrants_on_bpg,
        GROUP_CONCAT(DISTINCT CASE WHEN m.on_bpg THEN m.patient_id END ORDER BY m.patient_id SEPARATOR ',') AS bpg_patient_ids
 FROM clinic_patient cp
 JOIN measure m ON m.d = cp.d AND m.patient_id = cp.patient_id
 LEFT JOIN visits v ON v.d = cp.d AND v.patient_id = cp.patient_id
+LEFT JOIN procedure_clinic pc ON pc.d = cp.d AND pc.clinic_uuid <=> cp.clinic_uuid
 GROUP BY cp.d, cp.clinic_uuid
 UNION ALL
 -- A point with nobody registered still gets its all-clinics row, of zeros

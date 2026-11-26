@@ -202,6 +202,9 @@ def seed_window_cases(stack, today):
     enrol(stack, switched, day(200))
     consultation(stack, switched, clinic, day(150) + 'T10:00:00', [diagnosis(RHD), regimen(BPG_Q28, day(150))])
     consultation(stack, switched, clinic, day(60) + 'T10:00:00', [regimen(ORAL_PENICILLIN_V, day(60))])
+    # A procedure in the week to the last Sunday, with no recommendation before it: interventions_completed counts
+    # procedures done in each point's period (AR-218)
+    procedure(stack, switched, clinic, day(2) + 'T10:00:00', SURGERY_TYPE, MITRAL_VALVE)
     same_day = registrant(stack, clinic, f'{stamp} two consultations one day', birthdate='2010-05-01')
     enrol(stack, same_day, day(200))
     consultation(stack, same_day, clinic, day(60) + 'T10:00:00',
@@ -225,13 +228,14 @@ def check_window_cases(by_date, clinic, today):
     corrected is seen with one visit and no regimen yet.
     After: re-enrolled is active again, rediagnosed is CHD and switched oral, and the same-day pair counts two visits
     with an intervention; the later consultation of the pair, with the open recommendation and the CHD diagnosis, is
-    the latest, so nothing is completed and nobody is prescribed there. Corrected's RHD, saved last, is its diagnosis,
-    so its BPG makes it the one on BPG and the second prescribed, with two visits.
+    the latest, so nobody is prescribed there. Corrected's RHD, saved last, is its diagnosis, so its BPG makes it the
+    one on BPG and the second prescribed, with two visits. Switched's procedure two days ago is the one done in the
+    week to the last Sunday; same-day's, 58 days ago, falls in neither point's period.
     """
     sunday = lambda d: (d - datetime.timedelta(days=d.isoweekday() % 7)).isoformat()
     before, after = sunday(today - datetime.timedelta(days=80)), sunday(today)
     columns = COUNTS + ['active_registrants_on_bpg']
-    expected = {before: [5, 4, 3, 2, 3, 0, 0, 0, 2], after: [5, 5, 4, 2, 8, 0, 2, 0, 1]}
+    expected = {before: [5, 4, 3, 2, 3, 0, 0, 0, 2], after: [5, 5, 4, 2, 8, 0, 2, 1, 1]}
     for point, figures in expected.items():
         row = by_date.get(point, {}).get(clinic)
         check(f'seeded clinic at {point}', row and [int(row[c]) for c in columns], figures)
@@ -246,7 +250,7 @@ def check_range(stack, start, end, points):
     expected = [d.isoformat() for d in point_dates(start, end, points)]
     check(f'{label}: point dates', sorted(by_date), expected)
     for day in expected:
-        as_of = {row['clinic_uuid']: row for row in stack.rows(AS_OF, endDate=day)}
+        as_of = {row['clinic_uuid']: row for row in stack.rows(AS_OF, endDate=day, points=points)}
         clinics = by_date.get(day, {})
         check(f'{label} {day}: clinics', sorted(clinics, key=str), sorted(as_of, key=str))
         for clinic, row in clinics.items():
@@ -304,7 +308,7 @@ def check_endpoint(stack, start, end, points, by_date):
 def check_adherent_today(stack, answer, today):
     """ACT Core's rows, once refreshed, hold today's replay, so the as-of report's adherent figure is today's point."""
     stack.call('POST', '/actcore/refresh', {})
-    reference = {row['clinic_uuid']: row for row in stack.rows(AS_OF, endDate=today.isoformat())}[None]
+    reference = {row['clinic_uuid']: row for row in stack.rows(AS_OF, endDate=today.isoformat(), points='day')}[None]
     last = answer['metrics']['active_registrants_adherent']['points'][-1]
     check('adherent today', (last['date'], last['count']), (today.isoformat(), int(reference['active_registrants_adherent'])))
 
